@@ -10,12 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CarrinhoRouteImport } from './routes/carrinho'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CartaCardIdRouteImport } from './routes/carta.$cardId'
 import { Route as ColecoesIndexRouteImport } from './routes/colecoes.index'
 import { Route as ColecoesSlugRouteImport } from './routes/colecoes.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CarrinhoRoute = CarrinhoRouteImport.update({
+  id: '/carrinho',
+  path: '/carrinho',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartaCardIdRoute = CartaCardIdRouteImport.update({
+  id: '/carta/$cardId',
+  path: '/carta/$cardId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ColecoesIndexRoute = ColecoesIndexRouteImport.update({
@@ -31,30 +49,61 @@ const ColecoesSlugRoute = ColecoesSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/checkout': typeof CheckoutRoute
+  '/carta/$cardId': typeof CartaCardIdRoute
   '/colecoes/$slug': typeof ColecoesSlugRoute
   '/colecoes/': typeof ColecoesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/checkout': typeof CheckoutRoute
+  '/carta/$cardId': typeof CartaCardIdRoute
   '/colecoes/$slug': typeof ColecoesSlugRoute
   '/colecoes': typeof ColecoesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/checkout': typeof CheckoutRoute
+  '/carta/$cardId': typeof CartaCardIdRoute
   '/colecoes/$slug': typeof ColecoesSlugRoute
   '/colecoes/': typeof ColecoesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/colecoes/$slug' | '/colecoes/'
+  fullPaths:
+    | '/'
+    | '/carrinho'
+    | '/checkout'
+    | '/carta/$cardId'
+    | '/colecoes/$slug'
+    | '/colecoes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/colecoes/$slug' | '/colecoes'
-  id: '__root__' | '/' | '/colecoes/$slug' | '/colecoes/'
+  to:
+    | '/'
+    | '/carrinho'
+    | '/checkout'
+    | '/carta/$cardId'
+    | '/colecoes/$slug'
+    | '/colecoes'
+  id:
+    | '__root__'
+    | '/'
+    | '/carrinho'
+    | '/checkout'
+    | '/carta/$cardId'
+    | '/colecoes/$slug'
+    | '/colecoes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CarrinhoRoute: typeof CarrinhoRoute
+  CheckoutRoute: typeof CheckoutRoute
+  CartaCardIdRoute: typeof CartaCardIdRoute
   ColecoesSlugRoute: typeof ColecoesSlugRoute
   ColecoesIndexRoute: typeof ColecoesIndexRoute
 }
@@ -66,6 +115,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/carrinho': {
+      id: '/carrinho'
+      path: '/carrinho'
+      fullPath: '/carrinho'
+      preLoaderRoute: typeof CarrinhoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/carta/$cardId': {
+      id: '/carta/$cardId'
+      path: '/carta/$cardId'
+      fullPath: '/carta/$cardId'
+      preLoaderRoute: typeof CartaCardIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/colecoes/': {
@@ -87,6 +157,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CarrinhoRoute: CarrinhoRoute,
+  CheckoutRoute: CheckoutRoute,
+  CartaCardIdRoute: CartaCardIdRoute,
   ColecoesSlugRoute: ColecoesSlugRoute,
   ColecoesIndexRoute: ColecoesIndexRoute,
 }
