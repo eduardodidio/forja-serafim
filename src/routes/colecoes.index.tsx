@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/page-shell";
 import { collections } from "@/lib/store-data";
 
-export const Route = createFileRoute("/colecoes")({
+export const Route = createFileRoute("/colecoes/")({
   head: () => ({
     meta: [
       { title: "Coleções temáticas — A Casa do Serafim" },

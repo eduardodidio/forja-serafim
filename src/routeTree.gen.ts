@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ColecoesIndexRouteImport } from './routes/colecoes.index'
+import { Route as ColecoesSlugRouteImport } from './routes/colecoes.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ColecoesIndexRoute = ColecoesIndexRouteImport.update({
+  id: '/colecoes/',
+  path: '/colecoes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ColecoesSlugRoute = ColecoesSlugRouteImport.update({
+  id: '/colecoes/$slug',
+  path: '/colecoes/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/colecoes/$slug': typeof ColecoesSlugRoute
+  '/colecoes/': typeof ColecoesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/colecoes/$slug': typeof ColecoesSlugRoute
+  '/colecoes': typeof ColecoesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/colecoes/$slug': typeof ColecoesSlugRoute
+  '/colecoes/': typeof ColecoesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/colecoes/$slug' | '/colecoes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/colecoes/$slug' | '/colecoes'
+  id: '__root__' | '/' | '/colecoes/$slug' | '/colecoes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ColecoesSlugRoute: typeof ColecoesSlugRoute
+  ColecoesIndexRoute: typeof ColecoesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/colecoes/': {
+      id: '/colecoes/'
+      path: '/colecoes'
+      fullPath: '/colecoes/'
+      preLoaderRoute: typeof ColecoesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colecoes/$slug': {
+      id: '/colecoes/$slug'
+      path: '/colecoes/$slug'
+      fullPath: '/colecoes/$slug'
+      preLoaderRoute: typeof ColecoesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ColecoesSlugRoute: ColecoesSlugRoute,
+  ColecoesIndexRoute: ColecoesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
