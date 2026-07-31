@@ -54,11 +54,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const add = useCallback((cardId: string, foil: boolean, qty = 1) => {
     setItems((prev) => {
-      const idx = prev.findIndex((i) => i.cardId === cardId && i.foil === foil);
-      if (idx === -1) return [...prev, { cardId, foil, qty }];
-      const next = [...prev];
-      next[idx] = { ...next[idx], qty: next[idx].qty + qty };
-      return next;
+      const existing = prev.find((i) => i.cardId === cardId && i.foil === foil);
+      if (!existing) return [...prev, { cardId, foil, qty }];
+      return prev.map((i) =>
+        i.cardId === cardId && i.foil === foil ? { ...i, qty: i.qty + qty } : i,
+      );
     });
   }, []);
 
