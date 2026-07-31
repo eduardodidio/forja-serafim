@@ -14,10 +14,10 @@ export const Route = createFileRoute("/")({
         content:
           "Proxies full art premium e temáticas para Magic: The Gathering. Coleções de Diablo, Castlevania, Dragões, Cyberpunk e muito mais.",
       },
-      { property: "og:title", content: "A Casa do Serafim — Proxies Full Art" },
+      { property: "og:title", content: "A Casa do Serafim — Proxies Full Art para Magic: The Gathering" },
       {
         property: "og:description",
-        content: "Transforme seu deck em uma verdadeira obra de arte com proxies full art artesanais.",
+        content: "Proxies full art premium e temáticas para Magic: The Gathering. Coleções de Diablo, Castlevania, Dragões, Cyberpunk e muito mais.",
       },
     ],
   }),
