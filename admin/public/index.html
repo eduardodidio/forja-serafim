@@ -40,9 +40,14 @@
         <h1 class="text-lg font-bold text-gold">A Casa do Serafim</h1>
         <p class="text-xs text-gray-500">Painel Administrativo</p>
       </div>
-      <a href="http://localhost:8080" target="_blank" class="text-xs text-gray-500 hover:text-gold transition-colors">
-        Ver site &rarr;
-      </a>
+      <div class="flex items-center gap-4">
+        <a href="http://localhost:8080" target="_blank" class="text-xs text-gray-500 hover:text-gold transition-colors">
+          Ver site local &rarr;
+        </a>
+        <button onclick="publish()" id="btn-publish" class="btn bg-green-700 text-white hover:bg-green-600 text-xs">
+          Publicar no site
+        </button>
+      </div>
     </div>
   </header>
 
@@ -578,6 +583,51 @@ function esc(str) {
   const d = document.createElement('div');
   d.textContent = str;
   return d.innerHTML;
+}
+
+// --- Publish ---
+async function publish() {
+  if (!confirm('Publicar todas as alteracoes no site? Isso vai atualizar o site online.')) return;
+
+  const btn = document.getElementById('btn-publish');
+  btn.disabled = true;
+  btn.textContent = 'Publicando...';
+  btn.className = 'btn bg-gray-600 text-gray-300 text-xs cursor-not-allowed';
+
+  try {
+    const res = await fetch(`${API}/api/publish`, { method: 'POST' });
+    const data = await res.json();
+
+    if (data.success) {
+      toast('Site publicado com sucesso! As alteracoes estarao online em alguns minutos.');
+      openModal('Publicacao concluida', `
+        <div class="space-y-2">
+          ${data.steps.map(s => `<p class="text-sm text-gray-300">&#10003; ${esc(s)}</p>`).join('')}
+          <div class="pt-3">
+            <button onclick="closeModal()" class="btn btn-gold">Fechar</button>
+          </div>
+        </div>
+      `);
+    } else {
+      toast('Erro ao publicar.', 'error');
+      openModal('Erro na publicacao', `
+        <div class="space-y-2">
+          ${data.steps.map(s => `<p class="text-sm ${s.startsWith('Erro') ? 'text-red-400' : 'text-gray-300'}">
+            ${s.startsWith('Erro') ? '&#10007;' : '&#10003;'} ${esc(s)}
+          </p>`).join('')}
+          <div class="pt-3">
+            <button onclick="closeModal()" class="btn btn-outline">Fechar</button>
+          </div>
+        </div>
+      `);
+    }
+  } catch (err) {
+    toast('Erro de conexao ao publicar.', 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Publicar no site';
+  btn.className = 'btn bg-green-700 text-white hover:bg-green-600 text-xs';
 }
 
 // --- Init ---

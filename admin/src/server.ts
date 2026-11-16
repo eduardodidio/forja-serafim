@@ -1,8 +1,9 @@
 import { readFileSync, existsSync, mkdirSync, copyFileSync } from "fs";
 import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
+import { execSync } from "child_process";
 import { readJson, writeJson } from "./lib/data-io.js";
-import { COLLECTIONS_JSON, TESTIMONIALS_JSON, SETTINGS_JSON, COVERS_DIR, DECKS_DIR, MANUALS_DIR } from "./lib/paths.js";
+import { COLLECTIONS_JSON, TESTIMONIALS_JSON, SETTINGS_JSON, COVERS_DIR, DECKS_DIR, MANUALS_DIR, PROJECT_ROOT } from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
 import { processImage } from "./lib/image-processor.js";
 
@@ -274,6 +275,56 @@ async function handleRequest(req: Request): Promise<Response> {
     if (body.whatsappUrl !== undefined) settings.whatsappUrl = body.whatsappUrl;
     writeJson(SETTINGS_JSON, settings);
     return json(settings);
+  }
+
+  // --- Publish (build + commit + push) ---
+
+  if (path === "/api/publish" && method === "POST") {
+    const steps: string[] = [];
+    const opts = { cwd: PROJECT_ROOT, encoding: "utf-8" as const };
+
+    try {
+      // 1. Build
+      steps.push("Compilando site...");
+      execSync("bun run build", { ...opts, stdio: "pipe" });
+      steps.push("Build concluido.");
+
+      // 2. Check if there are changes to commit
+      const status = execSync("git status --porcelain", { ...opts, stdio: "pipe" }).trim();
+      if (!status) {
+        return json({ success: true, steps: [...steps, "Nenhuma alteracao para publicar."] });
+      }
+
+      // 3. Stage data files, covers, decks, manuals
+      const filesToAdd = [
+        "src/data/collections.json",
+        "src/data/testimonials.json",
+        "src/data/settings.json",
+        "public/images/covers/",
+        "public/images/decks/",
+        "public/manuals/",
+      ];
+      for (const f of filesToAdd) {
+        try {
+          execSync(`git add "${f}"`, { ...opts, stdio: "pipe" });
+        } catch {}
+      }
+      steps.push("Arquivos preparados para commit.");
+
+      // 4. Commit
+      const now = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+      execSync(`git commit -m "Atualizar site via admin (${now})"`, { ...opts, stdio: "pipe" });
+      steps.push("Commit criado.");
+
+      // 5. Push
+      execSync("git push origin main", { ...opts, stdio: "pipe" });
+      steps.push("Enviado para o servidor. O site sera atualizado em alguns minutos.");
+
+      return json({ success: true, steps });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return json({ success: false, steps: [...steps, `Erro: ${msg}`] }, 500);
+    }
   }
 
   return new Response("Not found", { status: 404 });
