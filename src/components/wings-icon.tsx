@@ -1,0 +1,55 @@
+export function WingsIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      {/* Left wing */}
+      <path
+        d="M24 28C20 24 14 18 6 16C4 15.5 2 16 2 18C2 22 6 28 12 32C16 34.5 20 35 24 34"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M24 30C20 26 15 21 8 20"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        opacity="0.6"
+      />
+      <path
+        d="M24 32C19 28 13 24 7 24"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+      {/* Right wing */}
+      <path
+        d="M24 28C28 24 34 18 42 16C44 15.5 46 16 46 18C46 22 42 28 36 32C32 34.5 28 35 24 34"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M24 30C28 26 33 21 40 20"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        opacity="0.6"
+      />
+      <path
+        d="M24 32C29 28 35 24 41 24"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+    </svg>
+  );
+}

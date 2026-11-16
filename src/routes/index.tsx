@@ -1,11 +1,46 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Brush, MessageCircle, Package, Sparkles, Star } from "lucide-react";
+import { useState } from "react";
+import {
+  ArrowRight,
+  Brush,
+  ClipboardPaste,
+  MessageCircle,
+  Package,
+  Palette,
+  Quote,
+  Sparkles,
+  Star,
+} from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import { PageShell } from "@/components/page-shell";
 import { CollectionCard } from "@/components/card-tile";
 import { collections } from "@/lib/store-data";
+import { WingsIcon } from "@/components/wings-icon";
 
 const WHATSAPP_URL = "https://wa.me/5551984315964";
+
+const testimonials = [
+  {
+    name: "Lucas M.",
+    text: "As cartas ficaram absurdas, parece obra de arte de verdade. Meu deck de Castlevania e o mais bonito da mesa toda.",
+    deck: "Castlevania",
+  },
+  {
+    name: "Rafaela S.",
+    text: "Encomendei o deck de Cavaleiros do Zodiaco e superou todas as expectativas. A qualidade da impressao e o nivel de detalhe sao incriveis.",
+    deck: "Cavaleiros do Zodiaco",
+  },
+  {
+    name: "Pedro H.",
+    text: "Pedi um tema personalizado de Final Fantasy e o resultado ficou perfeito. Atendimento rapido e muito atencioso.",
+    deck: "Final Fantasy VII",
+  },
+  {
+    name: "Mariana C.",
+    text: "Ja comprei 3 decks e cada um melhor que o outro. A Casa do Serafim e referencia em proxy full art no Brasil.",
+    deck: "Cliente recorrente",
+  },
+];
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -14,6 +49,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <PageShell>
+      {/* Hero */}
       <section className="relative overflow-hidden">
         <img
           src={hero}
@@ -50,6 +86,7 @@ function Home() {
         </div>
       </section>
 
+      {/* Features */}
       <section className="mx-auto max-w-7xl px-5 py-16">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -67,6 +104,7 @@ function Home() {
         </div>
       </section>
 
+      {/* Collections */}
       <section className="mx-auto max-w-7xl px-5 py-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -85,6 +123,16 @@ function Home() {
         </div>
       </section>
 
+      {/* Cole sua lista / Escolha seu deck proxy */}
+      <DeckListSection />
+
+      {/* Voce escolhe o tema */}
+      <ThemeBuilderSection />
+
+      {/* Depoimentos */}
+      <TestimonialsSection />
+
+      {/* CTA Final */}
       <section className="mx-auto max-w-7xl px-5 pb-8">
         <div className="surface-card flex flex-wrap items-center justify-between gap-6 p-10">
           <div className="min-w-0">
@@ -105,5 +153,248 @@ function Home() {
         </div>
       </section>
     </PageShell>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Secao: Cole sua lista / Escolha seu deck proxy                    */
+/* ------------------------------------------------------------------ */
+
+function DeckListSection() {
+  const [list, setList] = useState("");
+
+  const handleSend = () => {
+    const msg = encodeURIComponent(
+      `Oi! Gostaria de encomendar proxies para a seguinte lista:\n\n${list}`,
+    );
+    window.open(`${WHATSAPP_URL}?text=${msg}`, "_blank");
+  };
+
+  return (
+    <section className="mx-auto max-w-7xl px-5 py-16">
+      <div className="grid gap-10 lg:grid-cols-2">
+        {/* Lado esquerdo — explicacao */}
+        <div>
+          <div className="flex items-center gap-3">
+            <ClipboardPaste className="size-5 text-gold" />
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">Escolha seu deck proxy</p>
+          </div>
+          <h2 className="mt-4 text-3xl sm:text-4xl">Cole a lista, nos imprimimos pra voce</h2>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            Ja tem sua lista pronta? Cole aqui no formato padrao (1x Card Name) e envie
+            direto pelo WhatsApp. Nos cuidamos da arte e da impressao.
+          </p>
+
+          <div className="mt-8 space-y-4">
+            <div className="surface-card p-5">
+              <p className="text-xs uppercase tracking-[0.2em] text-gold">Como importar sua lista</p>
+              <ol className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <li className="flex gap-2">
+                  <span className="font-display text-gold">1.</span>
+                  Exporte sua lista do Moxfield, Archidekt ou Deckcheck
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-display text-gold">2.</span>
+                  Cole no campo ao lado no formato: 1x Sol Ring
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-display text-gold">3.</span>
+                  Clique em enviar — a conversa abre direto no WhatsApp
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-display text-gold">4.</span>
+                  Combinamos arte, tema e prazo com voce
+                </li>
+              </ol>
+            </div>
+
+            <p className="text-xs text-muted-foreground/60">
+              Formatos aceitos: Moxfield export, MTGO format, texto simples (1x Nome da Carta).
+              Tambem aceitamos links do Moxfield ou Archidekt direto.
+            </p>
+          </div>
+        </div>
+
+        {/* Lado direito — textarea + botao */}
+        <div className="flex flex-col">
+          <label htmlFor="decklist" className="text-sm font-medium text-muted-foreground">
+            Sua lista de cartas
+          </label>
+          <textarea
+            id="decklist"
+            value={list}
+            onChange={(e) => setList(e.target.value)}
+            rows={14}
+            placeholder={`1x Sol Ring\n1x Command Tower\n1x Arcane Signet\n1x Lightning Greaves\n1x Swords to Plowshares\n...\n\nOu cole o link do Moxfield/Archidekt`}
+            className="mt-2 flex-1 resize-none rounded-xl border border-border bg-card px-4 py-3 text-sm leading-relaxed outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-gold/60"
+          />
+          <button
+            onClick={handleSend}
+            disabled={list.trim().length === 0}
+            className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-7 py-3.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <MessageCircle className="size-4" /> Enviar lista via WhatsApp
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Secao: Voce escolhe o tema, nos fazemos acontecer                 */
+/* ------------------------------------------------------------------ */
+
+function ThemeBuilderSection() {
+  const [archetype, setArchetype] = useState("");
+  const [theme, setTheme] = useState("");
+  const [commander, setCommander] = useState("");
+  const [notes, setNotes] = useState("");
+
+  const handleSend = () => {
+    const parts = [
+      `Oi! Quero encomendar um deck personalizado.`,
+      commander && `Comandante: ${commander}`,
+      archetype && `Arquetipo: ${archetype}`,
+      theme && `Tema desejado: ${theme}`,
+      notes && `Observacoes: ${notes}`,
+    ].filter(Boolean);
+    const msg = encodeURIComponent(parts.join("\n"));
+    window.open(`${WHATSAPP_URL}?text=${msg}`, "_blank");
+  };
+
+  const canSend = theme.trim().length > 0 || commander.trim().length > 0;
+
+  return (
+    <section className="mx-auto max-w-7xl px-5 py-16">
+      <div className="surface-card overflow-hidden lg:grid lg:grid-cols-[1fr_1.2fr]">
+        {/* Lado esquerdo — motivacao */}
+        <div className="flex flex-col justify-center bg-gradient-to-br from-card to-background p-8 lg:p-12">
+          <div className="flex items-center gap-3">
+            <Palette className="size-5 text-gold" />
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">Deck personalizado</p>
+          </div>
+          <h2 className="mt-4 text-3xl leading-tight sm:text-4xl">
+            Voce escolhe o tema, nos fazemos acontecer
+          </h2>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            Quer um deck inteiro de Senhor dos Aneis? Ou um Commander de Zelda?
+            Conte pra gente qual e a vibe e nos criamos a arte completa.
+          </p>
+          <div className="mt-6">
+            <WingsIcon className="size-16 text-gold/30" />
+          </div>
+        </div>
+
+        {/* Lado direito — formulario */}
+        <div className="space-y-5 p-8 lg:p-12">
+          <div>
+            <label htmlFor="commander" className="text-sm font-medium text-muted-foreground">
+              Comandante (ou deck)
+            </label>
+            <input
+              id="commander"
+              value={commander}
+              onChange={(e) => setCommander(e.target.value)}
+              placeholder="Ex: Edgar Markov, Atraxa, Omnath..."
+              className="mt-1.5 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-gold/60"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="archetype" className="text-sm font-medium text-muted-foreground">
+              Arquetipo do deck
+            </label>
+            <select
+              id="archetype"
+              value={archetype}
+              onChange={(e) => setArchetype(e.target.value)}
+              className="mt-1.5 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-gold/60"
+            >
+              <option value="">Selecione...</option>
+              <option value="Aggro">Aggro</option>
+              <option value="Control">Control</option>
+              <option value="Combo">Combo</option>
+              <option value="Midrange">Midrange</option>
+              <option value="Stax">Stax</option>
+              <option value="Tribal">Tribal</option>
+              <option value="Voltron">Voltron</option>
+              <option value="Mill">Mill</option>
+              <option value="Reanimator">Reanimator</option>
+              <option value="Tokens">Tokens</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="theme" className="text-sm font-medium text-muted-foreground">
+              Tema desejado
+            </label>
+            <input
+              id="theme"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+              placeholder="Ex: Castlevania, Senhor dos Aneis, Cyberpunk, Zelda..."
+              className="mt-1.5 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-gold/60"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="notes" className="text-sm font-medium text-muted-foreground">
+              Observacoes (opcional)
+            </label>
+            <textarea
+              id="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={3}
+              placeholder="Preferencias de cor, estilo de arte, referencias..."
+              className="mt-1.5 w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-gold/60"
+            />
+          </div>
+
+          <button
+            onClick={handleSend}
+            disabled={!canSend}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-7 py-3.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <MessageCircle className="size-4" /> Solicitar orcamento via WhatsApp
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Secao: Depoimentos                                                */
+/* ------------------------------------------------------------------ */
+
+function TestimonialsSection() {
+  return (
+    <section className="mx-auto max-w-7xl px-5 py-16">
+      <p className="text-xs uppercase tracking-[0.3em] text-gold">Depoimentos</p>
+      <h2 className="mt-3 text-3xl sm:text-4xl">O que dizem nossos clientes</h2>
+
+      <div className="mt-10 grid gap-6 sm:grid-cols-2">
+        {testimonials.map((t, i) => (
+          <div key={i} className="surface-card p-7">
+            <Quote className="size-5 text-gold/40" />
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              "{t.text}"
+            </p>
+            <div className="mt-5 flex items-center gap-3 border-t border-border/50 pt-4">
+              <div className="flex size-9 items-center justify-center rounded-full bg-gold/10 font-display text-sm text-gold">
+                {t.name.charAt(0)}
+              </div>
+              <div>
+                <p className="text-sm font-medium">{t.name}</p>
+                <p className="text-xs text-muted-foreground">{t.deck}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

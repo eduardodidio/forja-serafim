@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, MessageCircle, Sparkles } from "lucide-react";
+import { Menu, MessageCircle } from "lucide-react";
+import { WingsIcon } from "@/components/wings-icon";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +20,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-4 sm:flex sm:justify-between">
         <Link to="/" className="flex min-w-0 items-center gap-3">
-          <Sparkles className="size-5 shrink-0 text-gold" />
+          <WingsIcon className="size-6 shrink-0 text-gold" />
           <span className="truncate font-display text-lg tracking-[0.18em] uppercase text-gradient-gold sm:text-xl">
             A Casa do Serafim
           </span>
