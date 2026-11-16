@@ -289,13 +289,7 @@ async function handleRequest(req: Request): Promise<Response> {
       execSync("bun run build", { ...opts, stdio: "pipe" });
       steps.push("Build concluido.");
 
-      // 2. Check if there are changes to commit
-      const status = execSync("git status --porcelain", { ...opts, stdio: "pipe" }).trim();
-      if (!status) {
-        return json({ success: true, steps: [...steps, "Nenhuma alteracao para publicar."] });
-      }
-
-      // 3. Stage data files, covers, decks, manuals
+      // 2. Stage data files, covers, decks, manuals
       const filesToAdd = [
         "src/data/collections.json",
         "src/data/testimonials.json",
@@ -309,16 +303,25 @@ async function handleRequest(req: Request): Promise<Response> {
           execSync(`git add "${f}"`, { ...opts, stdio: "pipe" });
         } catch {}
       }
-      steps.push("Arquivos preparados para commit.");
 
-      // 4. Commit
-      const now = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
-      execSync(`git commit -m "Atualizar site via admin (${now})"`, { ...opts, stdio: "pipe" });
-      steps.push("Commit criado.");
+      // 3. Check if there are staged changes to commit
+      const diff = execSync("git diff --cached --name-only", { ...opts, stdio: "pipe" }).trim();
+      if (diff) {
+        const now = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+        execSync(`git commit -m "Atualizar site via admin (${now})"`, { ...opts, stdio: "pipe" });
+        steps.push("Alteracoes salvas: " + diff.split("\n").join(", "));
+      } else {
+        steps.push("Dados ja estavam salvos.");
+      }
 
-      // 5. Push
-      execSync("git push origin main", { ...opts, stdio: "pipe" });
-      steps.push("Enviado para o servidor. O site sera atualizado em alguns minutos.");
+      // 4. Push (always push, in case there are unpushed commits)
+      const ahead = execSync("git rev-list --count @{u}..HEAD", { ...opts, stdio: "pipe" }).trim();
+      if (ahead !== "0") {
+        execSync("git push origin main", { ...opts, stdio: "pipe" });
+        steps.push("Enviado para o servidor. O site sera atualizado em alguns minutos.");
+      } else {
+        steps.push("O site ja esta atualizado com a versao mais recente.");
+      }
 
       return json({ success: true, steps });
     } catch (err: unknown) {
