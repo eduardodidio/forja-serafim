@@ -19,28 +19,8 @@ import { WingsIcon } from "@/components/wings-icon";
 
 const WHATSAPP_URL = "https://wa.me/5551984315964";
 
-const testimonials = [
-  {
-    name: "Lucas M.",
-    text: "As cartas ficaram absurdas, parece obra de arte de verdade. Meu deck de Castlevania e o mais bonito da mesa toda.",
-    deck: "Castlevania",
-  },
-  {
-    name: "Rafaela S.",
-    text: "Encomendei o deck de Cavaleiros do Zodiaco e superou todas as expectativas. A qualidade da impressao e o nivel de detalhe sao incriveis.",
-    deck: "Cavaleiros do Zodiaco",
-  },
-  {
-    name: "Pedro H.",
-    text: "Pedi um tema personalizado de Final Fantasy e o resultado ficou perfeito. Atendimento rapido e muito atencioso.",
-    deck: "Final Fantasy VII",
-  },
-  {
-    name: "Mariana C.",
-    text: "Ja comprei 3 decks e cada um melhor que o outro. A Casa do Serafim e referencia em proxy full art no Brasil.",
-    deck: "Cliente recorrente",
-  },
-];
+// Testimonials managed via admin tool — keep empty until real reviews are added
+const testimonials: { name: string; text: string; deck: string }[] = [];
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -129,8 +109,8 @@ function Home() {
       {/* Voce escolhe o tema */}
       <ThemeBuilderSection />
 
-      {/* Depoimentos */}
-      <TestimonialsSection />
+      {/* Depoimentos — só exibe quando houver reviews reais */}
+      {testimonials.length > 0 && <TestimonialsSection />}
 
       {/* CTA Final */}
       <section className="mx-auto max-w-7xl px-5 pb-8">
