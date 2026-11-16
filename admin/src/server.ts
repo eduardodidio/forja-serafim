@@ -9,7 +9,32 @@ import { processImage } from "./lib/image-processor.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ADMIN_HTML = join(__dirname, "..", "public", "index.html");
-const PORT = 3001;
+const PORT = parseInt(process.env.PORT || "3001", 10);
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
+
+function checkAuth(req: Request): Response | null {
+  // Skip auth if no password configured (local dev)
+  if (!ADMIN_PASSWORD) return null;
+
+  const auth = req.headers.get("Authorization");
+  if (!auth || !auth.startsWith("Basic ")) {
+    return new Response("Acesso negado", {
+      status: 401,
+      headers: { "WWW-Authenticate": 'Basic realm="A Casa do Serafim Admin"' },
+    });
+  }
+
+  const decoded = atob(auth.slice(6));
+  const [, password] = decoded.split(":");
+  if (password !== ADMIN_PASSWORD) {
+    return new Response("Senha incorreta", {
+      status: 401,
+      headers: { "WWW-Authenticate": 'Basic realm="A Casa do Serafim Admin"' },
+    });
+  }
+
+  return null;
+}
 
 type Collection = {
   slug: string;
@@ -57,6 +82,10 @@ async function handleRequest(req: Request): Promise<Response> {
   const method = req.method;
 
   if (method === "OPTIONS") return cors();
+
+  // Auth gate (skipped if ADMIN_PASSWORD not set)
+  const authResponse = checkAuth(req);
+  if (authResponse) return authResponse;
 
   // Serve admin UI
   if (path === "/" || path === "/admin") {
@@ -366,8 +395,26 @@ async function handleRequest(req: Request): Promise<Response> {
   return new Response("Not found", { status: 404 });
 }
 
+// Configure git for remote server (needed for commit/push on Render)
+if (process.env.GITHUB_TOKEN) {
+  try {
+    const remote = execSync("git remote get-url origin", { cwd: PROJECT_ROOT, encoding: "utf-8" }).trim();
+    // Convert https://github.com/user/repo.git to https://token@github.com/user/repo.git
+    if (remote.startsWith("https://") && !remote.includes("@")) {
+      const authedRemote = remote.replace("https://", `https://${process.env.GITHUB_TOKEN}@`);
+      execSync(`git remote set-url origin "${authedRemote}"`, { cwd: PROJECT_ROOT, encoding: "utf-8" });
+    }
+    // Set git identity if not configured
+    try { execSync("git config user.email", { cwd: PROJECT_ROOT, stdio: "pipe" }); } catch {
+      execSync('git config user.email "admin@casadoserafim.com.br"', { cwd: PROJECT_ROOT });
+      execSync('git config user.name "Serafim Admin"', { cwd: PROJECT_ROOT });
+    }
+  } catch {}
+}
+
 console.log(`\n  A Casa do Serafim — Admin Web`);
-console.log(`  http://localhost:${PORT}/admin/\n`);
+console.log(`  http://localhost:${PORT}/admin/`);
+console.log(`  Auth: ${ADMIN_PASSWORD ? "ENABLED" : "DISABLED (local dev)"}\n`);
 
 Bun.serve({
   port: PORT,
