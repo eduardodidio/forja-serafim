@@ -1181,10 +1181,77 @@ async function doPublish() {
   btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg> Publicar';
 }
 
-// --- Init ---
-loadCollections();
-loadTestimonials();
-loadSettings();
+// --- Escape key closes modals ---
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('modal');
+    if (modal && !modal.classList.contains('hidden')) {
+      closeModal();
+    }
+  }
+});
+
+// --- Double-click protection helper ---
+function withGuard(btn, asyncFn) {
+  return async function(...args) {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    try {
+      await asyncFn(...args);
+    } finally {
+      btn.disabled = false;
+    }
+  };
+}
+
+// --- Drag-and-drop for upload zones ---
+document.addEventListener('dragover', (e) => {
+  const zone = e.target.closest('.upload-zone');
+  if (zone) {
+    e.preventDefault();
+    zone.classList.add('border-gold/40', 'bg-gold/5');
+  }
+});
+document.addEventListener('dragleave', (e) => {
+  const zone = e.target.closest('.upload-zone');
+  if (zone) {
+    zone.classList.remove('border-gold/40', 'bg-gold/5');
+  }
+});
+document.addEventListener('drop', (e) => {
+  const zone = e.target.closest('.upload-zone');
+  if (zone) {
+    e.preventDefault();
+    zone.classList.remove('border-gold/40', 'bg-gold/5');
+    const input = zone.querySelector('input[type="file"]');
+    if (input && e.dataTransfer.files.length > 0) {
+      input.files = e.dataTransfer.files;
+      input.dispatchEvent(new Event('change'));
+    }
+  }
+});
+
+// --- Init with error handling ---
+async function init() {
+  try {
+    await loadCollections();
+  } catch (err) {
+    document.getElementById('collections-list').innerHTML =
+      '<div class="card text-center py-8"><p class="text-red-400 mb-3">Erro ao carregar colecoes</p><button onclick="loadCollections()" class="btn btn-outline text-xs">Tentar novamente</button></div>';
+  }
+  try {
+    await loadTestimonials();
+  } catch (err) {
+    document.getElementById('testimonials-list').innerHTML =
+      '<div class="card text-center py-8"><p class="text-red-400 mb-3">Erro ao carregar depoimentos</p><button onclick="loadTestimonials()" class="btn btn-outline text-xs">Tentar novamente</button></div>';
+  }
+  try {
+    await loadSettings();
+  } catch (err) {
+    toast('Erro ao carregar configuracoes', 'error');
+  }
+}
+init();
 </script>
 </body>
 </html>

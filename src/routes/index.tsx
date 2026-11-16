@@ -16,10 +16,38 @@ import { PageShell } from "@/components/page-shell";
 import { CollectionCard } from "@/components/card-tile";
 import { collections, testimonials, WHATSAPP_URL, whatsappLink } from "@/lib/store-data";
 import { WingsIcon } from "@/components/wings-icon";
+import { useReveal } from "@/hooks/useReveal";
+import { SITE } from "@/lib/seo";
+
+function Reveal({ direction = "up" as "up" | "left" | "right", delay = 0, children, className = "" }: {
+  direction?: "up" | "left" | "right";
+  delay?: number;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const { ref, style } = useReveal(direction, delay);
+  return <div ref={ref} style={style} className={className}>{children}</div>;
+}
 
 
 export const Route = createFileRoute("/")({
   component: Home,
+  head: () => ({
+    meta: [
+      { title: `A Casa do Serafim — Proxies Full Art para MTG` },
+      { name: "description", content: SITE.DESCRIPTION },
+      { property: "og:title", content: "A Casa do Serafim — Proxies Full Art para MTG" },
+      { property: "og:description", content: SITE.DESCRIPTION },
+      { property: "og:image", content: SITE.IMAGE },
+      { property: "og:url", content: SITE.URL },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "A Casa do Serafim — Proxies Full Art para MTG" },
+      { name: "twitter:description", content: SITE.DESCRIPTION },
+      { name: "twitter:image", content: SITE.IMAGE },
+    ],
+    links: [{ rel: "canonical", href: SITE.URL }],
+  }),
 });
 
 function Home() {
@@ -70,12 +98,14 @@ function Home() {
             { icon: Package, t: "Impressao premium", d: "Papel de alta gramatura e acabamento fosco." },
             { icon: Star, t: "Opcao foil", d: "Acabamento holografico sob encomenda." },
             { icon: Sparkles, t: "Decks tematicos", d: "Universos inteiros aplicados ao seu commander." },
-          ].map(({ icon: Icon, t, d }) => (
-            <div key={t} className="surface-card p-6">
-              <Icon className="size-5 text-gold" />
-              <p className="mt-4 font-display text-base">{t}</p>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{d}</p>
-            </div>
+          ].map(({ icon: Icon, t, d }, i) => (
+            <Reveal key={t} delay={i * 100}>
+              <div className="surface-card p-6 h-full">
+                <Icon className="size-5 text-gold" />
+                <p className="mt-4 font-display text-base">{t}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{d}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -93,8 +123,10 @@ function Home() {
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {collections.map((c) => (
-            <CollectionCard key={c.slug} collection={c} />
+          {collections.map((c, i) => (
+            <Reveal key={c.slug} delay={i * 120}>
+              <CollectionCard collection={c} />
+            </Reveal>
           ))}
         </div>
       </section>
@@ -109,6 +141,7 @@ function Home() {
       {testimonials.length > 0 && <TestimonialsSection />}
 
       {/* CTA Final */}
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 pb-8">
         <div className="surface-card flex flex-wrap items-center justify-between gap-6 p-10">
           <div className="min-w-0">
@@ -128,6 +161,7 @@ function Home() {
           </a>
         </div>
       </section>
+      </Reveal>
     </PageShell>
   );
 }
@@ -354,7 +388,8 @@ function TestimonialsSection() {
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2">
         {testimonials.map((t, i) => (
-          <div key={i} className="surface-card p-7">
+          <Reveal key={i} direction={i % 2 === 0 ? "left" : "right"} delay={i * 100}>
+          <div className="surface-card p-7">
             <Quote className="size-5 text-gold/40" />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               "{t.text}"
@@ -369,6 +404,7 @@ function TestimonialsSection() {
               </div>
             </div>
           </div>
+          </Reveal>
         ))}
       </div>
     </section>

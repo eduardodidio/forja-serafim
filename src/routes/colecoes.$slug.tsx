@@ -2,10 +2,35 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ExternalLink, FileText } from "lucide-react";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
+import { Lightbox } from "@/components/lightbox";
 import { getCollection, whatsappLink } from "@/lib/store-data";
+import { getProductJsonLd, getBreadcrumbJsonLd, SITE } from "@/lib/seo";
 
 export const Route = createFileRoute("/colecoes/$slug")({
   component: CollectionPage,
+  head: ({ params }) => {
+    const c = getCollection(params.slug);
+    if (!c) return {};
+    const image = c.image.startsWith("http") ? c.image : `${SITE.URL}${c.image}`;
+    return {
+      meta: [
+        { title: `${c.name} — Deck Proxy Full Art | ${SITE.NAME}` },
+        { name: "description", content: `${c.description} ${c.cardCount} cartas com arte autoral premium.` },
+        { property: "og:title", content: `${c.name} — Deck Proxy Full Art` },
+        { property: "og:description", content: c.description },
+        { property: "og:image", content: image },
+        { property: "og:url", content: `${SITE.URL}/colecoes/${c.slug}` },
+        { property: "og:type", content: "product" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: `${c.name} — Deck Proxy Full Art` },
+        { name: "twitter:description", content: c.description },
+        { name: "twitter:image", content: image },
+      ],
+      links: [
+        { rel: "canonical", href: `${SITE.URL}/colecoes/${c.slug}` },
+      ],
+    };
+  },
 });
 
 function CollectionPage() {
@@ -22,8 +47,26 @@ function CollectionPage() {
     `Oi! Vim pelo site e tenho interesse no deck ${collection.name} da Casa do Serafim. Pode me passar mais detalhes?`,
   );
 
+  const productJsonLd = getProductJsonLd(slug);
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: SITE.URL },
+    { name: "Colecoes", url: `${SITE.URL}/colecoes` },
+    { name: collection.name, url: `${SITE.URL}/colecoes/${slug}` },
+  ]);
+
   return (
     <PageShell>
+      {productJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       <section className="relative overflow-hidden border-b border-border/70">
         <img
           src={collection.image}
@@ -51,30 +94,35 @@ function CollectionPage() {
         {collection.sampleImages.length > 0 && (
           <div className="mb-12">
             <h2 className="mb-6 text-2xl">Amostra do deck</h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {collection.sampleImages.map((img, i) => (
-                <div
-                  key={i}
-                  className="art-frame overflow-hidden bg-card"
-                  onContextMenu={(e) => e.preventDefault()}
-                >
-                  <img
-                    src={img}
-                    alt={`Amostra ${i + 1} da colecao ${collection.name}`}
-                    loading="lazy"
-                    width={600}
-                    height={840}
-                    className="size-full object-cover"
-                    style={{
-                      userSelect: "none",
-                      WebkitUserDrag: "none",
-                      pointerEvents: "none",
-                    } as React.CSSProperties}
-                    draggable={false}
-                  />
+            <Lightbox images={collection.sampleImages} alt={`Amostra da colecao ${collection.name}`}>
+              {(openLightbox) => (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {collection.sampleImages.map((img, i) => (
+                    <div
+                      key={i}
+                      className="art-frame cursor-pointer overflow-hidden bg-card transition-transform hover:scale-[1.02]"
+                      onClick={() => openLightbox(i)}
+                      onContextMenu={(e) => e.preventDefault()}
+                    >
+                      <img
+                        src={img}
+                        alt={`Amostra ${i + 1} da colecao ${collection.name}`}
+                        loading="lazy"
+                        width={600}
+                        height={840}
+                        className="size-full object-cover"
+                        style={{
+                          userSelect: "none",
+                          WebkitUserDrag: "none",
+                          pointerEvents: "none",
+                        } as React.CSSProperties}
+                        draggable={false}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              )}
+            </Lightbox>
             <p className="mt-4 text-xs text-muted-foreground/60">
               Imagens ilustrativas com marca d'agua. As cartas finais possuem qualidade superior.
             </p>
