@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "admin": "bun admin/src/cli.ts"
+    "admin": "bun admin/src/server.ts",
+    "admin:cli": "bun admin/src/cli.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — A Casa do Serafim</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            gold: '#d4a853',
+            surface: '#1a1a2e',
+            deeper: '#12121f',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; }
+    .tab-active { border-color: #d4a853; color: #d4a853; }
+    .btn { @apply px-4 py-2 rounded-lg text-sm font-medium transition-colors; }
+    .btn-gold { @apply bg-gold text-black hover:bg-yellow-500; }
+    .btn-outline { @apply border border-gray-600 text-gray-300 hover:border-gold hover:text-gold; }
+    .btn-danger { @apply border border-red-800 text-red-400 hover:bg-red-900/50; }
+    .input { @apply w-full rounded-lg border border-gray-700 bg-deeper px-3 py-2 text-sm text-gray-200 outline-none focus:border-gold/60; }
+    .card { @apply rounded-xl border border-gray-800 bg-surface p-5; }
+    .toast { @apply fixed bottom-5 right-5 rounded-lg px-5 py-3 text-sm font-medium shadow-lg z-50 transition-opacity duration-300; }
+  </style>
+</head>
+<body class="min-h-screen bg-deeper text-gray-200">
+
+  <!-- Header -->
+  <header class="border-b border-gray-800 bg-surface">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+      <div>
+        <h1 class="text-lg font-bold text-gold">A Casa do Serafim</h1>
+        <p class="text-xs text-gray-500">Painel Administrativo</p>
+      </div>
+      <a href="http://localhost:8080" target="_blank" class="text-xs text-gray-500 hover:text-gold transition-colors">
+        Ver site &rarr;
+      </a>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="border-b border-gray-800 bg-surface">
+    <div class="mx-auto flex max-w-6xl gap-0 px-5">
+      <button onclick="showTab('collections')" id="tab-collections" class="border-b-2 border-transparent px-5 py-3 text-sm text-gray-400 hover:text-gray-200 transition-colors tab-active">
+        Colecoes
+      </button>
+      <button onclick="showTab('testimonials')" id="tab-testimonials" class="border-b-2 border-transparent px-5 py-3 text-sm text-gray-400 hover:text-gray-200 transition-colors">
+        Depoimentos
+      </button>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="mx-auto max-w-6xl px-5 py-8">
+
+    <!-- Collections Tab -->
+    <div id="panel-collections">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold">Colecoes</h2>
+        <button onclick="openAddCollection()" class="btn btn-gold">+ Nova colecao</button>
+      </div>
+      <div id="collections-list" class="grid gap-4"></div>
+    </div>
+
+    <!-- Testimonials Tab -->
+    <div id="panel-testimonials" class="hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold">Depoimentos</h2>
+        <button onclick="openAddTestimonial()" class="btn btn-gold">+ Novo depoimento</button>
+      </div>
+      <div id="testimonials-list" class="grid gap-4"></div>
+    </div>
+  </main>
+
+  <!-- Modal backdrop -->
+  <div id="modal-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden" onclick="closeModal()"></div>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+    <div class="w-full max-w-lg rounded-xl border border-gray-800 bg-surface p-6 shadow-2xl" onclick="event.stopPropagation()">
+      <h3 id="modal-title" class="text-lg font-semibold mb-4"></h3>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast bg-green-900 text-green-200 hidden"></div>
+
+<script>
+const API = '';
+
+// --- State ---
+let collections = [];
+let testimonials = [];
+
+// --- Tabs ---
+function showTab(tab) {
+  document.getElementById('panel-collections').classList.toggle('hidden', tab !== 'collections');
+  document.getElementById('panel-testimonials').classList.toggle('hidden', tab !== 'testimonials');
+  document.getElementById('tab-collections').classList.toggle('tab-active', tab === 'collections');
+  document.getElementById('tab-testimonials').classList.toggle('tab-active', tab === 'testimonials');
+}
+
+// --- Toast ---
+function toast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type === 'success' ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'}`;
+  el.classList.remove('hidden');
+  setTimeout(() => el.classList.add('hidden'), 3000);
+}
+
+// --- Modal ---
+function openModal(title, html) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('modal-backdrop').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.add('hidden');
+  document.getElementById('modal-backdrop').classList.add('hidden');
+}
+
+// --- Collections ---
+async function loadCollections() {
+  const res = await fetch(`${API}/api/collections`);
+  collections = await res.json();
+  renderCollections();
+}
+
+function renderCollections() {
+  const el = document.getElementById('collections-list');
+  if (collections.length === 0) {
+    el.innerHTML = '<p class="text-gray-500 text-sm">Nenhuma colecao cadastrada.</p>';
+    return;
+  }
+  el.innerHTML = collections.map(c => `
+    <div class="card">
+      <div class="flex gap-5">
+        <div class="w-24 h-24 rounded-lg bg-deeper overflow-hidden flex-shrink-0">
+          <img src="http://localhost:8080${c.image}" alt="${c.name}" class="w-full h-full object-cover"
+               onerror="this.style.display='none'" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="font-semibold text-gold">${esc(c.name)}</h3>
+              <p class="text-xs text-gray-500 mt-0.5">${esc(c.slug)} &middot; ${c.cardCount} cartas</p>
+            </div>
+            <div class="flex gap-2 flex-shrink-0">
+              <button onclick="openEditCollection('${c.slug}')" class="btn btn-outline text-xs">Editar</button>
+              <button onclick="deleteCollection('${c.slug}')" class="btn btn-danger text-xs">Remover</button>
+            </div>
+          </div>
+          <p class="text-sm text-gray-400 mt-2">${esc(c.description)}</p>
+          <div class="flex flex-wrap gap-3 mt-3">
+            ${c.deckcheckUrl ? `<span class="text-xs text-green-400">DeckCheck ✓</span>` : `<span class="text-xs text-gray-600">DeckCheck —</span>`}
+            ${c.moxfieldUrl ? `<span class="text-xs text-green-400">Moxfield ✓</span>` : `<span class="text-xs text-gray-600">Moxfield —</span>`}
+            ${c.manualUrl ? `<span class="text-xs text-green-400">Manual ✓</span>` : `<span class="text-xs text-gray-600">Manual —</span>`}
+            <span class="text-xs text-gray-500">${c.sampleImages.length} amostras</span>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <label class="btn btn-outline text-xs cursor-pointer">
+              Capa <input type="file" accept="image/*" class="hidden" onchange="uploadCover('${c.slug}', this)" />
+            </label>
+            <label class="btn btn-outline text-xs cursor-pointer">
+              Imagens <input type="file" accept="image/*" multiple class="hidden" onchange="uploadImages('${c.slug}', this)" />
+            </label>
+            <label class="btn btn-outline text-xs cursor-pointer">
+              Manual PDF <input type="file" accept=".pdf" class="hidden" onchange="uploadManual('${c.slug}', this)" />
+            </label>
+          </div>
+        </div>
+      </div>
+      ${c.sampleImages.length > 0 ? `
+        <div class="mt-4 flex gap-2 overflow-x-auto pb-1">
+          ${c.sampleImages.map(img => `
+            <img src="http://localhost:8080${img}" class="h-20 w-14 rounded object-cover flex-shrink-0 border border-gray-700"
+                 onerror="this.style.display='none'" />
+          `).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+function openAddCollection() {
+  openModal('Nova colecao', `
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs text-gray-400">Nome</label>
+        <input id="f-name" class="input mt-1" placeholder="Ex: Naruto Shippuden" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Descricao</label>
+        <input id="f-desc" class="input mt-1" placeholder="Descricao curta da colecao" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Quantidade de cartas</label>
+        <input id="f-cards" type="number" class="input mt-1" value="100" min="1" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">URL DeckCheck (opcional)</label>
+        <input id="f-deckcheck" class="input mt-1" placeholder="https://..." />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">URL Moxfield (opcional)</label>
+        <input id="f-moxfield" class="input mt-1" placeholder="https://..." />
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal()" class="btn btn-outline">Cancelar</button>
+        <button onclick="addCollection()" class="btn btn-gold">Adicionar</button>
+      </div>
+    </div>
+  `);
+}
+
+async function addCollection() {
+  const name = document.getElementById('f-name').value.trim();
+  const description = document.getElementById('f-desc').value.trim();
+  const cardCount = parseInt(document.getElementById('f-cards').value);
+  const deckcheckUrl = document.getElementById('f-deckcheck').value.trim();
+  const moxfieldUrl = document.getElementById('f-moxfield').value.trim();
+
+  if (!name || !description || !cardCount) { toast('Preencha todos os campos obrigatorios.', 'error'); return; }
+
+  const res = await fetch(`${API}/api/collections`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
+  });
+
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+
+  closeModal();
+  toast(`Colecao "${name}" adicionada!`);
+  await loadCollections();
+}
+
+function openEditCollection(slug) {
+  const c = collections.find(x => x.slug === slug);
+  if (!c) return;
+
+  openModal(`Editar: ${c.name}`, `
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs text-gray-400">Nome</label>
+        <input id="f-name" class="input mt-1" value="${esc(c.name)}" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Descricao</label>
+        <input id="f-desc" class="input mt-1" value="${esc(c.description)}" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Quantidade de cartas</label>
+        <input id="f-cards" type="number" class="input mt-1" value="${c.cardCount}" min="1" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">URL DeckCheck</label>
+        <input id="f-deckcheck" class="input mt-1" value="${esc(c.deckcheckUrl)}" placeholder="https://..." />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">URL Moxfield</label>
+        <input id="f-moxfield" class="input mt-1" value="${esc(c.moxfieldUrl)}" placeholder="https://..." />
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal()" class="btn btn-outline">Cancelar</button>
+        <button onclick="saveCollection('${slug}')" class="btn btn-gold">Salvar</button>
+      </div>
+    </div>
+  `);
+}
+
+async function saveCollection(slug) {
+  const name = document.getElementById('f-name').value.trim();
+  const description = document.getElementById('f-desc').value.trim();
+  const cardCount = parseInt(document.getElementById('f-cards').value);
+  const deckcheckUrl = document.getElementById('f-deckcheck').value.trim();
+  const moxfieldUrl = document.getElementById('f-moxfield').value.trim();
+
+  const res = await fetch(`${API}/api/collections/${slug}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
+  });
+
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+
+  closeModal();
+  toast('Colecao atualizada!');
+  await loadCollections();
+}
+
+async function deleteCollection(slug) {
+  const c = collections.find(x => x.slug === slug);
+  if (!confirm(`Remover "${c?.name}"? Essa acao nao pode ser desfeita.`)) return;
+
+  await fetch(`${API}/api/collections/${slug}`, { method: 'DELETE' });
+  toast('Colecao removida.');
+  await loadCollections();
+}
+
+async function uploadCover(slug, input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const fd = new FormData();
+  fd.append('file', file);
+
+  const res = await fetch(`${API}/api/collections/${slug}/cover`, { method: 'POST', body: fd });
+  if (!res.ok) { toast('Erro ao enviar capa.', 'error'); return; }
+
+  toast('Capa atualizada!');
+  input.value = '';
+  await loadCollections();
+}
+
+async function uploadImages(slug, input) {
+  const files = input.files;
+  if (!files.length) return;
+
+  toast(`Processando ${files.length} imagens...`);
+
+  const fd = new FormData();
+  for (const f of files) fd.append('files', f);
+
+  const res = await fetch(`${API}/api/collections/${slug}/images`, { method: 'POST', body: fd });
+  if (!res.ok) { toast('Erro ao processar imagens.', 'error'); return; }
+
+  const { processed } = await res.json();
+
+  // Add processed images as samples
+  const c = collections.find(x => x.slug === slug);
+  if (c) {
+    const allSamples = [...new Set([...c.sampleImages, ...processed])];
+    await fetch(`${API}/api/collections/${slug}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sampleImages: allSamples }),
+    });
+  }
+
+  toast(`${processed.length} imagens processadas!`);
+  input.value = '';
+  await loadCollections();
+}
+
+async function uploadManual(slug, input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const fd = new FormData();
+  fd.append('file', file);
+
+  const res = await fetch(`${API}/api/collections/${slug}/manual`, { method: 'POST', body: fd });
+  if (!res.ok) { toast('Erro ao enviar manual.', 'error'); return; }
+
+  toast('Manual enviado!');
+  input.value = '';
+  await loadCollections();
+}
+
+// --- Testimonials ---
+async function loadTestimonials() {
+  const res = await fetch(`${API}/api/testimonials`);
+  testimonials = await res.json();
+  renderTestimonials();
+}
+
+function renderTestimonials() {
+  const el = document.getElementById('testimonials-list');
+  if (testimonials.length === 0) {
+    el.innerHTML = '<p class="text-gray-500 text-sm">Nenhum depoimento cadastrado.</p>';
+    return;
+  }
+  el.innerHTML = testimonials.map((t, i) => `
+    <div class="card">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-3">
+            <div class="flex size-9 items-center justify-center rounded-full bg-gold/10 font-semibold text-sm text-gold">
+              ${esc(t.name.charAt(0).toUpperCase())}
+            </div>
+            <div>
+              <p class="font-medium">${esc(t.name)}</p>
+              <p class="text-xs text-gray-500">${esc(t.deck) || 'Sem deck associado'}</p>
+            </div>
+          </div>
+          <p class="text-sm text-gray-400 mt-3 italic">"${esc(t.text)}"</p>
+        </div>
+        <div class="flex gap-2 flex-shrink-0">
+          <button onclick="openEditTestimonial(${i})" class="btn btn-outline text-xs">Editar</button>
+          <button onclick="deleteTestimonial(${i})" class="btn btn-danger text-xs">Remover</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openAddTestimonial() {
+  const deckOptions = collections.map(c =>
+    `<option value="${esc(c.name)}">${esc(c.name)}</option>`
+  ).join('');
+
+  openModal('Novo depoimento', `
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs text-gray-400">Nome do cliente</label>
+        <input id="f-tname" class="input mt-1" placeholder="Ex: Joao Silva" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Depoimento</label>
+        <textarea id="f-ttext" class="input mt-1" rows="3" placeholder="O que o cliente disse..."></textarea>
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Deck associado</label>
+        <select id="f-tdeck" class="input mt-1">
+          <option value="">(nenhum)</option>
+          ${deckOptions}
+        </select>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal()" class="btn btn-outline">Cancelar</button>
+        <button onclick="addTestimonial()" class="btn btn-gold">Adicionar</button>
+      </div>
+    </div>
+  `);
+}
+
+async function addTestimonial() {
+  const name = document.getElementById('f-tname').value.trim();
+  const text = document.getElementById('f-ttext').value.trim();
+  const deck = document.getElementById('f-tdeck').value;
+
+  if (!name || !text) { toast('Nome e texto sao obrigatorios.', 'error'); return; }
+
+  const res = await fetch(`${API}/api/testimonials`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, text, deck }),
+  });
+
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+
+  closeModal();
+  toast(`Depoimento de "${name}" adicionado!`);
+  await loadTestimonials();
+}
+
+function openEditTestimonial(idx) {
+  const t = testimonials[idx];
+  if (!t) return;
+
+  const deckOptions = collections.map(c =>
+    `<option value="${esc(c.name)}" ${c.name === t.deck ? 'selected' : ''}>${esc(c.name)}</option>`
+  ).join('');
+
+  openModal('Editar depoimento', `
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs text-gray-400">Nome do cliente</label>
+        <input id="f-tname" class="input mt-1" value="${esc(t.name)}" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Depoimento</label>
+        <textarea id="f-ttext" class="input mt-1" rows="3">${esc(t.text)}</textarea>
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Deck associado</label>
+        <select id="f-tdeck" class="input mt-1">
+          <option value="">(nenhum)</option>
+          ${deckOptions}
+        </select>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal()" class="btn btn-outline">Cancelar</button>
+        <button onclick="saveTestimonial(${idx})" class="btn btn-gold">Salvar</button>
+      </div>
+    </div>
+  `);
+}
+
+async function saveTestimonial(idx) {
+  const name = document.getElementById('f-tname').value.trim();
+  const text = document.getElementById('f-ttext').value.trim();
+  const deck = document.getElementById('f-tdeck').value;
+
+  const res = await fetch(`${API}/api/testimonials/${idx}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, text, deck }),
+  });
+
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+
+  closeModal();
+  toast('Depoimento atualizado!');
+  await loadTestimonials();
+}
+
+async function deleteTestimonial(idx) {
+  const t = testimonials[idx];
+  if (!confirm(`Remover depoimento de "${t?.name}"?`)) return;
+
+  await fetch(`${API}/api/testimonials/${idx}`, { method: 'DELETE' });
+  toast('Depoimento removido.');
+  await loadTestimonials();
+}
+
+// --- Utils ---
+function esc(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// --- Init ---
+loadCollections();
+loadTestimonials();
+</script>
+</body>
+</html>
