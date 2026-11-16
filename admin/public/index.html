@@ -55,6 +55,9 @@
       <button onclick="showTab('testimonials')" id="tab-testimonials" class="border-b-2 border-transparent px-5 py-3 text-sm text-gray-400 hover:text-gray-200 transition-colors">
         Depoimentos
       </button>
+      <button onclick="showTab('settings')" id="tab-settings" class="border-b-2 border-transparent px-5 py-3 text-sm text-gray-400 hover:text-gray-200 transition-colors">
+        Configuracoes
+      </button>
     </div>
   </nav>
 
@@ -78,14 +81,31 @@
       </div>
       <div id="testimonials-list" class="grid gap-4"></div>
     </div>
+
+    <!-- Settings Tab -->
+    <div id="panel-settings" class="hidden">
+      <h2 class="text-xl font-semibold mb-6">Configuracoes</h2>
+      <div class="card max-w-xl">
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs text-gray-400">Link do WhatsApp</label>
+            <input id="settings-whatsapp" class="input mt-1" placeholder="https://wa.me/5551999999999" />
+            <p class="text-xs text-gray-500 mt-1">Formato: https://wa.me/55XXXXXXXXXXX (codigo do pais + DDD + numero, sem espacos)</p>
+          </div>
+          <div class="flex justify-end">
+            <button onclick="saveSettings()" class="btn btn-gold">Salvar</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- Modal backdrop -->
   <div id="modal-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden" onclick="closeModal()"></div>
 
   <!-- Modal -->
-  <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-    <div class="w-full max-w-lg rounded-xl border border-gray-800 bg-surface p-6 shadow-2xl" onclick="event.stopPropagation()">
+  <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden overflow-y-auto">
+    <div class="w-full max-w-lg rounded-xl border border-gray-800 bg-surface p-6 shadow-2xl my-8" onclick="event.stopPropagation()">
       <h3 id="modal-title" class="text-lg font-semibold mb-4"></h3>
       <div id="modal-body"></div>
     </div>
@@ -100,13 +120,15 @@ const API = '';
 // --- State ---
 let collections = [];
 let testimonials = [];
+let settings = {};
 
 // --- Tabs ---
+const TABS = ['collections', 'testimonials', 'settings'];
 function showTab(tab) {
-  document.getElementById('panel-collections').classList.toggle('hidden', tab !== 'collections');
-  document.getElementById('panel-testimonials').classList.toggle('hidden', tab !== 'testimonials');
-  document.getElementById('tab-collections').classList.toggle('tab-active', tab === 'collections');
-  document.getElementById('tab-testimonials').classList.toggle('tab-active', tab === 'testimonials');
+  TABS.forEach(t => {
+    document.getElementById('panel-' + t).classList.toggle('hidden', t !== tab);
+    document.getElementById('tab-' + t).classList.toggle('tab-active', t === tab);
+  });
 }
 
 // --- Toast ---
@@ -131,6 +153,25 @@ function closeModal() {
   document.getElementById('modal-backdrop').classList.add('hidden');
 }
 
+// --- Settings ---
+async function loadSettings() {
+  const res = await fetch(`${API}/api/settings`);
+  settings = await res.json();
+  document.getElementById('settings-whatsapp').value = settings.whatsappUrl || '';
+}
+
+async function saveSettings() {
+  const whatsappUrl = document.getElementById('settings-whatsapp').value.trim();
+  const res = await fetch(`${API}/api/settings`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ whatsappUrl }),
+  });
+  if (!res.ok) { toast('Erro ao salvar.', 'error'); return; }
+  settings = await res.json();
+  toast('Configuracoes salvas!');
+}
+
 // --- Collections ---
 async function loadCollections() {
   const res = await fetch(`${API}/api/collections`);
@@ -149,7 +190,7 @@ function renderCollections() {
       <div class="flex gap-5">
         <div class="w-24 h-24 rounded-lg bg-deeper overflow-hidden flex-shrink-0">
           <img src="http://localhost:8080${c.image}" alt="${c.name}" class="w-full h-full object-cover"
-               onerror="this.style.display='none'" />
+               onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-600 text-xs\\'>Sem capa</div>'" />
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-start justify-between gap-3">
@@ -164,17 +205,17 @@ function renderCollections() {
           </div>
           <p class="text-sm text-gray-400 mt-2">${esc(c.description)}</p>
           <div class="flex flex-wrap gap-3 mt-3">
-            ${c.deckcheckUrl ? `<span class="text-xs text-green-400">DeckCheck ✓</span>` : `<span class="text-xs text-gray-600">DeckCheck —</span>`}
-            ${c.moxfieldUrl ? `<span class="text-xs text-green-400">Moxfield ✓</span>` : `<span class="text-xs text-gray-600">Moxfield —</span>`}
-            ${c.manualUrl ? `<span class="text-xs text-green-400">Manual ✓</span>` : `<span class="text-xs text-gray-600">Manual —</span>`}
+            ${c.deckcheckUrl ? `<span class="text-xs text-green-400">DeckCheck &#10003;</span>` : `<span class="text-xs text-gray-600">DeckCheck &mdash;</span>`}
+            ${c.moxfieldUrl ? `<span class="text-xs text-green-400">Moxfield &#10003;</span>` : `<span class="text-xs text-gray-600">Moxfield &mdash;</span>`}
+            ${c.manualUrl ? `<span class="text-xs text-green-400">Manual &#10003;</span>` : `<span class="text-xs text-gray-600">Manual &mdash;</span>`}
             <span class="text-xs text-gray-500">${c.sampleImages.length} amostras</span>
           </div>
           <div class="flex flex-wrap gap-2 mt-3">
             <label class="btn btn-outline text-xs cursor-pointer">
-              Capa <input type="file" accept="image/*" class="hidden" onchange="uploadCover('${c.slug}', this)" />
+              Trocar capa <input type="file" accept="image/*" class="hidden" onchange="uploadCover('${c.slug}', this)" />
             </label>
             <label class="btn btn-outline text-xs cursor-pointer">
-              Imagens <input type="file" accept="image/*" multiple class="hidden" onchange="uploadImages('${c.slug}', this)" />
+              Imagens do deck <input type="file" accept="image/*" multiple class="hidden" onchange="uploadImages('${c.slug}', this)" />
             </label>
             <label class="btn btn-outline text-xs cursor-pointer">
               Manual PDF <input type="file" accept=".pdf" class="hidden" onchange="uploadManual('${c.slug}', this)" />
@@ -198,16 +239,21 @@ function openAddCollection() {
   openModal('Nova colecao', `
     <div class="space-y-3">
       <div>
-        <label class="text-xs text-gray-400">Nome</label>
+        <label class="text-xs text-gray-400">Nome *</label>
         <input id="f-name" class="input mt-1" placeholder="Ex: Naruto Shippuden" />
       </div>
       <div>
-        <label class="text-xs text-gray-400">Descricao</label>
+        <label class="text-xs text-gray-400">Descricao *</label>
         <input id="f-desc" class="input mt-1" placeholder="Descricao curta da colecao" />
       </div>
       <div>
-        <label class="text-xs text-gray-400">Quantidade de cartas</label>
+        <label class="text-xs text-gray-400">Quantidade de cartas *</label>
         <input id="f-cards" type="number" class="input mt-1" value="100" min="1" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Imagem de capa (banner) *</label>
+        <input id="f-cover" type="file" accept="image/*" class="input mt-1 p-1" />
+        <p class="text-xs text-gray-500 mt-1">Obrigatorio. Imagem que aparece como banner da colecao no site.</p>
       </div>
       <div>
         <label class="text-xs text-gray-400">URL DeckCheck (opcional)</label>
@@ -231,8 +277,10 @@ async function addCollection() {
   const cardCount = parseInt(document.getElementById('f-cards').value);
   const deckcheckUrl = document.getElementById('f-deckcheck').value.trim();
   const moxfieldUrl = document.getElementById('f-moxfield').value.trim();
+  const coverFile = document.getElementById('f-cover').files[0];
 
-  if (!name || !description || !cardCount) { toast('Preencha todos os campos obrigatorios.', 'error'); return; }
+  if (!name || !description || !cardCount) { toast('Preencha nome, descricao e quantidade.', 'error'); return; }
+  if (!coverFile) { toast('A imagem de capa e obrigatoria!', 'error'); return; }
 
   const res = await fetch(`${API}/api/collections`, {
     method: 'POST',
@@ -242,8 +290,15 @@ async function addCollection() {
 
   if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
 
+  const newCol = await res.json();
+
+  // Upload cover
+  const fd = new FormData();
+  fd.append('file', coverFile);
+  await fetch(`${API}/api/collections/${newCol.slug}/cover`, { method: 'POST', body: fd });
+
   closeModal();
-  toast(`Colecao "${name}" adicionada!`);
+  toast(`Colecao "${name}" adicionada com capa!`);
   await loadCollections();
 }
 
@@ -528,6 +583,7 @@ function esc(str) {
 // --- Init ---
 loadCollections();
 loadTestimonials();
+loadSettings();
 </script>
 </body>
 </html>

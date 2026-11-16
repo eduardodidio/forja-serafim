@@ -2,8 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Instagram } from "lucide-react";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
-
-const WHATSAPP_URL = "https://wa.me/5551984315964";
+import { whatsappLink } from "@/lib/store-data";
 
 export const Route = createFileRoute("/contato")({
   component: Contato,
@@ -23,7 +22,7 @@ function Contato() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
           <a
-            href={WHATSAPP_URL}
+            href={whatsappLink("Ola! Vim pela pagina de contato do site e gostaria de falar sobre proxies full art.")}
             target="_blank"
             rel="noopener noreferrer"
             className="surface-card flex items-center gap-4 p-6 transition-colors hover:border-gold/60"

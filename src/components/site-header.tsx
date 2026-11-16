@@ -4,8 +4,7 @@ import { WingsIcon } from "@/components/wings-icon";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-
-const WHATSAPP_URL = "https://wa.me/5551984315964";
+import { whatsappLink } from "@/lib/store-data";
 
 const links = [
   { to: "/", label: "Home" },
@@ -43,7 +42,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <a
-            href={WHATSAPP_URL}
+            href={whatsappLink("Ola! Vim pelo site da Casa do Serafim e tenho interesse em proxies full art.")}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-gold/60 hover:text-gold"

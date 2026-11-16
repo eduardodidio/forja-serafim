@@ -1,8 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram } from "lucide-react";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
-
-const WHATSAPP_URL = "https://wa.me/5551984315964";
+import { whatsappLink } from "@/lib/store-data";
 
 export const DISCLAIMER =
   "Este projeto nao e afiliado a Wizards of the Coast. Magic: The Gathering e seus respectivos nomes sao marcas registradas de seus proprietarios. As proxies produzidas destinam-se exclusivamente ao uso casual, colecionismo e personalizacao artistica, nao sendo validas para torneios oficiais.";
@@ -20,7 +19,7 @@ export function SiteFooter() {
           </p>
           <div className="mt-5 flex gap-3">
             <a
-              href={WHATSAPP_URL}
+              href={whatsappLink("Ola! Vim pelo site da Casa do Serafim.")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-gold/60 hover:text-gold"
@@ -60,7 +59,7 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             <li>
               <a
-                href={WHATSAPP_URL}
+                href={whatsappLink("Ola! Vim pelo site da Casa do Serafim.")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-gold"

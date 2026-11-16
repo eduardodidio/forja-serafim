@@ -2,7 +2,7 @@ import { readFileSync, existsSync, mkdirSync, copyFileSync } from "fs";
 import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { readJson, writeJson } from "./lib/data-io.js";
-import { COLLECTIONS_JSON, TESTIMONIALS_JSON, COVERS_DIR, DECKS_DIR, MANUALS_DIR } from "./lib/paths.js";
+import { COLLECTIONS_JSON, TESTIMONIALS_JSON, SETTINGS_JSON, COVERS_DIR, DECKS_DIR, MANUALS_DIR } from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
 import { processImage } from "./lib/image-processor.js";
 
@@ -26,6 +26,10 @@ type Testimonial = {
   name: string;
   text: string;
   deck: string;
+};
+
+type Settings = {
+  whatsappUrl: string;
 };
 
 function json(data: unknown, status = 200) {
@@ -256,6 +260,20 @@ async function handleRequest(req: Request): Promise<Response> {
       writeJson(TESTIMONIALS_JSON, testimonials);
       return json(removed);
     }
+  }
+
+  // --- Settings API ---
+
+  if (path === "/api/settings" && method === "GET") {
+    return json(readJson<Settings>(SETTINGS_JSON));
+  }
+
+  if (path === "/api/settings" && method === "PUT") {
+    const body = await req.json() as Partial<Settings>;
+    const settings = readJson<Settings>(SETTINGS_JSON);
+    if (body.whatsappUrl !== undefined) settings.whatsappUrl = body.whatsappUrl;
+    writeJson(SETTINGS_JSON, settings);
+    return json(settings);
   }
 
   return new Response("Not found", { status: 404 });

@@ -2,9 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ExternalLink, FileText } from "lucide-react";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
-import { getCollection } from "@/lib/store-data";
-
-const WHATSAPP_URL = "https://wa.me/5551984315964";
+import { getCollection, whatsappLink } from "@/lib/store-data";
 
 export const Route = createFileRoute("/colecoes/$slug")({
   component: CollectionPage,
@@ -20,8 +18,8 @@ function CollectionPage() {
     return null;
   }
 
-  const whatsappMessage = encodeURIComponent(
-    `Oi! Tenho interesse no deck ${collection.name} da Casa do Serafim. Pode me passar mais detalhes?`,
+  const whatsappHref = whatsappLink(
+    `Oi! Vim pelo site e tenho interesse no deck ${collection.name} da Casa do Serafim. Pode me passar mais detalhes?`,
   );
 
   return (
@@ -142,7 +140,7 @@ function CollectionPage() {
             </p>
           </div>
           <a
-            href={`${WHATSAPP_URL}?text=${whatsappMessage}`}
+            href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3.5 text-sm font-medium transition-colors hover:border-gold/60 hover:text-gold"
