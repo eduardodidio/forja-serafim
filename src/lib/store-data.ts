@@ -11,6 +11,7 @@ export type Collection = {
   sampleImages: string[];
   moxfieldUrl: string;
   deckcheckUrl: string;
+  manualUrl: string;
 };
 
 export const collections: Collection[] = [
@@ -29,6 +30,7 @@ export const collections: Collection[] = [
     ],
     moxfieldUrl: "",
     deckcheckUrl: "",
+    manualUrl: "",
   },
   {
     slug: "cavaleiros-do-zodiaco",
@@ -45,6 +47,7 @@ export const collections: Collection[] = [
     ],
     moxfieldUrl: "",
     deckcheckUrl: "",
+    manualUrl: "",
   },
   {
     slug: "final-fantasy-vii",
@@ -61,6 +64,7 @@ export const collections: Collection[] = [
     ],
     moxfieldUrl: "",
     deckcheckUrl: "",
+    manualUrl: "",
   },
 ];
 

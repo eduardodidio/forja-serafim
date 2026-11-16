@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, FileText } from "lucide-react";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
 import { getCollection } from "@/lib/store-data";
@@ -83,28 +83,55 @@ function CollectionPage() {
           </div>
         )}
 
-        <div className="mb-12 flex flex-wrap gap-4">
-          {collection.moxfieldUrl && (
-            <a
-              href={collection.moxfieldUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm transition-colors hover:border-gold/60 hover:text-gold"
-            >
-              <ExternalLink className="size-4" /> Ver no Moxfield
-            </a>
-          )}
-          {collection.deckcheckUrl && (
-            <a
-              href={collection.deckcheckUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm transition-colors hover:border-gold/60 hover:text-gold"
-            >
-              <ExternalLink className="size-4" /> Ver no Deckcheck
-            </a>
-          )}
-        </div>
+        {/* Deck reference link + manual */}
+        {(collection.deckcheckUrl || collection.moxfieldUrl || collection.manualUrl) && (
+          <div className="mb-12 space-y-6">
+            {collection.deckcheckUrl && (
+              <div className="surface-card p-6">
+                <p className="text-xs uppercase tracking-[0.2em] text-gold">Deck referencia</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Confira a lista completa de cartas deste deck no DeckCheck antes de encomendar.
+                </p>
+                <a
+                  href={collection.deckcheckUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm transition-colors hover:border-gold/60 hover:text-gold"
+                >
+                  <ExternalLink className="size-4" /> Confira o deck referencia aqui
+                </a>
+              </div>
+            )}
+
+            {collection.moxfieldUrl && (
+              <a
+                href={collection.moxfieldUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm transition-colors hover:border-gold/60 hover:text-gold"
+              >
+                <ExternalLink className="size-4" /> Ver no Moxfield
+              </a>
+            )}
+
+            {collection.manualUrl && (
+              <div className="surface-card p-6">
+                <p className="text-xs uppercase tracking-[0.2em] text-gold">Manual do deck</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Baixe o guia completo com estrategias, combos e dicas de como pilotar este deck.
+                </p>
+                <a
+                  href={collection.manualUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm transition-colors hover:border-gold/60 hover:text-gold"
+                >
+                  <FileText className="size-4" /> Baixar manual do deck (PDF)
+                </a>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="surface-card flex flex-wrap items-center justify-between gap-6 p-10">
           <div className="min-w-0">
