@@ -29,6 +29,9 @@ logs/agents/*.meta.json
 logs/agents/state.json
 claude-didio-out/
 
+# Admin env (deploy hook secret)
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

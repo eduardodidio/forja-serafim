@@ -318,9 +318,22 @@ async function handleRequest(req: Request): Promise<Response> {
       const ahead = execSync("git rev-list --count @{u}..HEAD", { ...opts, stdio: "pipe" }).trim();
       if (ahead !== "0") {
         execSync("git push origin main", { ...opts, stdio: "pipe" });
-        steps.push("Enviado para o servidor. O site sera atualizado em alguns minutos.");
+        steps.push("Enviado para o GitHub.");
       } else {
-        steps.push("O site ja esta atualizado com a versao mais recente.");
+        steps.push("Codigo ja estava no GitHub.");
+      }
+
+      // 5. Trigger Render deploy
+      const deployHook = process.env.RENDER_DEPLOY_HOOK;
+      if (deployHook) {
+        const hookRes = await fetch(deployHook, { method: "POST" });
+        if (hookRes.ok) {
+          steps.push("Deploy disparado no Render! O site sera atualizado em alguns minutos.");
+        } else {
+          steps.push("Aviso: nao foi possivel disparar o deploy no Render.");
+        }
+      } else {
+        steps.push("Aviso: RENDER_DEPLOY_HOOK nao configurado. Deploy manual necessario.");
       }
 
       return json({ success: true, steps });
@@ -328,6 +341,26 @@ async function handleRequest(req: Request): Promise<Response> {
       const msg = err instanceof Error ? err.message : String(err);
       return json({ success: false, steps: [...steps, `Erro: ${msg}`] }, 500);
     }
+  }
+
+  // --- Serve static files from project public/ ---
+  const MIME_TYPES: Record<string, string> = {
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".webp": "image/webp",
+    ".gif": "image/gif",
+    ".svg": "image/svg+xml",
+    ".pdf": "application/pdf",
+    ".ico": "image/x-icon",
+  };
+
+  const staticFile = join(PROJECT_ROOT, "public", path.slice(1));
+  if (existsSync(staticFile)) {
+    const ext = extname(staticFile).toLowerCase();
+    const mime = MIME_TYPES[ext] ?? "application/octet-stream";
+    const file = readFileSync(staticFile);
+    return new Response(file, { headers: { "Content-Type": mime } });
   }
 
   return new Response("Not found", { status: 404 });
