@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Estrategia de Negocio — A Casa do Serafim</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  @page {
+    size: A4;
+    margin: 2cm 2.5cm;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11pt;
+    line-height: 1.6;
+    color: #1a1a2e;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2cm;
+  }
+
+  h1 {
+    font-size: 22pt;
+    color: #12121f;
+    border-bottom: 3px solid #d4a853;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-size: 15pt;
+    color: #d4a853;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  h3 {
+    font-size: 12pt;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+
+  p { margin-bottom: 10px; }
+
+  .subtitle {
+    font-size: 10pt;
+    color: #888;
+    margin-bottom: 24px;
+  }
+
+  .cover {
+    text-align: center;
+    padding: 60px 0 40px;
+    page-break-after: always;
+  }
+
+  .cover h1 {
+    font-size: 28pt;
+    border: none;
+    padding: 0;
+  }
+
+  .cover .star {
+    font-size: 48pt;
+    color: #d4a853;
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .cover .tagline {
+    font-size: 13pt;
+    color: #666;
+    margin-top: 16px;
+    font-style: italic;
+  }
+
+  .cover .date {
+    font-size: 10pt;
+    color: #aaa;
+    margin-top: 40px;
+  }
+
+  .priority-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 9pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .priority-high { background: #fee; color: #c33; border: 1px solid #fcc; }
+  .priority-medium { background: #fff8e6; color: #b8903d; border: 1px solid #f0d88a; }
+  .priority-low { background: #eef; color: #66a; border: 1px solid #ccf; }
+
+  .item {
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border-left: 4px solid #d4a853;
+    background: #fafaf8;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .item-title {
+    font-weight: 600;
+    font-size: 11pt;
+    margin-bottom: 4px;
+  }
+
+  .item-desc {
+    font-size: 10pt;
+    color: #555;
+    margin-bottom: 6px;
+  }
+
+  .item-impact {
+    font-size: 9pt;
+    color: #888;
+    font-style: italic;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 10pt;
+  }
+
+  th {
+    background: #12121f;
+    color: #d4a853;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+  }
+
+  tr:nth-child(even) td { background: #fafaf8; }
+
+  .footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #d4a853;
+    font-size: 9pt;
+    color: #aaa;
+    text-align: center;
+  }
+
+  .toc {
+    padding: 20px;
+    background: #fafaf8;
+    border-radius: 8px;
+    margin-bottom: 24px;
+  }
+
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 6px; font-size: 10pt; }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .kpi-card {
+    padding: 16px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .kpi-value {
+    font-size: 20pt;
+    font-weight: 700;
+    color: #d4a853;
+  }
+
+  .kpi-label {
+    font-size: 9pt;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media print {
+    body { padding: 0; }
+    .item { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CAPA -->
+<div class="cover">
+  <span class="star">&#9733;</span>
+  <h1>A Casa do Serafim</h1>
+  <p class="tagline">Estrategia de Evolucao do Negocio</p>
+  <p class="tagline">Proxies Full Art Premium — Magic: The Gathering</p>
+  <p class="date">Novembro 2026 — Documento estrategico v1.0</p>
+  <p class="date">Preparado por: Eduardo Didio (Tech) + AI Strategy Assistant</p>
+</div>
+
+<!-- INDICE -->
+<h2>Indice</h2>
+<div class="toc">
+  <ol>
+    <li>Visao Geral do Mercado</li>
+    <li>Posicionamento Atual</li>
+    <li>Estrategia de SEO e Descoberta Organica</li>
+    <li>Presenca Digital e Redes Sociais</li>
+    <li>Catalogo de Produtos e Precificacao</li>
+    <li>Logistica: Calculo de Frete Automatico</li>
+    <li>Automacao de Atendimento via WhatsApp</li>
+    <li>Programa de Fidelidade e Recompra</li>
+    <li>Expansao de Linha de Produtos</li>
+    <li>Metricas e KPIs Sugeridos</li>
+    <li>Roadmap de Priorizacao</li>
+  </ol>
+</div>
+
+<!-- 1. VISAO GERAL -->
+<h2>1. Visao Geral do Mercado</h2>
+
+<p>O mercado de proxies de Magic: The Gathering vive um momento de expansao significativa.
+Com o custo crescente de cartas originais (especialmente no formato Commander/EDH), jogadores
+casuais e competitivos buscam alternativas de alta qualidade para jogar sem investir
+milhares de reais em um unico deck.</p>
+
+<p>O nicho de <strong>proxies full art tematicas</strong> e um segmento premium dentro deste mercado.
+Diferente de proxies genericas que apenas replicam a arte original, proxies full art
+com temas de cultura pop (anime, games, filmes) agregam valor artistico e emocional,
+justificando um preco superior.</p>
+
+<h3>Concorrentes e Benchmarks</h3>
+<table>
+  <tr>
+    <th>Concorrente</th>
+    <th>Modelo</th>
+    <th>Diferencial</th>
+    <th>Ponto fraco</th>
+  </tr>
+  <tr>
+    <td>ProxyKing</td>
+    <td>Singles + decks</td>
+    <td>Catalogo imenso, busca avancada</td>
+    <td>Sem arte custom, generico</td>
+  </tr>
+  <tr>
+    <td>PrintMTG</td>
+    <td>Print-on-demand</td>
+    <td>Workflow custom, upload de arte</td>
+    <td>Sem curadoria tematica</td>
+  </tr>
+  <tr>
+    <td>Proxydudes</td>
+    <td>Decks prontos</td>
+    <td>Qualidade, transparencia</td>
+    <td>Precos internacionais (USD)</td>
+  </tr>
+  <tr>
+    <td>Bazar MTG (BR)</td>
+    <td>Marketplace</td>
+    <td>Ecosistema BR, frete local</td>
+    <td>Sem full art tematico</td>
+  </tr>
+  <tr>
+    <td><strong>A Casa do Serafim</strong></td>
+    <td><strong>Artesanal tematico</strong></td>
+    <td><strong>Arte autoral, decks tematicos completos, atendimento personalizado</strong></td>
+    <td>Escala limitada, dependencia de WhatsApp</td>
+  </tr>
+</table>
+
+<p><strong>Oportunidade-chave:</strong> A Casa do Serafim ocupa um espaco unico como artesao de proxies tematicas
+no Brasil. Nenhum concorrente nacional combina arte autoral full art + temas de cultura pop + atendimento
+personalizado. Este posicionamento premium deve ser explorado e comunicado com clareza.</p>
+
+<!-- 2. POSICIONAMENTO -->
+<h2>2. Posicionamento Atual</h2>
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-value">3</div>
+    <div class="kpi-label">Colecoes publicadas</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-value">1</div>
+    <div class="kpi-label">Canal de venda (WhatsApp)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-value">0</div>
+    <div class="kpi-label">Presenca em marketplaces</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-value">0</div>
+    <div class="kpi-label">Redes sociais ativas</div>
+  </div>
+</div>
+
+<p><strong>Forca:</strong> Produto diferenciado, qualidade premium, atendimento pessoal.</p>
+<p><strong>Fraqueza:</strong> Visibilidade quase nula fora do circulo imediato. Sem SEO, sem redes sociais,
+sem presenca em marketplaces. Frete nao calculado automaticamente. Processo 100% manual.</p>
+
+<!-- 3. SEO -->
+<h2>3. Estrategia de SEO e Descoberta Organica</h2>
+
+<p>O site atual nao possui meta tags, structured data, nem sitemap. Isso significa que o Google
+nao consegue indexar e ranquear o conteudo adequadamente. Corrigir isso e a acao de maior
+ROI imediato.</p>
+
+<div class="item">
+  <div class="item-title">3.1 SEO On-Page <span class="priority-tag priority-high">Alta</span></div>
+  <div class="item-desc">Meta tags OG/Twitter em todas as paginas, JSON-LD (Organization + Product),
+    sitemap.xml, canonical URLs. Ja planejado como F03-T01 (tecnico).</div>
+  <div class="item-impact">Impacto: visibilidade no Google + preview rico no WhatsApp/Telegram/Facebook quando compartilhar link</div>
+</div>
+
+<div class="item">
+  <div class="item-title">3.2 Blog de Conteudo <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">Criar secao de blog com artigos como: "O que sao proxies full art?",
+    "Como montar um Commander tematico", "Melhores temas para proxies 2027",
+    "Castlevania Commander — guia completo do deck". Cada artigo captura long-tail keywords
+    e gera trafego organico.</div>
+  <div class="item-impact">Impacto: 60-70% do trafego organico de lojas de nicho vem de conteudo educativo (fonte: Ranktracker)</div>
+</div>
+
+<div class="item">
+  <div class="item-title">3.3 Google Business Profile <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">Mesmo sem loja fisica, e possivel criar um perfil como "Loja online"
+    no Google Business. Incluir fotos dos decks, horario de atendimento WhatsApp, reviews de clientes.
+    Aparece em buscas locais como "proxy mtg porto alegre".</div>
+  <div class="item-impact">Impacto: presenca em buscas locais, Google Maps, reviews verificadas</div>
+</div>
+
+<div class="item">
+  <div class="item-title">3.4 Keywords Alvo <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">
+    <strong>Head terms:</strong> "proxy mtg brasil", "proxy full art magic", "cartas proxy commander"<br>
+    <strong>Long-tail:</strong> "deck proxy castlevania commander", "proxy final fantasy mtg",
+    "onde comprar proxy magic brasil", "proxy full art personalizada"<br>
+    <strong>Informacional:</strong> "o que e proxy mtg", "proxy e permitido em commander",
+    "como usar proxy no magic"
+  </div>
+  <div class="item-impact">Impacto: cada keyword long-tail converte 2-3x mais que head terms</div>
+</div>
+
+<!-- 4. REDES SOCIAIS -->
+<h2>4. Presenca Digital e Redes Sociais</h2>
+
+<div class="item">
+  <div class="item-title">4.1 Instagram <span class="priority-tag priority-high">Alta</span></div>
+  <div class="item-desc">Plataforma visual perfeita para mostrar a arte dos decks.
+    Estrategia: Reels mostrando o "unboxing" do deck, time-lapse do processo de criacao,
+    before/after (carta original vs proxy full art), carrossel com as cartas do deck.
+    Hashtags: #mtgproxy #commanderedh #fullartproxy #magicbrasil #proxyart</div>
+  <div class="item-impact">Impacto: Instagram e o canal #1 de descoberta para produtos visuais artesanais</div>
+</div>
+
+<div class="item">
+  <div class="item-title">4.2 TikTok <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">Videos curtos: "POV: voce recebeu seu deck proxy full art de Castlevania",
+    "Reacao do amigo quando viu o deck", ASMR de embaralhar as cartas, comparativo de qualidade.
+    O nicho MTG no TikTok cresce exponencialmente.</div>
+  <div class="item-impact">Impacto: alcance organico alto, publico jovem (25-35), viralizacao potencial</div>
+</div>
+
+<div class="item">
+  <div class="item-title">4.3 YouTube <span class="priority-tag priority-low">Baixa</span></div>
+  <div class="item-desc">Videos longos de review dos decks, gameplay usando as proxies,
+    "making of" do processo artistico. Pode ser um canal a medio prazo apos Instagram e TikTok
+    estarem rodando.</div>
+  <div class="item-impact">Impacto: autoridade de marca, SEO via YouTube (2o maior buscador do mundo)</div>
+</div>
+
+<div class="item">
+  <div class="item-title">4.4 Comunidades e Grupos <span class="priority-tag priority-high">Alta</span></div>
+  <div class="item-desc">Participar ativamente de: grupos Facebook de MTG Brasil, subreddits (r/mtgproxy, r/magicTCG),
+    Discord servers de Commander BR, grupos Telegram de MTG.
+    Nao fazer spam — contribuir com conteudo e mencionar o trabalho quando relevante.
+    Oferecer descontos exclusivos para membros de comunidades.</div>
+  <div class="item-impact">Impacto: boca-a-boca e a fonte #1 de vendas no nicho artesanal</div>
+</div>
+
+<!-- 5. CATALOGO -->
+<h2>5. Catalogo de Produtos e Precificacao</h2>
+
+<div class="item">
+  <div class="item-title">5.1 Tabela de Precos no Site <span class="priority-tag priority-high">Alta</span></div>
+  <div class="item-desc">Hoje o site nao exibe nenhum preco. Visitantes precisam ir ao WhatsApp para saber
+    quanto custa. Adicionar faixas de preco ("a partir de R$XX") ou tabela clara:
+    <ul style="margin-top:6px;padding-left:20px;font-size:10pt">
+      <li>Deck completo (100 cartas): R$ XX - R$ XX</li>
+      <li>Carta avulsa: R$ X</li>
+      <li>Opcao foil: +R$ XX por deck</li>
+      <li>Arte personalizada (tema custom): sob consulta</li>
+    </ul>
+    Transparencia de preco reduz fricao e aumenta conversao.</div>
+  <div class="item-impact">Impacto: sites com precos visiveis convertem ate 30% mais que "sob consulta"</div>
+</div>
+
+<div class="item">
+  <div class="item-title">5.2 Pagina de Cada Deck como "Produto" <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">Transformar cada colecao em uma pagina de produto completa:
+    ficha tecnica (formato, n. cartas, acabamento), galeria grande, preco,
+    botao "Encomendar via WhatsApp" pre-preenchido com o nome do deck,
+    depoimentos especificos daquele deck, FAQ inline.</div>
+  <div class="item-impact">Impacto: paginas de produto ricas ranqueam melhor no Google e convertem mais</div>
+</div>
+
+<div class="item">
+  <div class="item-title">5.3 Opcao de Carta Avulsa <span class="priority-tag priority-low">Baixa</span></div>
+  <div class="item-desc">Permitir que clientes comprem cartas individuais de temas ja produzidos.
+    Ex: "Quero so a Sol Ring tema Castlevania". Menor ticket medio mas maior volume
+    e porta de entrada para novos clientes.</div>
+  <div class="item-impact">Impacto: maior acessibilidade, funciona como "experimentar antes de comprar o deck"</div>
+</div>
+
+<!-- 6. FRETE -->
+<h2>6. Logistica: Calculo de Frete Automatico</h2>
+
+<div class="item">
+  <div class="item-title">6.1 Calculadora de Frete no Site <span class="priority-tag priority-high">Alta</span></div>
+  <div class="item-desc">Integrar API do Melhor Envio (gratuita) para calcular frete em tempo real.
+    O visitante digita o CEP e ve opcoes (PAC, SEDEX, Jadlog) com preco e prazo.
+    <br><br>
+    <strong>Como funciona:</strong>
+    <ul style="margin-top:6px;padding-left:20px;font-size:10pt">
+      <li>API REST gratuita do Melhor Envio</li>
+      <li>Input: CEP destino + peso/dimensoes do pacote (fixo para deck: ~300g, 15x10x5cm)</li>
+      <li>Output: lista de transportadoras com preco e prazo</li>
+      <li>Implementacao: um componente no site que faz a consulta via backend proxy</li>
+    </ul>
+  </div>
+  <div class="item-impact">Impacto: elimina principal objecao de compra ("quanto vai ficar o frete?"), reduz mensagens no WhatsApp</div>
+</div>
+
+<div class="item">
+  <div class="item-title">6.2 Frete Gratis Acima de X <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">Oferecer frete gratis para compras acima de um valor (ex: 2 decks ou R$300).
+    Incentiva ticket medio maior. Comunicar no banner do site: "Frete gratis para 2+ decks!"</div>
+  <div class="item-impact">Impacto: aumento de 15-25% no ticket medio (benchmark ecommerce BR)</div>
+</div>
+
+<div class="item">
+  <div class="item-title">6.3 Rastreamento de Pedido <span class="priority-tag priority-low">Baixa</span></div>
+  <div class="item-desc">Enviar codigo de rastreio automaticamente via WhatsApp quando despachar.
+    Pode ser manual inicialmente (Anderson cola o codigo no admin, sistema envia msg).</div>
+  <div class="item-impact">Impacto: profissionalismo, reduz "cadê meu pedido?" no WhatsApp</div>
+</div>
+
+<!-- 7. WHATSAPP -->
+<h2>7. Automacao de Atendimento via WhatsApp</h2>
+
+<div class="item">
+  <div class="item-title">7.1 WhatsApp Business com Catalogo <span class="priority-tag priority-high">Alta</span></div>
+  <div class="item-desc">Migrar para WhatsApp Business (gratuito). Configurar:
+    catalogo de produtos com fotos e precos dos decks,
+    mensagem de saudacao automatica,
+    respostas rapidas para perguntas frequentes (preco, prazo, frete, como funciona),
+    horario de atendimento.
+    O catalogo aparece direto no perfil e permite o cliente "comprar" sem sair do chat.</div>
+  <div class="item-impact">Impacto: profissionalismo + 40% das interacoes podem ser automatizadas</div>
+</div>
+
+<div class="item">
+  <div class="item-title">7.2 Chatbot Basico <span class="priority-tag priority-low">Baixa</span></div>
+  <div class="item-desc">A medio prazo, considerar um chatbot simples (via API WhatsApp Business)
+    que responde automaticamente: saudacao, FAQ, calculo de frete, link do site.
+    Escala o atendimento quando o volume crescer. Ferramentas: Twilio, Zenvia, MessageBird.</div>
+  <div class="item-impact">Impacto: atendimento 24/7, escala sem custo de pessoal</div>
+</div>
+
+<!-- 8. FIDELIDADE -->
+<h2>8. Programa de Fidelidade e Recompra</h2>
+
+<div class="item">
+  <div class="item-title">8.1 Desconto para Recompra <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">Cliente que ja comprou 1 deck recebe 10% no proximo.
+    Enviar cupom via WhatsApp 30 dias apos a compra:
+    "Oi [nome]! Como esta o deck de [tema]? Temos novidades! Use o codigo SERAFIM10
+    para 10% de desconto no seu proximo deck."</div>
+  <div class="item-impact">Impacto: recompra e 5-7x mais barata que aquisicao de novo cliente</div>
+</div>
+
+<div class="item">
+  <div class="item-title">8.2 Programa de Indicacao <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">"Indique um amigo e ganhe uma carta exclusiva" ou desconto.
+    Funciona especialmente bem em grupos de Magic, onde jogadores se conhecem.
+    Implementacao simples: codigo unico por cliente, Anderson rastreia manualmente.</div>
+  <div class="item-impact">Impacto: boca-a-boca estruturado, CAC (custo de aquisicao) ~zero</div>
+</div>
+
+<div class="item">
+  <div class="item-title">8.3 Pre-venda de Novos Temas <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">Antes de produzir um novo tema, abrir pre-venda no site:
+    "Proximo deck: Naruto Shippuden — Reserve o seu com 15% de desconto!".
+    Valida demanda antes de investir tempo na arte. Coleta emails/WhatsApp para notificacao.</div>
+  <div class="item-impact">Impacto: valida produto antes de produzir, fluxo de caixa antecipado, hype na comunidade</div>
+</div>
+
+<!-- 9. EXPANSAO -->
+<h2>9. Expansao de Linha de Produtos</h2>
+
+<div class="item">
+  <div class="item-title">9.1 Acessorios Tematicos <span class="priority-tag priority-medium">Media</span></div>
+  <div class="item-desc">Playmats (tapetes) full art combinando com os decks, deck boxes customizados,
+    sleeves com arte propria. Cross-sell natural: quem compra o deck quer o kit completo.
+    Producao via parceiros de print-on-demand (Inked Gaming, Dragon Shield custom).</div>
+  <div class="item-impact">Impacto: ticket medio +40-60%, diferenciacao competitiva</div>
+</div>
+
+<div class="item">
+  <div class="item-title">9.2 Tokens e Emblemas Full Art <span class="priority-tag priority-low">Baixa</span></div>
+  <div class="item-desc">Tokens tematicos combinando com cada deck (Soldier tokens Castlevania,
+    Beast tokens Final Fantasy, etc). Venda casada com o deck ou avulso.</div>
+  <div class="item-impact">Impacto: diferencial unico, complementa a experiencia do deck</div>
+</div>
+
+<div class="item">
+  <div class="item-title">9.3 Outros TCGs <span class="priority-tag priority-low">Baixa</span></div>
+  <div class="item-desc">Expandir para proxies de outros jogos: Pokemon, Yu-Gi-Oh!, One Piece TCG,
+    Lorcana. Mesmo modelo artesanal tematico. Avaliar demanda via enquete nas redes sociais.</div>
+  <div class="item-impact">Impacto: multiplica o mercado enderecavel, diversifica receita</div>
+</div>
+
+<!-- 10. KPIs -->
+<h2>10. Metricas e KPIs Sugeridos</h2>
+
+<table>
+  <tr>
+    <th>Metrica</th>
+    <th>Como Medir</th>
+    <th>Meta (6 meses)</th>
+  </tr>
+  <tr>
+    <td>Visitantes unicos/mes</td>
+    <td>Google Analytics ou Plausible (privacy-first)</td>
+    <td>500+</td>
+  </tr>
+  <tr>
+    <td>Taxa de conversao (visita → WhatsApp)</td>
+    <td>UTM nos links WhatsApp + contagem</td>
+    <td>5-8%</td>
+  </tr>
+  <tr>
+    <td>Decks vendidos/mes</td>
+    <td>Controle manual (planilha ou admin)</td>
+    <td>10+</td>
+  </tr>
+  <tr>
+    <td>Ticket medio</td>
+    <td>Receita / pedidos</td>
+    <td>R$150+</td>
+  </tr>
+  <tr>
+    <td>Taxa de recompra</td>
+    <td>Clientes que voltaram / total clientes</td>
+    <td>20%+</td>
+  </tr>
+  <tr>
+    <td>Seguidores Instagram</td>
+    <td>Instagram Insights</td>
+    <td>500+</td>
+  </tr>
+  <tr>
+    <td>Posicao media no Google</td>
+    <td>Google Search Console</td>
+    <td>Top 20 para keywords alvo</td>
+  </tr>
+  <tr>
+    <td>Tempo medio no site</td>
+    <td>Analytics</td>
+    <td>2min+</td>
+  </tr>
+  <tr>
+    <td>Avaliacao media (depoimentos)</td>
+    <td>Admin panel</td>
+    <td>4.8+/5</td>
+  </tr>
+</table>
+
+<p>Recomendacao: instalar <strong>Plausible Analytics</strong> (leve, sem cookies, LGPD-friendly)
+no site para comecar a medir desde o dia 1.</p>
+
+<!-- 11. ROADMAP -->
+<h2>11. Roadmap de Priorizacao</h2>
+
+<h3>Fase 1 — Fundacao (mes 1-2)</h3>
+<table>
+  <tr><th>Acao</th><th>Tipo</th><th>Prioridade</th></tr>
+  <tr><td>SEO tecnico (meta tags, sitemap, structured data)</td><td>Tecnico (F03)</td><td><span class="priority-tag priority-high">Alta</span></td></tr>
+  <tr><td>WhatsApp Business + catalogo</td><td>Negocio</td><td><span class="priority-tag priority-high">Alta</span></td></tr>
+  <tr><td>Tabela de precos no site</td><td>Negocio</td><td><span class="priority-tag priority-high">Alta</span></td></tr>
+  <tr><td>Criar conta Instagram</td><td>Negocio</td><td><span class="priority-tag priority-high">Alta</span></td></tr>
+  <tr><td>Calculadora de frete (Melhor Envio)</td><td>Tecnico</td><td><span class="priority-tag priority-high">Alta</span></td></tr>
+  <tr><td>Instalar analytics (Plausible)</td><td>Tecnico</td><td><span class="priority-tag priority-high">Alta</span></td></tr>
+</table>
+
+<h3>Fase 2 — Crescimento (mes 3-4)</h3>
+<table>
+  <tr><th>Acao</th><th>Tipo</th><th>Prioridade</th></tr>
+  <tr><td>Blog de conteudo (3-4 artigos)</td><td>Negocio/Conteudo</td><td><span class="priority-tag priority-medium">Media</span></td></tr>
+  <tr><td>Paginas de produto ricas</td><td>Tecnico</td><td><span class="priority-tag priority-medium">Media</span></td></tr>
+  <tr><td>Google Business Profile</td><td>Negocio</td><td><span class="priority-tag priority-medium">Media</span></td></tr>
+  <tr><td>Programa de indicacao simples</td><td>Negocio</td><td><span class="priority-tag priority-medium">Media</span></td></tr>
+  <tr><td>Presenca em comunidades (Discord, Facebook, Reddit)</td><td>Negocio</td><td><span class="priority-tag priority-high">Alta</span></td></tr>
+  <tr><td>TikTok (primeiros 10 videos)</td><td>Negocio</td><td><span class="priority-tag priority-medium">Media</span></td></tr>
+</table>
+
+<h3>Fase 3 — Escala (mes 5-6)</h3>
+<table>
+  <tr><th>Acao</th><th>Tipo</th><th>Prioridade</th></tr>
+  <tr><td>Pre-venda de novos temas</td><td>Negocio</td><td><span class="priority-tag priority-medium">Media</span></td></tr>
+  <tr><td>Acessorios tematicos (playmats, sleeves)</td><td>Negocio</td><td><span class="priority-tag priority-medium">Media</span></td></tr>
+  <tr><td>Frete gratis acima de X</td><td>Negocio</td><td><span class="priority-tag priority-medium">Media</span></td></tr>
+  <tr><td>Desconto recompra automatizado</td><td>Tecnico/Negocio</td><td><span class="priority-tag priority-medium">Media</span></td></tr>
+  <tr><td>Chatbot WhatsApp basico</td><td>Tecnico</td><td><span class="priority-tag priority-low">Baixa</span></td></tr>
+  <tr><td>Expansao para outros TCGs (avaliar demanda)</td><td>Negocio</td><td><span class="priority-tag priority-low">Baixa</span></td></tr>
+</table>
+
+<h2>Consideracoes Legais Importantes</h2>
+
+<p><strong>Disclosure obrigatorio:</strong> Proxies devem ser claramente rotuladas como "cartas de teste/proxy
+para uso casual". Nunca usar termos como "replica", "copia fiel" ou "identica a original".
+O site ja deve conter um disclaimer visivel.</p>
+
+<p><strong>LGPD:</strong> Se coletar emails para pre-venda ou newsletter, garantir consentimento explicito
+e possibilidade de descadastro. Usar analytics sem cookies (Plausible) evita necessidade de
+banner de cookies.</p>
+
+<p><strong>Direitos autorais:</strong> As artes full art sao autorais do Serafim. Manter registro das criacoes
+e marcar com copyright "A Casa do Serafim" e watermark. A protecao no site (anti-copy, resolucao
+reduzida) ja esta implementada.</p>
+
+<div class="footer">
+  <p>&#9733; A Casa do Serafim — Estrategia de Evolucao do Negocio</p>
+  <p>Documento gerado em Novembro/2026. Revisao recomendada a cada 3 meses.</p>
+  <p>Proxies full art artesanais para Magic: The Gathering</p>
+</div>
+
+</body>
+</html>
