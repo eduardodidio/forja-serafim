@@ -44,10 +44,10 @@ export function SiteHeader() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="relative inline-flex size-10 items-center justify-center rounded-full border border-border transition-colors hover:border-gold/60 hover:text-gold"
-            aria-label="WhatsApp"
+            className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
             <MessageCircle className="size-4" />
+            <span className="hidden sm:inline">WhatsApp</span>
           </a>
           <button
             onClick={() => setOpen((o) => !o)}

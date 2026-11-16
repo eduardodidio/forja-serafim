@@ -117,7 +117,7 @@ function CollectionPage() {
             href={`${WHATSAPP_URL}?text=${whatsappMessage}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03]"
+            className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-3.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
             <MessageCircle className="size-4" /> Encomendar via WhatsApp
           </a>

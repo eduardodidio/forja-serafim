@@ -22,10 +22,9 @@ export function SiteFooter() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="WhatsApp"
-              className="inline-flex size-10 items-center justify-center rounded-full border border-border transition-colors hover:border-gold/60 hover:text-gold"
+              className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
-              <MessageCircle className="size-4" />
+              <MessageCircle className="size-4" /> WhatsApp
             </a>
             <a
               href="#"

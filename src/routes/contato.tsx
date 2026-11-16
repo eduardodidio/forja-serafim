@@ -25,11 +25,15 @@ function Contato() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="surface-card p-6 transition-colors hover:border-gold/60"
+            className="surface-card flex items-center gap-4 border-[#25D366]/40 p-6 transition-colors hover:border-[#25D366]"
           >
-            <MessageCircle className="size-5 text-gold" />
-            <p className="mt-4 font-display text-base">WhatsApp</p>
-            <p className="mt-1 text-sm text-muted-foreground">Clique para conversar</p>
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#25D366]">
+              <MessageCircle className="size-5 text-white" />
+            </div>
+            <div>
+              <p className="font-display text-base text-[#25D366]">WhatsApp</p>
+              <p className="mt-1 text-sm text-muted-foreground">Clique para conversar</p>
+            </div>
           </a>
           <a
             href="#"
