@@ -29,7 +29,9 @@ services:
     startCommand: export PATH="$HOME/.bun/bin:$PATH" && bun admin/src/server.ts
     plan: free
     envVars:
-      - key: ADMIN_PASSWORD
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: ALLOWED_EMAILS
         sync: false
       - key: GITHUB_TOKEN
         sync: false

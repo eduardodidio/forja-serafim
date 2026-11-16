@@ -6,34 +6,58 @@ import { readJson, writeJson } from "./lib/data-io.js";
 import { COLLECTIONS_JSON, TESTIMONIALS_JSON, SETTINGS_JSON, COVERS_DIR, DECKS_DIR, MANUALS_DIR, PROJECT_ROOT } from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
 import { processImage } from "./lib/image-processor.js";
+import crypto from "crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ADMIN_HTML = join(__dirname, "..", "public", "index.html");
+const LOGIN_HTML = join(__dirname, "..", "public", "login.html");
 const PORT = parseInt(process.env.PORT || "3001", 10);
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
 
-function checkAuth(req: Request): Response | null {
-  // Skip auth if no password configured (local dev)
-  if (!ADMIN_PASSWORD) return null;
+// Google OAuth config
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
+const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
+  .split(",")
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
-  const auth = req.headers.get("Authorization");
-  if (!auth || !auth.startsWith("Basic ")) {
-    return new Response("Acesso negado", {
-      status: 401,
-      headers: { "WWW-Authenticate": 'Basic realm="A Casa do Serafim Admin"' },
-    });
+// In-memory session store (resets on deploy — user just logs in again)
+const sessions = new Map<string, { email: string; expires: number }>();
+
+function createSession(email: string): string {
+  const token = crypto.randomBytes(32).toString("hex");
+  sessions.set(token, { email, expires: Date.now() + 7 * 24 * 60 * 60 * 1000 }); // 7 days
+  return token;
+}
+
+function getSession(req: Request): string | null {
+  const cookie = req.headers.get("Cookie") || "";
+  const match = cookie.match(/serafim_session=([a-f0-9]+)/);
+  if (!match) return null;
+  const token = match[1];
+  const session = sessions.get(token);
+  if (!session || session.expires < Date.now()) {
+    sessions.delete(token);
+    return null;
   }
+  return session.email;
+}
 
-  const decoded = atob(auth.slice(6));
-  const [, password] = decoded.split(":");
-  if (password !== ADMIN_PASSWORD) {
-    return new Response("Senha incorreta", {
-      status: 401,
-      headers: { "WWW-Authenticate": 'Basic realm="A Casa do Serafim Admin"' },
-    });
+function isAuthEnabled(): boolean {
+  return GOOGLE_CLIENT_ID !== "" && ALLOWED_EMAILS.length > 0;
+}
+
+async function verifyGoogleToken(credential: string): Promise<string | null> {
+  try {
+    const res = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
+    if (!res.ok) return null;
+    const data = await res.json() as { email?: string; aud?: string; email_verified?: string };
+    if (data.aud !== GOOGLE_CLIENT_ID) return null;
+    if (data.email_verified !== "true") return null;
+    return data.email?.toLowerCase() || null;
+  } catch {
+    return null;
   }
-
-  return null;
 }
 
 type Collection = {
@@ -83,9 +107,65 @@ async function handleRequest(req: Request): Promise<Response> {
 
   if (method === "OPTIONS") return cors();
 
-  // Auth gate (skipped if ADMIN_PASSWORD not set)
-  const authResponse = checkAuth(req);
-  if (authResponse) return authResponse;
+  // --- Auth routes (always accessible) ---
+
+  // Login page
+  if (path === "/login" || path === "/login/") {
+    if (!isAuthEnabled()) {
+      return new Response(null, { status: 302, headers: { Location: "/admin/" } });
+    }
+    const html = existsSync(LOGIN_HTML)
+      ? readFileSync(LOGIN_HTML, "utf-8").replace("__GOOGLE_CLIENT_ID__", GOOGLE_CLIENT_ID)
+      : `<html><body>Login page not found. Set GOOGLE_CLIENT_ID.</body></html>`;
+    return new Response(html, { headers: { "Content-Type": "text/html" } });
+  }
+
+  // Google auth callback
+  if (path === "/auth/google" && method === "POST") {
+    const body = await req.json() as { credential?: string };
+    if (!body.credential) return json({ error: "Missing credential" }, 400);
+
+    const email = await verifyGoogleToken(body.credential);
+    if (!email) return json({ error: "Token invalido" }, 401);
+    if (!ALLOWED_EMAILS.includes(email)) {
+      return json({ error: `Email ${email} nao autorizado` }, 403);
+    }
+
+    const token = createSession(email);
+    return new Response(JSON.stringify({ ok: true, email }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Set-Cookie": `serafim_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${7 * 24 * 60 * 60}${url.protocol === "https:" ? "; Secure" : ""}`,
+      },
+    });
+  }
+
+  // Logout
+  if (path === "/auth/logout") {
+    const cookie = req.headers.get("Cookie") || "";
+    const match = cookie.match(/serafim_session=([a-f0-9]+)/);
+    if (match) sessions.delete(match[1]);
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: "/login",
+        "Set-Cookie": "serafim_session=; Path=/; Max-Age=0",
+      },
+    });
+  }
+
+  // --- Auth gate (if enabled) ---
+  if (isAuthEnabled()) {
+    const email = getSession(req);
+    if (!email) {
+      // API calls get 401, page requests redirect to login
+      if (path.startsWith("/api/")) {
+        return json({ error: "Nao autenticado" }, 401);
+      }
+      return new Response(null, { status: 302, headers: { Location: "/login" } });
+    }
+  }
 
   // Serve admin UI
   if (path === "/" || path === "/admin") {
@@ -399,12 +479,10 @@ async function handleRequest(req: Request): Promise<Response> {
 if (process.env.GITHUB_TOKEN) {
   try {
     const remote = execSync("git remote get-url origin", { cwd: PROJECT_ROOT, encoding: "utf-8" }).trim();
-    // Convert https://github.com/user/repo.git to https://token@github.com/user/repo.git
     if (remote.startsWith("https://") && !remote.includes("@")) {
       const authedRemote = remote.replace("https://", `https://${process.env.GITHUB_TOKEN}@`);
       execSync(`git remote set-url origin "${authedRemote}"`, { cwd: PROJECT_ROOT, encoding: "utf-8" });
     }
-    // Set git identity if not configured
     try { execSync("git config user.email", { cwd: PROJECT_ROOT, stdio: "pipe" }); } catch {
       execSync('git config user.email "admin@casadoserafim.com.br"', { cwd: PROJECT_ROOT });
       execSync('git config user.name "Serafim Admin"', { cwd: PROJECT_ROOT });
@@ -414,7 +492,7 @@ if (process.env.GITHUB_TOKEN) {
 
 console.log(`\n  A Casa do Serafim — Admin Web`);
 console.log(`  http://localhost:${PORT}/admin/`);
-console.log(`  Auth: ${ADMIN_PASSWORD ? "ENABLED" : "DISABLED (local dev)"}\n`);
+console.log(`  Auth: ${isAuthEnabled() ? `Google OAuth (${ALLOWED_EMAILS.join(", ")})` : "DISABLED (local dev)"}\n`);
 
 Bun.serve({
   port: PORT,

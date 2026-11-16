@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — A Casa do Serafim</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://accounts.google.com/gsi/client" async></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #12121f;
+      color: #e5e5e5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-card {
+      background: #1a1a2e;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 1.5rem;
+      padding: 3rem 2.5rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .star { font-size: 2.5rem; color: #d4a853; margin-bottom: 1rem; }
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #d4a853;
+      letter-spacing: 0.05em;
+    }
+    .subtitle {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 0.25rem;
+    }
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 1.5rem 0;
+    }
+    .info {
+      font-size: 0.8rem;
+      color: #999;
+      margin-bottom: 1.5rem;
+    }
+    #google-btn {
+      display: flex;
+      justify-content: center;
+      min-height: 44px;
+    }
+    .error {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(220,38,38,0.1);
+      border: 1px solid rgba(220,38,38,0.3);
+      border-radius: 0.75rem;
+      color: #f87171;
+      font-size: 0.8rem;
+      display: none;
+    }
+    .loading {
+      display: none;
+      margin-top: 1rem;
+      color: #d4a853;
+      font-size: 0.8rem;
+    }
+    .loading.show { display: block; }
+    .error.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="star">&#9733;</div>
+    <h1>A Casa do Serafim</h1>
+    <p class="subtitle">Painel Administrativo</p>
+    <div class="divider"></div>
+    <p class="info">Faca login com sua conta Google autorizada para acessar o admin.</p>
+
+    <div id="google-btn">
+      <div id="g_id_onload"
+           data-client_id="__GOOGLE_CLIENT_ID__"
+           data-callback="handleCredentialResponse"
+           data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-shape="pill"
+           data-theme="filled_black"
+           data-text="signin_with"
+           data-size="large"
+           data-logo_alignment="left">
+      </div>
+    </div>
+
+    <div id="loading" class="loading">Verificando acesso...</div>
+    <div id="error" class="error"></div>
+  </div>
+
+  <script>
+    async function handleCredentialResponse(response) {
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      loading.classList.add('show');
+      error.classList.remove('show');
+
+      try {
+        const res = await fetch('/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential: response.credential }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          window.location.href = '/admin/';
+        } else {
+          loading.classList.remove('show');
+          error.textContent = data.error || 'Erro ao autenticar.';
+          error.classList.add('show');
+        }
+      } catch (err) {
+        loading.classList.remove('show');
+        error.textContent = 'Erro de conexao. Tente novamente.';
+        error.classList.add('show');
+      }
+    }
+  </script>
+</body>
+</html>
