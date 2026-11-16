@@ -14,13 +14,11 @@ import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import hero from "@/assets/hero.jpg";
 import { PageShell } from "@/components/page-shell";
 import { CollectionCard } from "@/components/card-tile";
-import { collections } from "@/lib/store-data";
+import { collections, testimonials } from "@/lib/store-data";
 import { WingsIcon } from "@/components/wings-icon";
 
 const WHATSAPP_URL = "https://wa.me/5551984315964";
 
-// Testimonials managed via admin tool — keep empty until real reviews are added
-const testimonials: { name: string; text: string; deck: string }[] = [];
 
 export const Route = createFileRoute("/")({
   component: Home,
