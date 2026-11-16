@@ -1,0 +1,43 @@
+{
+  "turbo": false,
+  "economy": false,
+  "highlander": false,
+  "max_parallel": 0,
+  "providers": {
+    "claude": { "bin": "claude", "default": true }
+  },
+  "models": {
+    "architect": { "model": "opus", "fallback": "sonnet" },
+    "developer": { "model": "sonnet", "fallback": "haiku", "effort": "medium" },
+    "techlead": { "model": "sonnet", "fallback": "haiku", "effort": "medium" },
+    "qa": { "model": "sonnet", "fallback": "haiku", "effort": "medium" }
+  },
+  "models_economy": {
+    "architect": { "model": "sonnet", "fallback": "haiku" },
+    "developer": { "model": "haiku", "fallback": "haiku" },
+    "techlead": { "model": "haiku", "fallback": "haiku" },
+    "qa": { "model": "haiku", "fallback": "haiku" }
+  },
+  "retrospective": {
+    "feature": true,
+    "bugfix": true,
+    "review": true
+  },
+  "second_brain": {
+    "enabled": false,
+    "fallback_to_local": true,
+    "home": ""
+  },
+  "sharding": {
+    "enabled": true,
+    "brief_lines_threshold": 150,
+    "task_count_threshold": 6
+  },
+  "tea": { "enabled": true },
+  "meta_agents": {
+    "t800": { "enabled": false },
+    "t1000": { "enabled": false }
+  },
+  "graphify": { "enabled": false },
+  "rtk": { "enabled": false }
+}

@@ -4,55 +4,40 @@ import { PageShell } from "@/components/page-shell";
 import { DISCLAIMER } from "@/components/site-footer";
 
 export const Route = createFileRoute("/sobre")({
-  head: () => ({
-    meta: [
-      { title: "Sobre a Casa do Serafim — Proxies artesanais de Magic" },
-      {
-        name: "description",
-        content:
-          "A história da Casa do Serafim: paixão por Magic: The Gathering e o desejo de transformar cada deck em uma obra de arte única.",
-      },
-      { property: "og:title", content: "Sobre a Casa do Serafim" },
-      {
-        property: "og:description",
-        content: "Qualidade, criatividade, impressão premium e atendimento personalizado.",
-      },
-    ],
-  }),
   component: Sobre,
 });
 
 const values = [
-  { icon: ShieldCheck, t: "Qualidade", d: "Revisão de cor e nitidez em cada carta antes do envio." },
-  { icon: Brush, t: "Criatividade", d: "Composições autorais inspiradas em universos que amamos." },
-  { icon: Printer, t: "Impressão Premium", d: "Papel de alta gramatura, acabamento fosco ou foil." },
-  { icon: HeartHandshake, t: "Atendimento Personalizado", d: "Acompanhamento direto do início ao envio." },
+  { icon: ShieldCheck, t: "Qualidade", d: "Revisao de cor e nitidez em cada carta antes do envio." },
+  { icon: Brush, t: "Criatividade", d: "Composicoes autorais inspiradas em universos que amamos." },
+  { icon: Printer, t: "Impressao Premium", d: "Papel de alta gramatura, acabamento fosco ou foil." },
+  { icon: HeartHandshake, t: "Atendimento Personalizado", d: "Acompanhamento direto do inicio ao envio." },
 ];
 
 function Sobre() {
   return (
     <PageShell>
       <div className="mx-auto max-w-3xl px-5 py-20">
-        <p className="text-xs uppercase tracking-[0.3em] text-gold">Nossa história</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-gold">Nossa historia</p>
         <h1 className="mt-3 text-4xl sm:text-5xl">Sobre</h1>
 
         <p className="mt-8 font-display text-xl leading-relaxed text-gradient-gold">
-          A Casa do Serafim nasceu da paixão por Magic: The Gathering e pelo desejo de transformar
-          cada deck em uma obra de arte única.
+          A Casa do Serafim nasceu da paixao por Magic: The Gathering e pelo desejo de transformar
+          cada deck em uma obra de arte unica.
         </p>
 
         <div className="mt-8 space-y-5 text-sm leading-relaxed text-muted-foreground">
           <p>
-            Tudo começou em mesas de Commander, entre amigos, quando percebemos que um deck conta
-            uma história — e que essa história merece uma identidade visual à altura. Passamos a
-            desenhar cartas inspiradas nos universos que moldaram nossa imaginação: o inferno de
-            Diablo, a noite eterna de Castlevania, as armaduras douradas do Zodíaco, os cristais de
-            Final Fantasy, as ruas neon do cyberpunk.
+            Tudo comecou em mesas de Commander, entre amigos, quando percebemos que um deck conta
+            uma historia — e que essa historia merece uma identidade visual a altura. Passamos a
+            desenhar cartas inspiradas nos universos que moldaram nossa imaginacao: a noite eterna
+            de Castlevania, as armaduras douradas do Zodiaco, os cristais de Final Fantasy e muito
+            mais.
           </p>
           <p>
-            Hoje cada arte passa por composição manual, tratamento de cor e diagramação própria
-            antes de ir para a impressão premium. Nada é automático: da moldura ao tipo de papel,
-            tudo é escolhido para que a carta pareça uma peça de coleção nas suas mãos.
+            Hoje cada arte passa por composicao manual, tratamento de cor e diagramacao propria
+            antes de ir para a impressao premium. Nada e automatico: da moldura ao tipo de papel,
+            tudo e escolhido para que a carta pareca uma peca de colecao nas suas maos.
           </p>
         </div>
 

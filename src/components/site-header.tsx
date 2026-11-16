@@ -1,19 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, ShoppingBag, Sparkles } from "lucide-react";
+import { Menu, MessageCircle, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+
+const WHATSAPP_URL = "https://wa.me/5551984315964";
 
 const links = [
   { to: "/", label: "Home" },
-  { to: "/colecoes", label: "Coleções" },
-  { to: "/monte-seu-deck", label: "Monte seu Deck" },
-  { to: "/personalizacao", label: "Personalização" },
+  { to: "/colecoes", label: "Colecoes" },
   { to: "/sobre", label: "Sobre" },
-];
+  { to: "/contato", label: "Contato" },
+] as const;
 
 export function SiteHeader() {
-  const { count } = useStore();
   const [open, setOpen] = useState(false);
 
   return (
@@ -41,18 +40,15 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            to="/carrinho"
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="relative inline-flex size-10 items-center justify-center rounded-full border border-border transition-colors hover:border-gold/60 hover:text-gold"
-            aria-label="Carrinho"
+            aria-label="WhatsApp"
           >
-            <ShoppingBag className="size-4" />
-            {count > 0 && (
-              <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-gold text-[11px] font-semibold text-primary-foreground">
-                {count}
-              </span>
-            )}
-          </Link>
+            <MessageCircle className="size-4" />
+          </a>
           <button
             onClick={() => setOpen((o) => !o)}
             className="inline-flex size-10 items-center justify-center rounded-full border border-border lg:hidden"

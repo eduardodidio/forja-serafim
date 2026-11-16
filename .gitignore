@@ -20,6 +20,15 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Deck ZIPs (too large for git, keep locally)
+decks/*.zip
+
+# Didio agent logs
+logs/agents/*.jsonl
+logs/agents/*.meta.json
+logs/agents/state.json
+claude-didio-out/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

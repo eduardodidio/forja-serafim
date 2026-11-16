@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, MessageCircle, Gamepad2 } from "lucide-react";
+import { Instagram, MessageCircle } from "lucide-react";
+
+const WHATSAPP_URL = "https://wa.me/5551984315964";
 
 export const DISCLAIMER =
-  "Este projeto não é afiliado à Wizards of the Coast. Magic: The Gathering e seus respectivos nomes são marcas registradas de seus proprietários. As proxies produzidas destinam-se exclusivamente ao uso casual, colecionismo e personalização artística, não sendo válidas para torneios oficiais.";
+  "Este projeto nao e afiliado a Wizards of the Coast. Magic: The Gathering e seus respectivos nomes sao marcas registradas de seus proprietarios. As proxies produzidas destinam-se exclusivamente ao uso casual, colecionismo e personalizacao artistica, nao sendo validas para torneios oficiais.";
 
 export function SiteFooter() {
   return (
@@ -13,23 +15,25 @@ export function SiteFooter() {
             A Casa do Serafim
           </p>
           <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-            Proxies full art feitas à mão para jogadores casuais, Commander e colecionadores.
+            Proxies full art feitas a mao para jogadores casuais, Commander e colecionadores.
           </p>
           <div className="mt-5 flex gap-3">
-            {[
-              { icon: Instagram, label: "Instagram" },
-              { icon: MessageCircle, label: "WhatsApp" },
-              { icon: Gamepad2, label: "Discord" },
-            ].map(({ icon: Icon, label }) => (
-              <a
-                key={label}
-                href="#"
-                aria-label={label}
-                className="inline-flex size-10 items-center justify-center rounded-full border border-border transition-colors hover:border-gold/60 hover:text-gold"
-              >
-                <Icon className="size-4" />
-              </a>
-            ))}
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+              className="inline-flex size-10 items-center justify-center rounded-full border border-border transition-colors hover:border-gold/60 hover:text-gold"
+            >
+              <MessageCircle className="size-4" />
+            </a>
+            <a
+              href="#"
+              aria-label="Instagram"
+              className="inline-flex size-10 items-center justify-center rounded-full border border-border transition-colors hover:border-gold/60 hover:text-gold"
+            >
+              <Instagram className="size-4" />
+            </a>
           </div>
         </div>
 
@@ -38,8 +42,7 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             {[
               { to: "/", label: "Home" },
-              { to: "/colecoes", label: "Coleções" },
-              { to: "/monte-seu-deck", label: "Monte seu Deck" },
+              { to: "/colecoes", label: "Colecoes" },
               { to: "/sobre", label: "Sobre" },
               { to: "/contato", label: "Contato" },
             ].map((l) => (
@@ -53,10 +56,18 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-gold">Atendimento</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-gold">Contato</p>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-            <li>Seg a sex · 10h às 19h</li>
-            <li>contato@casadoserafim.com</li>
+            <li>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-gold"
+              >
+                WhatsApp
+              </a>
+            </li>
             <li>Envio para todo o Brasil</li>
           </ul>
         </div>
@@ -66,7 +77,7 @@ export function SiteFooter() {
         <div className="mx-auto max-w-7xl px-5 py-6">
           <p className="text-[11px] leading-relaxed text-muted-foreground/70">{DISCLAIMER}</p>
           <p className="mt-3 text-[11px] text-muted-foreground/60">
-            © {new Date().getFullYear()} A Casa do Serafim. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} A Casa do Serafim. Todos os direitos reservados.
           </p>
         </div>
       </div>

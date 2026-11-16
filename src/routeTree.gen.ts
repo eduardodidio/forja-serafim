@@ -10,13 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CarrinhoRouteImport } from './routes/carrinho'
-import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContatoRouteImport } from './routes/contato'
-import { Route as MonteSeuDeckRouteImport } from './routes/monte-seu-deck'
-import { Route as PersonalizacaoRouteImport } from './routes/personalizacao'
 import { Route as SobreRouteImport } from './routes/sobre'
-import { Route as CartaCardIdRouteImport } from './routes/carta.$cardId'
 import { Route as ColecoesIndexRouteImport } from './routes/colecoes.index'
 import { Route as ColecoesSlugRouteImport } from './routes/colecoes.$slug'
 
@@ -25,39 +20,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CarrinhoRoute = CarrinhoRouteImport.update({
-  id: '/carrinho',
-  path: '/carrinho',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ContatoRoute = ContatoRouteImport.update({
   id: '/contato',
   path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MonteSeuDeckRoute = MonteSeuDeckRouteImport.update({
-  id: '/monte-seu-deck',
-  path: '/monte-seu-deck',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PersonalizacaoRoute = PersonalizacaoRouteImport.update({
-  id: '/personalizacao',
-  path: '/personalizacao',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartaCardIdRoute = CartaCardIdRouteImport.update({
-  id: '/carta/$cardId',
-  path: '/carta/$cardId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ColecoesIndexRoute = ColecoesIndexRouteImport.update({
@@ -73,89 +43,39 @@ const ColecoesSlugRoute = ColecoesSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/carrinho': typeof CarrinhoRoute
-  '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
-  '/monte-seu-deck': typeof MonteSeuDeckRoute
-  '/personalizacao': typeof PersonalizacaoRoute
   '/sobre': typeof SobreRoute
-  '/carta/$cardId': typeof CartaCardIdRoute
   '/colecoes/$slug': typeof ColecoesSlugRoute
   '/colecoes/': typeof ColecoesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/carrinho': typeof CarrinhoRoute
-  '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
-  '/monte-seu-deck': typeof MonteSeuDeckRoute
-  '/personalizacao': typeof PersonalizacaoRoute
   '/sobre': typeof SobreRoute
-  '/carta/$cardId': typeof CartaCardIdRoute
   '/colecoes/$slug': typeof ColecoesSlugRoute
   '/colecoes': typeof ColecoesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/carrinho': typeof CarrinhoRoute
-  '/checkout': typeof CheckoutRoute
   '/contato': typeof ContatoRoute
-  '/monte-seu-deck': typeof MonteSeuDeckRoute
-  '/personalizacao': typeof PersonalizacaoRoute
   '/sobre': typeof SobreRoute
-  '/carta/$cardId': typeof CartaCardIdRoute
   '/colecoes/$slug': typeof ColecoesSlugRoute
   '/colecoes/': typeof ColecoesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/carrinho'
-    | '/checkout'
-    | '/contato'
-    | '/monte-seu-deck'
-    | '/personalizacao'
-    | '/sobre'
-    | '/carta/$cardId'
-    | '/colecoes/$slug'
-    | '/colecoes/'
+  fullPaths: '/' | '/contato' | '/sobre' | '/colecoes/$slug' | '/colecoes/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/carrinho'
-    | '/checkout'
-    | '/contato'
-    | '/monte-seu-deck'
-    | '/personalizacao'
-    | '/sobre'
-    | '/carta/$cardId'
-    | '/colecoes/$slug'
-    | '/colecoes'
+  to: '/' | '/contato' | '/sobre' | '/colecoes/$slug' | '/colecoes'
   id:
-    | '__root__'
-    | '/'
-    | '/carrinho'
-    | '/checkout'
-    | '/contato'
-    | '/monte-seu-deck'
-    | '/personalizacao'
-    | '/sobre'
-    | '/carta/$cardId'
-    | '/colecoes/$slug'
-    | '/colecoes/'
+    '__root__' | '/' | '/contato' | '/sobre' | '/colecoes/$slug' | '/colecoes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CarrinhoRoute: typeof CarrinhoRoute
-  CheckoutRoute: typeof CheckoutRoute
   ContatoRoute: typeof ContatoRoute
-  MonteSeuDeckRoute: typeof MonteSeuDeckRoute
-  PersonalizacaoRoute: typeof PersonalizacaoRoute
   SobreRoute: typeof SobreRoute
-  CartaCardIdRoute: typeof CartaCardIdRoute
   ColecoesSlugRoute: typeof ColecoesSlugRoute
   ColecoesIndexRoute: typeof ColecoesIndexRoute
 }
@@ -169,20 +89,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/carrinho': {
-      id: '/carrinho'
-      path: '/carrinho'
-      fullPath: '/carrinho'
-      preLoaderRoute: typeof CarrinhoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/contato': {
       id: '/contato'
       path: '/contato'
@@ -190,32 +96,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/monte-seu-deck': {
-      id: '/monte-seu-deck'
-      path: '/monte-seu-deck'
-      fullPath: '/monte-seu-deck'
-      preLoaderRoute: typeof MonteSeuDeckRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/personalizacao': {
-      id: '/personalizacao'
-      path: '/personalizacao'
-      fullPath: '/personalizacao'
-      preLoaderRoute: typeof PersonalizacaoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/sobre': {
       id: '/sobre'
       path: '/sobre'
       fullPath: '/sobre'
       preLoaderRoute: typeof SobreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/carta/$cardId': {
-      id: '/carta/$cardId'
-      path: '/carta/$cardId'
-      fullPath: '/carta/$cardId'
-      preLoaderRoute: typeof CartaCardIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/colecoes/': {
@@ -237,13 +122,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CarrinhoRoute: CarrinhoRoute,
-  CheckoutRoute: CheckoutRoute,
   ContatoRoute: ContatoRoute,
-  MonteSeuDeckRoute: MonteSeuDeckRoute,
-  PersonalizacaoRoute: PersonalizacaoRoute,
   SobreRoute: SobreRoute,
-  CartaCardIdRoute: CartaCardIdRoute,
   ColecoesSlugRoute: ColecoesSlugRoute,
   ColecoesIndexRoute: ColecoesIndexRoute,
 }
