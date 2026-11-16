@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, MessageCircle } from "lucide-react";
+import { Menu } from "lucide-react";
 import { WingsIcon } from "@/components/wings-icon";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -45,9 +46,9 @@ export function SiteHeader() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-gold/60 hover:text-gold"
           >
-            <MessageCircle className="size-4" />
+            <WhatsAppIcon className="size-4 text-[#25D366]" />
             <span className="hidden sm:inline">WhatsApp</span>
           </a>
           <button

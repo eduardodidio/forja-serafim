@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, MessageCircle } from "lucide-react";
+import { Instagram } from "lucide-react";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 const WHATSAPP_URL = "https://wa.me/5551984315964";
 
@@ -22,9 +23,9 @@ export function SiteFooter() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-gold/60 hover:text-gold"
             >
-              <MessageCircle className="size-4" /> WhatsApp
+              <WhatsAppIcon className="size-4 text-[#25D366]" /> WhatsApp
             </a>
             <a
               href="#"

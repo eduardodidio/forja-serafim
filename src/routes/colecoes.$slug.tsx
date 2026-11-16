@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ExternalLink, MessageCircle } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
 import { getCollection } from "@/lib/store-data";
 
@@ -117,9 +118,9 @@ function CollectionPage() {
             href={`${WHATSAPP_URL}?text=${whatsappMessage}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-3.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3.5 text-sm font-medium transition-colors hover:border-gold/60 hover:text-gold"
           >
-            <MessageCircle className="size-4" /> Encomendar via WhatsApp
+            <WhatsAppIcon className="size-4 text-[#25D366]" /> Encomendar via WhatsApp
           </a>
         </div>
       </div>

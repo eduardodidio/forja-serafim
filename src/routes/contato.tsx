@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Instagram, MessageCircle } from "lucide-react";
+import { Instagram } from "lucide-react";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
 
 const WHATSAPP_URL = "https://wa.me/5551984315964";
@@ -25,13 +26,11 @@ function Contato() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="surface-card flex items-center gap-4 border-[#25D366]/40 p-6 transition-colors hover:border-[#25D366]"
+            className="surface-card flex items-center gap-4 p-6 transition-colors hover:border-gold/60"
           >
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#25D366]">
-              <MessageCircle className="size-5 text-white" />
-            </div>
+            <WhatsAppIcon className="size-8 shrink-0 text-[#25D366]" />
             <div>
-              <p className="font-display text-base text-[#25D366]">WhatsApp</p>
+              <p className="font-display text-base">WhatsApp</p>
               <p className="mt-1 text-sm text-muted-foreground">Clique para conversar</p>
             </div>
           </a>
