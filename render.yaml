@@ -2,7 +2,7 @@ services:
   - type: web
     runtime: static
     name: casa-do-serafim
-    buildCommand: npm i -g bun && bun install && bun run build
+    buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     pullRequestPreviewsEnabled: false
     headers:
