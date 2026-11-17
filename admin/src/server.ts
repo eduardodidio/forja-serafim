@@ -672,10 +672,21 @@ async function handleRequest(req: Request): Promise<Response> {
 
       if (shouldPush) {
         if (process.env.GITHUB_TOKEN) {
-          const remoteUrl = execSync("git remote get-url origin", {
-            ...opts,
-            stdio: "pipe",
-          }).trim();
+          // Ensure origin remote exists (Render may strip it)
+          let remoteUrl = "";
+          try {
+            remoteUrl = execSync("git remote get-url origin", {
+              ...opts,
+              stdio: "pipe",
+            }).trim();
+          } catch {
+            // No origin remote — add it from GITHUB_REPO or hardcoded
+            const repo =
+              process.env.GITHUB_REPO || "https://github.com/eduardodidio/forja-serafim.git";
+            execSync(`git remote add origin "${repo}"`, { ...opts, stdio: "pipe" });
+            remoteUrl = repo;
+            steps.push("Remote origin adicionado.");
+          }
           const authedUrl =
             remoteUrl.startsWith("https://") && !remoteUrl.includes("@")
               ? remoteUrl.replace("https://", `https://x-access-token:${process.env.GITHUB_TOKEN}@`)
