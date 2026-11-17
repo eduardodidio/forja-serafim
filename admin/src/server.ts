@@ -155,11 +155,10 @@ async function handleRequest(req: Request): Promise<Response> {
     });
   }
 
-  // --- Auth gate (if enabled) ---
-  if (isAuthEnabled()) {
+  // --- Auth gate: only protect /admin and /api routes ---
+  if (isAuthEnabled() && (path.startsWith("/admin") || path.startsWith("/api/"))) {
     const email = getSession(req);
     if (!email) {
-      // API calls get 401, page requests redirect to login
       if (path.startsWith("/api/")) {
         return json({ error: "Nao autenticado" }, 401);
       }
