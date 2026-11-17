@@ -8,6 +8,12 @@ function RootComponent() {
 
   return (
     <>
+      {/* Anti-FOUC: apply dark class before React hydrates */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `(function(){var t=localStorage.getItem('theme');if(t!=='light')document.documentElement.classList.add('dark')})()`,
+        }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}

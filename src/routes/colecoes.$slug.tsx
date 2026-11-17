@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ExternalLink, FileText } from "lucide-react";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
+import { Card3DTilt } from "@/components/card-3d-tilt";
 import { Lightbox } from "@/components/lightbox";
 import { getCollection, whatsappLink } from "@/lib/store-data";
 import { getProductJsonLd, getBreadcrumbJsonLd, SITE } from "@/lib/seo";
@@ -98,27 +99,27 @@ function CollectionPage() {
               {(openLightbox) => (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {collection.sampleImages.map((img, i) => (
-                    <div
-                      key={i}
-                      className="art-frame cursor-pointer overflow-hidden bg-card transition-transform hover:scale-[1.02]"
-                      onClick={() => openLightbox(i)}
-                      onContextMenu={(e) => e.preventDefault()}
-                    >
-                      <img
-                        src={img}
-                        alt={`Amostra ${i + 1} da colecao ${collection.name}`}
-                        loading="lazy"
-                        width={600}
-                        height={840}
-                        className="size-full object-cover"
-                        style={{
-                          userSelect: "none",
-                          WebkitUserDrag: "none",
-                          pointerEvents: "none",
-                        } as React.CSSProperties}
-                        draggable={false}
-                      />
-                    </div>
+                    <Card3DTilt key={i} foil gold className="cursor-pointer overflow-hidden bg-card">
+                      <div
+                        onClick={() => openLightbox(i)}
+                        onContextMenu={(e) => e.preventDefault()}
+                      >
+                        <img
+                          src={img}
+                          alt={`Amostra ${i + 1} da colecao ${collection.name}`}
+                          loading="lazy"
+                          width={600}
+                          height={840}
+                          className="size-full object-cover"
+                          style={{
+                            userSelect: "none",
+                            WebkitUserDrag: "none",
+                            pointerEvents: "none",
+                          } as React.CSSProperties}
+                          draggable={false}
+                        />
+                      </div>
+                    </Card3DTilt>
                   ))}
                 </div>
               )}

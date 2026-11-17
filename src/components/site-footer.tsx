@@ -8,7 +8,7 @@ export const DISCLAIMER =
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-border/70 bg-[oklch(0.19_0.012_265)]">
+    <footer className="mt-24 border-t border-border/70 bg-surface">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 md:grid-cols-[2fr_1fr_1fr]">
         <div className="min-w-0">
           <p className="font-display text-lg tracking-[0.18em] uppercase text-gradient-gold">

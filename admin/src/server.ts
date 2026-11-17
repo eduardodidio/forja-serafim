@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, mkdirSync, copyFileSync, statSync } from "fs";
+import { readFileSync, existsSync, mkdirSync, copyFileSync, statSync, unlinkSync } from "fs";
 import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
@@ -282,6 +282,60 @@ async function handleRequest(req: Request): Promise<Response> {
     return json({ path: `/manuals/${slug}.pdf` });
   }
 
+  // Reorder sample images
+  const reorderMatch = path.match(/^\/api\/collections\/([^/]+)\/images\/reorder$/);
+  if (reorderMatch && method === "PUT") {
+    const slug = reorderMatch[1]!;
+    const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+    const col = collections.find((c) => c.slug === slug);
+    if (!col) return json({ error: "Colecao nao encontrada." }, 404);
+
+    const body = await req.json() as { sampleImages?: string[] };
+    if (!body.sampleImages || !Array.isArray(body.sampleImages)) {
+      return json({ error: "sampleImages deve ser um array." }, 400);
+    }
+
+    // Validate all paths exist in current array
+    const currentSet = new Set(col.sampleImages);
+    for (const img of body.sampleImages) {
+      if (!currentSet.has(img)) {
+        return json({ error: `Imagem "${img}" nao encontrada na colecao.` }, 400);
+      }
+    }
+
+    col.sampleImages = body.sampleImages;
+    writeJson(COLLECTIONS_JSON, collections);
+    return json(col);
+  }
+
+  // Delete a sample image
+  const imageDeleteMatch = path.match(/^\/api\/collections\/([^/]+)\/images\/([^/]+)$/);
+  if (imageDeleteMatch && method === "DELETE") {
+    const slug = imageDeleteMatch[1]!;
+    const filename = imageDeleteMatch[2]!;
+    const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+    const col = collections.find((c) => c.slug === slug);
+    if (!col) return json({ error: "Colecao nao encontrada." }, 404);
+
+    const imagePath = `/images/decks/${slug}/${filename}`;
+    const idx = col.sampleImages.indexOf(imagePath);
+    if (idx === -1) return json({ error: "Imagem nao encontrada na colecao." }, 404);
+
+    // Remove from array
+    col.sampleImages.splice(idx, 1);
+    writeJson(COLLECTIONS_JSON, collections);
+
+    // Delete physical file
+    const physicalPath = join(DECKS_DIR, slug, filename);
+    try {
+      if (existsSync(physicalPath)) unlinkSync(physicalPath);
+    } catch (err) {
+      console.error(`Failed to delete file ${physicalPath}:`, err);
+    }
+
+    return json(col);
+  }
+
   // Upload deck images (process with watermark)
   const imagesMatch = path.match(/^\/api\/collections\/([^/]+)\/images$/);
   if (imagesMatch && method === "POST") {
@@ -290,6 +344,13 @@ async function handleRequest(req: Request): Promise<Response> {
     const files = formData.getAll("files") as File[];
 
     if (files.length === 0) return json({ error: "Nenhuma imagem enviada." }, 400);
+
+    // Validate limit of 6 sample images
+    const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+    const col = collections.find((c) => c.slug === slug);
+    if (col && col.sampleImages.length + files.length > 6) {
+      return json({ error: "Maximo de 6 imagens de amostra por colecao." }, 400);
+    }
 
     const destDir = join(DECKS_DIR, slug);
     if (!existsSync(destDir)) mkdirSync(destDir, { recursive: true });

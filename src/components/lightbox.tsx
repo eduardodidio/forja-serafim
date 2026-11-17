@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Card3DTilt } from "@/components/card-3d-tilt";
 
 type LightboxProps = {
   images: string[];
@@ -91,20 +92,25 @@ export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
           )}
 
           {/* Image */}
-          <img
+          <div
             key={index}
-            src={images[index]}
-            alt={`${alt} ${index + 1}`}
-            className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
-            style={{
-              animation: "fade-in 0.2s ease-out",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
-            draggable={false}
-          />
+            style={{ animation: "fade-in 0.2s ease-out" }}
+          >
+            <Card3DTilt foil glowBorder tiltMaxAngle={18} scale={1.08} className="inline-block">
+              <img
+                src={images[index]}
+                alt={`${alt} ${index + 1}`}
+                className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
+                style={{
+                  userSelect: "none",
+                  pointerEvents: "none",
+                }}
+                draggable={false}
+              />
+            </Card3DTilt>
+          </div>
 
           {/* Next */}
           {images.length > 1 && (

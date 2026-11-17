@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Menu } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
 
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { whatsappLink } from "@/lib/store-data";
 
@@ -15,6 +15,24 @@ const links = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("theme");
+    setIsDark(stored !== "light");
+  }, []);
+
+  function toggleTheme() {
+    const next = !isDark;
+    setIsDark(next);
+    if (next) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
@@ -41,6 +59,19 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border text-gold transition-colors hover:border-gold/60 hover:bg-gold/10"
+            aria-label={isDark ? "Mudar para tema claro" : "Mudar para tema escuro"}
+            title={isDark ? "Tema claro" : "Tema escuro"}
+          >
+            <span
+              className="inline-flex items-center justify-center transition-transform duration-300"
+              style={{ transform: isDark ? "rotate(0deg)" : "rotate(180deg)" }}
+            >
+              {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
+            </span>
+          </button>
           <a
             href={whatsappLink("Ola! Vim pelo site da Forja Serafim e tenho interesse em proxies full art.")}
             target="_blank"
