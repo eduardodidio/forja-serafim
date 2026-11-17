@@ -24,11 +24,12 @@ const PORT = parseInt(process.env.PORT || "3001", 10);
 const ALLOWED_ORIGINS = new Set([
   "http://localhost:3001",
   "http://localhost:3000",
-  `https://forja-serafim-admin.onrender.com`,
+  "https://forja-serafim.onrender.com",
 ]);
 
 function getAllowedOrigin(req: Request): string {
   const origin = req.headers.get("Origin") || "";
+  if (!origin) return ""; // same-origin requests may omit Origin
   return ALLOWED_ORIGINS.has(origin) ? origin : "";
 }
 
@@ -221,10 +222,11 @@ async function handleRequest(req: Request): Promise<Response> {
     }
   }
 
-  // CSRF: reject state-changing API requests without valid origin
+  // CSRF: reject state-changing API requests from disallowed cross-origins
+  // Same-origin requests (no Origin header) are always allowed
   if (path.startsWith("/api/") && method !== "GET" && method !== "OPTIONS") {
-    const origin = req.headers.get("Origin") || "";
-    if (!ALLOWED_ORIGINS.has(origin)) {
+    const origin = req.headers.get("Origin");
+    if (origin && !ALLOWED_ORIGINS.has(origin)) {
       return json({ error: "Origem nao permitida." }, 403, req);
     }
   }
