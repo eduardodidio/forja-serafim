@@ -3,7 +3,15 @@ import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
 import { readJson, writeJson } from "./lib/data-io.js";
-import { COLLECTIONS_JSON, TESTIMONIALS_JSON, SETTINGS_JSON, COVERS_DIR, DECKS_DIR, MANUALS_DIR, PROJECT_ROOT } from "./lib/paths.js";
+import {
+  COLLECTIONS_JSON,
+  TESTIMONIALS_JSON,
+  SETTINGS_JSON,
+  COVERS_DIR,
+  DECKS_DIR,
+  MANUALS_DIR,
+  PROJECT_ROOT,
+} from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
 import { processImage } from "./lib/image-processor.js";
 import crypto from "crypto";
@@ -46,12 +54,15 @@ const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toSt
 const sessions = new Map<string, { email: string; expires: number }>();
 
 // Clean up expired sessions every hour
-setInterval(() => {
-  const now = Date.now();
-  for (const [token, session] of sessions) {
-    if (session.expires < now) sessions.delete(token);
-  }
-}, 60 * 60 * 1000);
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [token, session] of sessions) {
+      if (session.expires < now) sessions.delete(token);
+    }
+  },
+  60 * 60 * 1000,
+);
 
 function createSession(email: string): string {
   const token = crypto.randomBytes(32).toString("hex");
@@ -80,7 +91,7 @@ async function verifyGoogleToken(credential: string): Promise<string | null> {
   try {
     const res = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
     if (!res.ok) return null;
-    const data = await res.json() as { email?: string; aud?: string; email_verified?: string };
+    const data = (await res.json()) as { email?: string; aud?: string; email_verified?: string };
     if (data.aud !== GOOGLE_CLIENT_ID) return null;
     if (data.email_verified !== "true") return null;
     return data.email?.toLowerCase() || null;
@@ -166,7 +177,7 @@ async function handleRequest(req: Request): Promise<Response> {
 
   // Google auth callback
   if (path === "/auth/google" && method === "POST") {
-    const body = await req.json() as { credential?: string };
+    const body = (await req.json()) as { credential?: string };
     if (!body.credential) return json({ error: "Missing credential" }, 400, req);
 
     const email = await verifyGoogleToken(body.credential);
@@ -241,7 +252,7 @@ async function handleRequest(req: Request): Promise<Response> {
   }
 
   if (path === "/api/collections" && method === "POST") {
-    const body = await req.json() as Partial<Collection>;
+    const body = (await req.json()) as Partial<Collection>;
     const collections = readJson<Collection[]>(COLLECTIONS_JSON);
 
     if (!body.name || !body.description || !body.cardCount || body.cardCount <= 0) {
@@ -287,7 +298,7 @@ async function handleRequest(req: Request): Promise<Response> {
     if (idx === -1) return json({ error: "Colecao nao encontrada." }, 404, req);
 
     if (method === "PUT") {
-      const body = await req.json() as Partial<Collection>;
+      const body = (await req.json()) as Partial<Collection>;
       if (body.moxfieldUrl !== undefined && !isValidUrl(body.moxfieldUrl)) {
         return json({ error: "moxfieldUrl deve ser uma URL valida (http/https)." }, 400, req);
       }
@@ -340,7 +351,8 @@ async function handleRequest(req: Request): Promise<Response> {
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     if (!file) return json({ error: "Nenhum arquivo enviado." }, 400, req);
-    if (!file.name.toLowerCase().endsWith(".pdf")) return json({ error: "Arquivo deve ser PDF." }, 400, req);
+    if (!file.name.toLowerCase().endsWith(".pdf"))
+      return json({ error: "Arquivo deve ser PDF." }, 400, req);
 
     if (!existsSync(MANUALS_DIR)) mkdirSync(MANUALS_DIR, { recursive: true });
     const dest = join(MANUALS_DIR, `${slug}.pdf`);
@@ -365,7 +377,7 @@ async function handleRequest(req: Request): Promise<Response> {
     const col = collections.find((c) => c.slug === slug);
     if (!col) return json({ error: "Colecao nao encontrada." }, 404, req);
 
-    const body = await req.json() as { sampleImages?: string[] };
+    const body = (await req.json()) as { sampleImages?: string[] };
     if (!body.sampleImages || !Array.isArray(body.sampleImages)) {
       return json({ error: "sampleImages deve ser um array." }, 400, req);
     }
@@ -425,9 +437,15 @@ async function handleRequest(req: Request): Promise<Response> {
     if (files.length === 0) return json({ error: "Nenhuma imagem enviada." }, 400, req);
 
     const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
-    const invalidFiles = files.filter(f => !allowedImageTypes.includes(f.type));
+    const invalidFiles = files.filter((f) => !allowedImageTypes.includes(f.type));
     if (invalidFiles.length > 0) {
-      return json({ error: `Arquivos invalidos: ${invalidFiles.map(f => f.name).join(", ")}. Apenas JPEG, PNG e WebP.` }, 400, req);
+      return json(
+        {
+          error: `Arquivos invalidos: ${invalidFiles.map((f) => f.name).join(", ")}. Apenas JPEG, PNG e WebP.`,
+        },
+        400,
+        req,
+      );
     }
 
     // Validate limit of 6 sample images
@@ -474,7 +492,9 @@ async function handleRequest(req: Request): Promise<Response> {
     try {
       const { rmSync } = await import("fs");
       rmSync(tmpDir, { recursive: true, force: true });
-    } catch {}
+    } catch {
+      /* cleanup best-effort */
+    }
 
     return json({ processed }, 200, req);
   }
@@ -486,8 +506,9 @@ async function handleRequest(req: Request): Promise<Response> {
   }
 
   if (path === "/api/testimonials" && method === "POST") {
-    const body = await req.json() as Partial<Testimonial>;
-    if (!body.name || !body.text) return json({ error: "Nome e texto sao obrigatorios." }, 400, req);
+    const body = (await req.json()) as Partial<Testimonial>;
+    if (!body.name || !body.text)
+      return json({ error: "Nome e texto sao obrigatorios." }, 400, req);
 
     const testimonials = readJson<Testimonial[]>(TESTIMONIALS_JSON);
     const t: Testimonial = { name: body.name, text: body.text, deck: body.deck ?? "" };
@@ -504,7 +525,7 @@ async function handleRequest(req: Request): Promise<Response> {
     if (idx < 0 || idx >= testimonials.length) return json({ error: "Indice invalido." }, 404, req);
 
     if (method === "PUT") {
-      const body = await req.json() as Partial<Testimonial>;
+      const body = (await req.json()) as Partial<Testimonial>;
       const t = testimonials[idx]!;
       if (body.name !== undefined) t.name = body.name;
       if (body.text !== undefined) t.text = body.text;
@@ -527,7 +548,7 @@ async function handleRequest(req: Request): Promise<Response> {
   }
 
   if (path === "/api/settings" && method === "PUT") {
-    const body = await req.json() as Partial<Settings>;
+    const body = (await req.json()) as Partial<Settings>;
     const settings = readJson<Settings>(SETTINGS_JSON);
     if (body.whatsappUrl !== undefined) settings.whatsappUrl = body.whatsappUrl;
     writeJson(SETTINGS_JSON, settings);
@@ -558,7 +579,9 @@ async function handleRequest(req: Request): Promise<Response> {
       for (const f of filesToAdd) {
         try {
           execSync(`git add "${f}"`, { ...opts, stdio: "pipe" });
-        } catch {}
+        } catch {
+          /* file may not exist */
+        }
       }
 
       // 3. Check if there are staged changes to commit
@@ -576,10 +599,14 @@ async function handleRequest(req: Request): Promise<Response> {
       if (ahead !== "0") {
         // Push using token at runtime (never persist in git config)
         if (process.env.GITHUB_TOKEN) {
-          const remoteUrl = execSync("git remote get-url origin", { ...opts, stdio: "pipe" }).trim();
-          const authedUrl = remoteUrl.startsWith("https://") && !remoteUrl.includes("@")
-            ? remoteUrl.replace("https://", `https://x-access-token:${process.env.GITHUB_TOKEN}@`)
-            : remoteUrl;
+          const remoteUrl = execSync("git remote get-url origin", {
+            ...opts,
+            stdio: "pipe",
+          }).trim();
+          const authedUrl =
+            remoteUrl.startsWith("https://") && !remoteUrl.includes("@")
+              ? remoteUrl.replace("https://", `https://x-access-token:${process.env.GITHUB_TOKEN}@`)
+              : remoteUrl;
           execSync(`git push "${authedUrl}" main`, { ...opts, stdio: "pipe" });
         } else {
           execSync("git push origin main", { ...opts, stdio: "pipe" });
@@ -598,15 +625,21 @@ async function handleRequest(req: Request): Promise<Response> {
             steps.push("Deploy disparado no Render! O site sera atualizado em alguns minutos.");
           } else {
             const hookBody = await hookRes.text().catch(() => "");
-            console.error(`Render deploy hook failed: ${hookRes.status} ${hookRes.statusText} — ${hookBody}`);
-            steps.push(`Aviso: deploy hook retornou status ${hookRes.status}. Verifique se o RENDER_DEPLOY_HOOK esta correto.`);
+            console.error(
+              `Render deploy hook failed: ${hookRes.status} ${hookRes.statusText} — ${hookBody}`,
+            );
+            steps.push(
+              `Aviso: deploy hook retornou status ${hookRes.status}. Verifique se o RENDER_DEPLOY_HOOK esta correto.`,
+            );
           }
         } catch (hookErr) {
           console.error("Render deploy hook error:", hookErr);
           steps.push("Aviso: erro de rede ao disparar deploy. Verifique o RENDER_DEPLOY_HOOK.");
         }
       } else {
-        steps.push("Aviso: RENDER_DEPLOY_HOOK nao configurado. Configure no Render para deploys automaticos.");
+        steps.push(
+          "Aviso: RENDER_DEPLOY_HOOK nao configurado. Configure no Render para deploys automaticos.",
+        );
       }
 
       return json({ success: true, steps }, 200, req);
@@ -664,15 +697,21 @@ async function handleRequest(req: Request): Promise<Response> {
 
 // Configure git user for remote server (needed for commit/push on Render)
 try {
-  try { execSync("git config user.email", { cwd: PROJECT_ROOT, stdio: "pipe" }); } catch {
+  try {
+    execSync("git config user.email", { cwd: PROJECT_ROOT, stdio: "pipe" });
+  } catch {
     execSync('git config user.email "admin@forjaserafim.com.br"', { cwd: PROJECT_ROOT });
     execSync('git config user.name "Serafim Admin"', { cwd: PROJECT_ROOT });
   }
-} catch {}
+} catch {
+  /* git config optional */
+}
 
 console.log(`\n  Forja Serafim — Admin Web`);
 console.log(`  http://localhost:${PORT}/admin/`);
-console.log(`  Auth: ${isAuthEnabled() ? `Google OAuth (${ALLOWED_EMAILS.join(", ")})` : "DISABLED (local dev)"}\n`);
+console.log(
+  `  Auth: ${isAuthEnabled() ? `Google OAuth (${ALLOWED_EMAILS.join(", ")})` : "DISABLED (local dev)"}\n`,
+);
 
 Bun.serve({
   port: PORT,

@@ -21,7 +21,9 @@ export function SiteHeader() {
     try {
       const stored = localStorage.getItem("theme");
       setIsDark(stored !== "light");
-    } catch {}
+    } catch {
+      /* localStorage unavailable */
+    }
   }, []);
 
   function toggleTheme() {
@@ -32,14 +34,22 @@ export function SiteHeader() {
     } else {
       document.documentElement.classList.remove("dark");
     }
-    try { localStorage.setItem("theme", next ? "dark" : "light"); } catch {}
+    try {
+      localStorage.setItem("theme", next ? "dark" : "light");
+    } catch {
+      /* localStorage unavailable */
+    }
   }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-4 sm:flex sm:justify-between">
         <Link to="/" className="flex min-w-0 items-center gap-3">
-          <img src="/images/logo-forja-serafim.jpg" alt="Forja Serafim" className="size-8 shrink-0 rounded-full object-cover" />
+          <img
+            src="/images/logo-forja-serafim.jpg"
+            alt="Forja Serafim"
+            className="size-8 shrink-0 rounded-full object-cover"
+          />
           <span className="truncate font-display text-lg tracking-[0.18em] uppercase text-gradient-gold sm:text-xl">
             Forja Serafim
           </span>
@@ -74,7 +84,9 @@ export function SiteHeader() {
             </span>
           </button>
           <a
-            href={whatsappLink("Ola! Vim pelo site da Forja Serafim e tenho interesse em proxies full art.")}
+            href={whatsappLink(
+              "Ola! Vim pelo site da Forja Serafim e tenho interesse em proxies full art.",
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-gold/60 hover:text-gold"
