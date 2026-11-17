@@ -1,647 +1,933 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — Forja Serafim</title>
-  <!-- Anti-FOUC: apply dark class before render -->
-  <script>(function(){var t=localStorage.getItem('admin-theme');if(t!=='light')document.documentElement.classList.add('dark')})()</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['Cinzel', 'Georgia', 'serif'],
-            sans: ['Jost', 'sans-serif']
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Forja Serafim</title>
+    <!-- Anti-FOUC: apply dark class before render -->
+    <script>
+      (function () {
+        var t = localStorage.getItem("admin-theme");
+        if (t !== "light") document.documentElement.classList.add("dark");
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Jost:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ["Cinzel", "Georgia", "serif"],
+              sans: ["Jost", "sans-serif"],
+            },
+            colors: {
+              gold: {
+                DEFAULT: "var(--admin-gold)",
+                light: "var(--admin-gold-light)",
+                dark: "var(--admin-gold-dark)",
+              },
+              surface: "var(--admin-surface)",
+              deeper: "var(--admin-deeper)",
+              panel: "var(--admin-panel)",
+            },
           },
-          colors: {
-            gold: { DEFAULT: 'var(--admin-gold)', light: 'var(--admin-gold-light)', dark: 'var(--admin-gold-dark)' },
-            surface: 'var(--admin-surface)',
-            deeper: 'var(--admin-deeper)',
-            panel: 'var(--admin-panel)',
-          }
+        },
+      };
+    </script>
+    <style>
+      /* Theme variables — light (default) */
+      :root {
+        --admin-gold: oklch(0.65 0.12 75);
+        --admin-gold-light: oklch(0.75 0.09 82);
+        --admin-gold-dark: oklch(0.52 0.1 70);
+        --admin-surface: oklch(0.95 0.006 90);
+        --admin-deeper: oklch(0.97 0.004 90);
+        --admin-panel: oklch(0.98 0.004 90);
+        --admin-text: oklch(0.2 0.012 265);
+        --admin-text-muted: oklch(0.45 0.012 265);
+        --admin-text-faint: oklch(0.55 0.01 265);
+        --admin-border: oklch(0.85 0.01 90);
+        --admin-border-faint: oklch(0.88 0.008 90);
+        --admin-bg-hover: oklch(0.92 0.006 90);
+        --admin-code-bg: oklch(0.93 0.005 90);
+        color-scheme: light;
+      }
+      /* Theme variables — dark */
+      .dark {
+        --admin-gold: oklch(0.75 0.09 82);
+        --admin-gold-light: oklch(0.85 0.06 85);
+        --admin-gold-dark: oklch(0.62 0.08 70);
+        --admin-surface: oklch(0.21 0.012 265);
+        --admin-deeper: oklch(0.17 0.012 265);
+        --admin-panel: oklch(0.22 0.013 265);
+        --admin-text: oklch(0.92 0.006 90);
+        --admin-text-muted: oklch(0.65 0.012 265);
+        --admin-text-faint: oklch(0.45 0.01 265);
+        --admin-border: oklch(0.3 0.014 265);
+        --admin-border-faint: oklch(0.25 0.012 265);
+        --admin-bg-hover: oklch(0.25 0.012 265);
+        --admin-code-bg: oklch(0.22 0.012 265);
+        color-scheme: dark;
+      }
+
+      body {
+        font-family: "Jost", system-ui, sans-serif;
+        color: var(--admin-text);
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--admin-border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--admin-text-faint);
+      }
+
+      /* Tab underline animation */
+      .tab-btn {
+        position: relative;
+        color: var(--admin-text-muted);
+      }
+      .tab-btn:hover {
+        color: var(--admin-text);
+      }
+      .tab-btn::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: oklch(0.75 0.09 82);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+      .tab-btn.tab-active::after {
+        width: 100%;
+      }
+      .tab-btn.tab-active {
+        color: oklch(0.75 0.09 82);
+      }
+
+      /* Buttons */
+      .btn {
+        @apply px-4 py-2 rounded-xl text-sm font-medium inline-flex items-center gap-2;
+        transition: all 200ms ease;
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .btn-gold {
+        @apply text-black;
+        background: linear-gradient(
+          135deg,
+          oklch(0.62 0.08 70),
+          oklch(0.75 0.09 82),
+          oklch(0.85 0.06 85)
+        );
+        background-size: 200% 200%;
+        box-shadow: 0 0 0 0 oklch(0.75 0.09 82 / 0);
+      }
+      .btn-gold:hover {
+        box-shadow: 0 4px 20px oklch(0.75 0.09 82 / 0.3);
+        background-position: 100% 100%;
+        transform: translateY(-1px);
+      }
+      .btn-outline {
+        border: 1px solid var(--admin-border);
+        color: var(--admin-text-muted);
+        transition: all 200ms ease;
+      }
+      .btn-outline:hover {
+        border-color: var(--admin-gold);
+        color: var(--admin-gold);
+      }
+      .btn-danger {
+        @apply border border-red-900/60 text-red-400;
+        transition: all 200ms ease;
+      }
+      .btn-danger:hover {
+        @apply bg-red-900/30 border-red-700;
+      }
+      .btn-green {
+        @apply bg-gradient-to-r from-emerald-700 to-emerald-600 text-white;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        transition: all 200ms ease;
+      }
+      .btn-green:hover {
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
+        transform: translateY(-1px);
+      }
+      .btn-green:disabled {
+        @apply opacity-50 cursor-not-allowed;
+        box-shadow: none !important;
+        filter: grayscale(0.5);
+        transform: none !important;
+      }
+
+      /* Inputs */
+      .input {
+        @apply w-full rounded-xl px-4 py-2.5 text-sm outline-none;
+        border: 1px solid var(--admin-border);
+        background: var(--admin-deeper);
+        color: var(--admin-text);
+        transition: all 200ms ease;
+      }
+      .input:focus {
+        border-color: var(--admin-gold);
+        box-shadow: 0 0 0 3px oklch(0.75 0.09 82 / 0.1);
+      }
+      .input::placeholder {
+        color: var(--admin-text-faint);
+      }
+
+      /* Select custom arrow */
+      select.input {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1rem;
+        padding-right: 2.5rem;
+        cursor: pointer;
+      }
+      select.input:focus {
+        cursor: default;
+      }
+      select.input option {
+        background: var(--admin-panel);
+        color: var(--admin-text);
+      }
+
+      /* Textarea */
+      textarea.input {
+        resize: vertical;
+        min-height: 5rem;
+        line-height: 1.6;
+      }
+
+      /* Cards */
+      .card {
+        @apply rounded-2xl bg-surface p-5;
+        border: 1px solid var(--admin-border);
+        transition: all 300ms ease;
+      }
+      .card:hover {
+        border-color: var(--admin-gold);
+        box-shadow:
+          0 4px 24px oklch(0 0 0 / 0.15),
+          0 0 0 1px oklch(0.75 0.09 82 / 0.05);
+        transform: translateY(-2px);
+      }
+      .dark .card:hover {
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.3),
+          0 0 0 1px oklch(0.75 0.09 82 / 0.05);
+      }
+
+      /* Toast */
+      .toast-container {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .toast-item {
+        @apply rounded-xl px-5 py-3.5 text-sm font-medium shadow-2xl flex items-center gap-3;
+        animation: toast-in 0.35s ease-out;
+        position: relative;
+        overflow: hidden;
+      }
+      .toast-item.toast-out {
+        animation: toast-out 0.3s ease-in forwards;
+      }
+      .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        border-radius: 0 0 0 0.75rem;
+        animation: toast-progress 3s linear forwards;
+      }
+      @keyframes toast-in {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
         }
       }
-    }
-  </script>
-  <style>
-    /* Theme variables — light (default) */
-    :root {
-      --admin-gold: oklch(0.65 0.12 75);
-      --admin-gold-light: oklch(0.75 0.09 82);
-      --admin-gold-dark: oklch(0.52 0.1 70);
-      --admin-surface: oklch(0.95 0.006 90);
-      --admin-deeper: oklch(0.97 0.004 90);
-      --admin-panel: oklch(0.98 0.004 90);
-      --admin-text: oklch(0.2 0.012 265);
-      --admin-text-muted: oklch(0.45 0.012 265);
-      --admin-text-faint: oklch(0.55 0.01 265);
-      --admin-border: oklch(0.85 0.01 90);
-      --admin-border-faint: oklch(0.88 0.008 90);
-      --admin-bg-hover: oklch(0.92 0.006 90);
-      --admin-code-bg: oklch(0.93 0.005 90);
-      color-scheme: light;
-    }
-    /* Theme variables — dark */
-    .dark {
-      --admin-gold: oklch(0.75 0.09 82);
-      --admin-gold-light: oklch(0.85 0.06 85);
-      --admin-gold-dark: oklch(0.62 0.08 70);
-      --admin-surface: oklch(0.21 0.012 265);
-      --admin-deeper: oklch(0.17 0.012 265);
-      --admin-panel: oklch(0.22 0.013 265);
-      --admin-text: oklch(0.92 0.006 90);
-      --admin-text-muted: oklch(0.65 0.012 265);
-      --admin-text-faint: oklch(0.45 0.01 265);
-      --admin-border: oklch(0.3 0.014 265);
-      --admin-border-faint: oklch(0.25 0.012 265);
-      --admin-bg-hover: oklch(0.25 0.012 265);
-      --admin-code-bg: oklch(0.22 0.012 265);
-      color-scheme: dark;
-    }
+      @keyframes toast-out {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+      @keyframes toast-progress {
+        from {
+          width: 100%;
+        }
+        to {
+          width: 0%;
+        }
+      }
 
-    body { font-family: 'Jost', system-ui, sans-serif; color: var(--admin-text); }
+      /* Modal */
+      .modal-backdrop {
+        @apply fixed inset-0 z-40;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+      }
+      .dark .modal-backdrop {
+        background: rgba(0, 0, 0, 0.7);
+      }
+      .modal-backdrop.show {
+        animation: fade-in 0.2s ease-out;
+      }
+      .modal-content.show {
+        animation: modal-in 0.25s ease-out;
+      }
+      .modal-content {
+        border: 1px solid var(--admin-border);
+      }
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes modal-in {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--admin-border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--admin-text-faint); }
+      /* Badge */
+      .badge {
+        @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+      }
+      .badge-green {
+        @apply bg-emerald-900/40 text-emerald-400 border border-emerald-800/50;
+      }
+      .badge-gray {
+        border: 1px dashed var(--admin-border);
+        color: var(--admin-text-faint);
+        background: var(--admin-bg-hover);
+      }
+      .badge-gold {
+        @apply bg-gold/10 text-gold border border-gold/20;
+      }
 
-    /* Tab underline animation */
-    .tab-btn { position: relative; color: var(--admin-text-muted); }
-    .tab-btn:hover { color: var(--admin-text); }
-    .tab-btn::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      width: 0;
-      height: 2px;
-      background: oklch(0.75 0.09 82);
-      transition: all 0.3s ease;
-      transform: translateX(-50%);
-    }
-    .tab-btn.tab-active::after { width: 100%; }
-    .tab-btn.tab-active { color: oklch(0.75 0.09 82); }
+      /* Upload zone */
+      .upload-zone {
+        @apply rounded-xl border-2 border-dashed p-4 text-center cursor-pointer;
+        border-color: var(--admin-border);
+        transition: all 200ms ease;
+      }
+      .upload-zone:hover {
+        border-color: var(--admin-gold);
+        background: oklch(0.75 0.09 82 / 0.05);
+      }
 
-    /* Buttons */
-    .btn {
-      @apply px-4 py-2 rounded-xl text-sm font-medium inline-flex items-center gap-2;
-      transition: all 200ms ease;
-    }
-    .btn:active { transform: scale(0.97); }
-    .btn-gold {
-      @apply text-black;
-      background: linear-gradient(135deg, oklch(0.62 0.08 70), oklch(0.75 0.09 82), oklch(0.85 0.06 85));
-      background-size: 200% 200%;
-      box-shadow: 0 0 0 0 oklch(0.75 0.09 82 / 0);
-    }
-    .btn-gold:hover {
-      box-shadow: 0 4px 20px oklch(0.75 0.09 82 / 0.3);
-      background-position: 100% 100%;
-      transform: translateY(-1px);
-    }
-    .btn-outline {
-      border: 1px solid var(--admin-border);
-      color: var(--admin-text-muted);
-      transition: all 200ms ease;
-    }
-    .btn-outline:hover {
-      border-color: var(--admin-gold);
-      color: var(--admin-gold);
-    }
-    .btn-danger {
-      @apply border border-red-900/60 text-red-400;
-      transition: all 200ms ease;
-    }
-    .btn-danger:hover {
-      @apply bg-red-900/30 border-red-700;
-    }
-    .btn-green {
-      @apply bg-gradient-to-r from-emerald-700 to-emerald-600 text-white;
-      box-shadow: 0 0 0 0 rgba(16,185,129,0);
-      transition: all 200ms ease;
-    }
-    .btn-green:hover {
-      box-shadow: 0 4px 20px rgba(16,185,129,0.25);
-      transform: translateY(-1px);
-    }
-    .btn-green:disabled {
-      @apply opacity-50 cursor-not-allowed;
-      box-shadow: none !important;
-      filter: grayscale(0.5);
-      transform: none !important;
-    }
+      /* Fade in animation for lists */
+      .fade-in {
+        animation: fade-in 0.4s ease-out;
+      }
 
-    /* Inputs */
-    .input {
-      @apply w-full rounded-xl px-4 py-2.5 text-sm outline-none;
-      border: 1px solid var(--admin-border);
-      background: var(--admin-deeper);
-      color: var(--admin-text);
-      transition: all 200ms ease;
-    }
-    .input:focus {
-      border-color: var(--admin-gold);
-      box-shadow: 0 0 0 3px oklch(0.75 0.09 82 / 0.1);
-    }
-    .input::placeholder { color: var(--admin-text-faint); }
+      /* Spinner */
+      .spinner {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-    /* Select custom arrow */
-    select.input {
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.75rem center;
-      background-size: 1rem;
-      padding-right: 2.5rem;
-      cursor: pointer;
-    }
-    select.input:focus { cursor: default; }
-    select.input option {
-      background: var(--admin-panel);
-      color: var(--admin-text);
-    }
+      /* Publish step */
+      .publish-step {
+        @apply flex items-center gap-3 py-2.5 text-sm;
+        transition: all 0.3s ease;
+      }
+      .publish-step .step-icon {
+        @apply flex items-center justify-center w-7 h-7 rounded-full text-xs flex-shrink-0;
+        transition: all 0.3s ease;
+      }
 
-    /* Textarea */
-    textarea.input {
-      resize: vertical;
-      min-height: 5rem;
-      line-height: 1.6;
-    }
+      /* Skeleton */
+      .skeleton {
+        @apply rounded-xl;
+        background: var(--admin-bg-hover);
+        animation: skeleton-pulse 1.5s ease-in-out infinite;
+      }
+      @keyframes skeleton-pulse {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
 
-    /* Cards */
-    .card {
-      @apply rounded-2xl bg-surface p-5;
-      border: 1px solid var(--admin-border);
-      transition: all 300ms ease;
-    }
-    .card:hover {
-      border-color: var(--admin-gold);
-      box-shadow: 0 4px 24px oklch(0 0 0 / 0.15), 0 0 0 1px oklch(0.75 0.09 82 / 0.05);
-      transform: translateY(-2px);
-    }
-    .dark .card:hover {
-      box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px oklch(0.75 0.09 82 / 0.05);
-    }
+      /* Section divider */
+      .section-divider {
+        @apply flex items-center gap-3 py-2;
+      }
+      .section-divider::after {
+        content: "";
+        @apply flex-1 h-px;
+        background: var(--admin-border);
+      }
 
-    /* Toast */
-    .toast-container {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .toast-item {
-      @apply rounded-xl px-5 py-3.5 text-sm font-medium shadow-2xl flex items-center gap-3;
-      animation: toast-in 0.35s ease-out;
-      position: relative;
-      overflow: hidden;
-    }
-    .toast-item.toast-out { animation: toast-out 0.3s ease-in forwards; }
-    .toast-progress {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 3px;
-      border-radius: 0 0 0 0.75rem;
-      animation: toast-progress 3s linear forwards;
-    }
-    @keyframes toast-in {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes toast-out {
-      from { transform: translateX(0); opacity: 1; }
-      to { transform: translateX(100%); opacity: 0; }
-    }
-    @keyframes toast-progress {
-      from { width: 100%; }
-      to { width: 0%; }
-    }
+      /* Confirm modal */
+      .confirm-icon {
+        @apply flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3;
+      }
 
-    /* Modal */
-    .modal-backdrop {
-      @apply fixed inset-0 z-40;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-    }
-    .dark .modal-backdrop {
-      background: rgba(0,0,0,0.7);
-    }
-    .modal-backdrop.show { animation: fade-in 0.2s ease-out; }
-    .modal-content.show { animation: modal-in 0.25s ease-out; }
-    .modal-content {
-      border: 1px solid var(--admin-border);
-    }
-    @keyframes fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes modal-in {
-      from { opacity: 0; transform: scale(0.95) translateY(10px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
+      /* Font display utility */
+      .font-display {
+        font-family: "Cinzel", Georgia, serif;
+      }
 
-    /* Badge */
-    .badge {
-      @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
-    }
-    .badge-green { @apply bg-emerald-900/40 text-emerald-400 border border-emerald-800/50; }
-    .badge-gray { border: 1px dashed var(--admin-border); color: var(--admin-text-faint); background: var(--admin-bg-hover); }
-    .badge-gold { @apply bg-gold/10 text-gold border border-gold/20; }
+      /* Gold text gradient */
+      .text-gold-gradient {
+        background: linear-gradient(
+          135deg,
+          oklch(0.85 0.06 85),
+          oklch(0.75 0.09 82),
+          oklch(0.62 0.08 70)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
 
-    /* Upload zone */
-    .upload-zone {
-      @apply rounded-xl border-2 border-dashed p-4 text-center cursor-pointer;
-      border-color: var(--admin-border);
-      transition: all 200ms ease;
-    }
-    .upload-zone:hover {
-      border-color: var(--admin-gold);
-      background: oklch(0.75 0.09 82 / 0.05);
-    }
+      /* Theme-aware text/border overrides for body content */
+      body .text-gray-200 {
+        color: var(--admin-text);
+      }
+      body .text-gray-300 {
+        color: var(--admin-text);
+      }
+      body .text-gray-400 {
+        color: var(--admin-text-muted);
+      }
+      body .text-gray-500 {
+        color: var(--admin-text-faint);
+      }
+      body .text-gray-600 {
+        color: var(--admin-text-faint);
+      }
+      body .border-gray-700,
+      body .border-gray-700\/60,
+      body .border-gray-700\/80 {
+        border-color: var(--admin-border);
+      }
+      body .border-gray-800,
+      body .border-gray-800\/60,
+      body .border-gray-800\/80 {
+        border-color: var(--admin-border);
+      }
+      body .bg-gray-800 {
+        background-color: var(--admin-bg-hover);
+      }
+      body .bg-gray-800\/50 {
+        background-color: var(--admin-bg-hover);
+      }
 
-    /* Fade in animation for lists */
-    .fade-in { animation: fade-in 0.4s ease-out; }
+      /* Focus rings for accessibility */
+      .btn:focus-visible,
+      .input:focus-visible,
+      .tab-btn:focus-visible {
+        outline: 2px solid oklch(0.75 0.09 82 / 0.6);
+        outline-offset: 2px;
+      }
 
-    /* Spinner */
-    .spinner {
-      display: inline-block;
-      width: 1em;
-      height: 1em;
-      border: 2px solid currentColor;
-      border-right-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+      /* Image thumbnail hover */
+      .img-thumb {
+        overflow: hidden;
+        transition: all 200ms ease;
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 4px oklch(0 0 0 / 0.08);
+      }
+      .img-thumb img {
+        transition: transform 200ms ease;
+      }
+      .img-thumb:hover img {
+        transform: scale(1.03);
+      }
+      .img-thumb:hover {
+        box-shadow: 0 3px 12px oklch(0 0 0 / 0.15);
+      }
 
-    /* Publish step */
-    .publish-step {
-      @apply flex items-center gap-3 py-2.5 text-sm;
-      transition: all 0.3s ease;
-    }
-    .publish-step .step-icon {
-      @apply flex items-center justify-center w-7 h-7 rounded-full text-xs flex-shrink-0;
-      transition: all 0.3s ease;
-    }
+      /* Link hover */
+      a {
+        transition: color 200ms ease;
+      }
 
-    /* Skeleton */
-    .skeleton {
-      @apply rounded-xl;
-      background: var(--admin-bg-hover);
-      animation: skeleton-pulse 1.5s ease-in-out infinite;
-    }
-    @keyframes skeleton-pulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 0.8; }
-    }
+      /* Danger zone divider */
+      .section-divider-danger::after {
+        background: oklch(0.5 0.1 25 / 0.3);
+      }
 
-    /* Section divider */
-    .section-divider {
-      @apply flex items-center gap-3 py-2;
-    }
-    .section-divider::after {
-      content: '';
-      @apply flex-1 h-px;
-      background: var(--admin-border);
-    }
+      /* Toast light mode */
+      :root:not(.dark) .toast-item.bg-emerald-950\/90 {
+        background: oklch(0.95 0.03 155);
+        border-color: oklch(0.75 0.1 155);
+        color: oklch(0.25 0.06 155);
+      }
+      :root:not(.dark) .toast-item.bg-red-950\/90 {
+        background: oklch(0.95 0.03 25);
+        border-color: oklch(0.75 0.1 25);
+        color: oklch(0.3 0.08 25);
+      }
 
-    /* Confirm modal */
-    .confirm-icon {
-      @apply flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3;
-    }
+      /* Responsive modal padding */
+      @media (max-width: 640px) {
+        .modal-content {
+          padding: 1rem !important;
+        }
+        .modal-content h3 {
+          font-size: 1rem;
+        }
+      }
 
-    /* Font display utility */
-    .font-display {
-      font-family: 'Cinzel', Georgia, serif;
-    }
-
-    /* Gold text gradient */
-    .text-gold-gradient {
-      background: linear-gradient(135deg, oklch(0.85 0.06 85), oklch(0.75 0.09 82), oklch(0.62 0.08 70));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Theme-aware text/border overrides for body content */
-    body .text-gray-200 { color: var(--admin-text); }
-    body .text-gray-300 { color: var(--admin-text); }
-    body .text-gray-400 { color: var(--admin-text-muted); }
-    body .text-gray-500 { color: var(--admin-text-faint); }
-    body .text-gray-600 { color: var(--admin-text-faint); }
-    body .border-gray-700,
-    body .border-gray-700\/60,
-    body .border-gray-700\/80 { border-color: var(--admin-border); }
-    body .border-gray-800,
-    body .border-gray-800\/60,
-    body .border-gray-800\/80 { border-color: var(--admin-border); }
-    body .bg-gray-800 { background-color: var(--admin-bg-hover); }
-    body .bg-gray-800\/50 { background-color: var(--admin-bg-hover); }
-
-    /* Focus rings for accessibility */
-    .btn:focus-visible,
-    .input:focus-visible,
-    .tab-btn:focus-visible {
-      outline: 2px solid oklch(0.75 0.09 82 / 0.6);
-      outline-offset: 2px;
-    }
-
-    /* Image thumbnail hover */
-    .img-thumb {
-      overflow: hidden;
-      transition: all 200ms ease;
-      border-radius: 0.75rem;
-      box-shadow: 0 1px 4px oklch(0 0 0 / 0.08);
-    }
-    .img-thumb img {
-      transition: transform 200ms ease;
-    }
-    .img-thumb:hover img {
-      transform: scale(1.03);
-    }
-    .img-thumb:hover {
-      box-shadow: 0 3px 12px oklch(0 0 0 / 0.15);
-    }
-
-
-    /* Link hover */
-    a {
-      transition: color 200ms ease;
-    }
-
-    /* Danger zone divider */
-    .section-divider-danger::after {
-      background: oklch(0.5 0.1 25 / 0.3);
-    }
-
-    /* Toast light mode */
-    :root:not(.dark) .toast-item.bg-emerald-950\/90 { background: oklch(0.95 0.03 155); border-color: oklch(0.75 0.1 155); color: oklch(0.25 0.06 155); }
-    :root:not(.dark) .toast-item.bg-red-950\/90 { background: oklch(0.95 0.03 25); border-color: oklch(0.75 0.1 25); color: oklch(0.3 0.08 25); }
-
-    /* Responsive modal padding */
-    @media (max-width: 640px) {
-      .modal-content { padding: 1rem !important; }
-      .modal-content h3 { font-size: 1rem; }
-    }
-
-    /* Tabs horizontal scroll on small screens */
-    @media (max-width: 640px) {
-      nav .flex { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-      nav .flex::-webkit-scrollbar { display: none; }
-    }
-  </style>
-</head>
-<body class="min-h-screen bg-deeper" style="color:var(--admin-text)">
-
-  <!-- Header -->
-  <header class="border-b bg-surface/95 backdrop-blur-sm sticky top-0 z-30" style="border-color:var(--admin-border)">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-      <div class="flex items-center gap-3">
-        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-gold/10 text-gold text-lg">
-          &#9733;
-        </div>
-        <div>
-          <h1 class="text-lg font-bold text-gold tracking-tight font-display">Forja Serafim</h1>
-          <div class="flex items-center gap-2">
-            <span class="badge badge-gold text-[10px] py-0 px-1.5">ADMIN</span>
-            <p class="text-xs text-gray-500">Painel Administrativo</p>
+      /* Tabs horizontal scroll on small screens */
+      @media (max-width: 640px) {
+        nav .flex {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+        nav .flex::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-deeper" style="color: var(--admin-text)">
+    <!-- Header -->
+    <header
+      class="border-b bg-surface/95 backdrop-blur-sm sticky top-0 z-30"
+      style="border-color: var(--admin-border)"
+    >
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3">
+          <div
+            class="flex items-center justify-center w-10 h-10 rounded-xl bg-gold/10 text-gold text-lg"
+          >
+            &#9733;
           </div>
-        </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <button onclick="toggleAdminTheme()" id="admin-theme-btn"
-                class="btn btn-outline text-xs py-1.5 px-2.5" title="Alternar tema">
-          <span id="admin-theme-icon"></span>
-        </button>
-        <a href="https://forjaserafim.com.br" target="_blank"
-           class="btn btn-outline text-xs py-1.5 px-3">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-          Ver site
-        </a>
-        <button onclick="publish()" id="btn-publish" class="btn btn-green text-xs py-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-          Publicar
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Tabs -->
-  <nav class="border-b bg-surface/60 backdrop-blur-sm sticky top-[65px] z-20" style="border-color:var(--admin-border)">
-    <div class="mx-auto flex max-w-6xl gap-0 px-5">
-      <button onclick="showTab('collections')" id="tab-collections"
-              class="tab-btn px-5 py-3.5 text-sm transition-colors flex items-center gap-2 tab-active font-display">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-        Colecoes <span id="count-collections" class="badge badge-gold text-[10px] py-0 px-1.5 ml-1 hidden">0</span>
-      </button>
-      <button onclick="showTab('testimonials')" id="tab-testimonials"
-              class="tab-btn px-5 py-3.5 text-sm transition-colors flex items-center gap-2 font-display">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-        Depoimentos <span id="count-testimonials" class="badge badge-gold text-[10px] py-0 px-1.5 ml-1 hidden">0</span>
-      </button>
-      <button onclick="showTab('settings')" id="tab-settings"
-              class="tab-btn px-5 py-3.5 text-sm transition-colors flex items-center gap-2 font-display">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
-        Configuracoes
-      </button>
-    </div>
-  </nav>
-
-  <!-- Content -->
-  <main class="mx-auto max-w-6xl px-5 py-8">
-
-    <!-- Collections Tab -->
-    <div id="panel-collections" class="fade-in">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold font-display">Colecoes</h2>
-        <button onclick="openAddCollection()" class="btn btn-gold">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Nova colecao
-        </button>
-      </div>
-      <div id="collections-list" class="grid gap-5">
-        <!-- Skeleton loading -->
-        <div class="skeleton h-48 w-full"></div>
-        <div class="skeleton h-48 w-full"></div>
-      </div>
-    </div>
-
-    <!-- Testimonials Tab -->
-    <div id="panel-testimonials" class="hidden fade-in">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold font-display">Depoimentos</h2>
-        <button onclick="openAddTestimonial()" class="btn btn-gold">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Novo depoimento
-        </button>
-      </div>
-      <div id="testimonials-list" class="grid gap-4">
-        <div class="skeleton h-28 w-full"></div>
-        <div class="skeleton h-28 w-full"></div>
-      </div>
-    </div>
-
-    <!-- Settings Tab -->
-    <div id="panel-settings" class="hidden fade-in">
-      <h2 class="text-xl font-semibold mb-6 font-display">Configuracoes</h2>
-      <div class="card max-w-xl">
-        <div class="section-divider">
-          <span class="text-sm font-semibold text-gold flex items-center gap-2 font-display">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.11-1.14l-.29-.174-3.01.79.8-2.93-.19-.3A7.96 7.96 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
-            Contato
-          </span>
-        </div>
-        <div class="space-y-4 mt-4">
           <div>
-            <label class="text-xs font-medium text-gray-400 mb-1.5 block uppercase tracking-wider">Link do WhatsApp</label>
-            <div class="relative">
-              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-              </span>
-              <input id="settings-whatsapp" class="input pl-10" placeholder="https://wa.me/5551999999999" oninput="onSettingsChange()" />
+            <h1 class="text-lg font-bold text-gold tracking-tight font-display">Forja Serafim</h1>
+            <div class="flex items-center gap-2">
+              <span class="badge badge-gold text-[10px] py-0 px-1.5">ADMIN</span>
+              <p class="text-xs text-gray-500">Painel Administrativo</p>
             </div>
-            <p class="text-xs text-gray-500 mt-2 flex items-center gap-1.5">
-              <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              Formato: <code class="px-1.5 py-0.5 rounded" style="background:var(--admin-code-bg);color:var(--admin-text-muted)">https://wa.me/55XXXXXXXXXXX</code> (pais + DDD + numero)
-            </p>
           </div>
-          <div class="flex justify-end pt-2">
-            <button onclick="saveSettings()" id="btn-save-settings" class="btn btn-gold" disabled>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              Salvar
-            </button>
+        </div>
+        <div class="flex items-center gap-3">
+          <button
+            onclick="toggleAdminTheme()"
+            id="admin-theme-btn"
+            class="btn btn-outline text-xs py-1.5 px-2.5"
+            title="Alternar tema"
+          >
+            <span id="admin-theme-icon"></span>
+          </button>
+          <a
+            href="https://forjaserafim.com.br"
+            target="_blank"
+            class="btn btn-outline text-xs py-1.5 px-3"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+            Ver site
+          </a>
+          <button onclick="publish()" id="btn-publish" class="btn btn-green text-xs py-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 10l7-7m0 0l7 7m-7-7v18"
+              />
+            </svg>
+            Publicar
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav
+      class="border-b bg-surface/60 backdrop-blur-sm sticky top-[65px] z-20"
+      style="border-color: var(--admin-border)"
+    >
+      <div class="mx-auto flex max-w-6xl gap-0 px-5">
+        <button
+          onclick="showTab('collections')"
+          id="tab-collections"
+          class="tab-btn px-5 py-3.5 text-sm transition-colors flex items-center gap-2 tab-active font-display"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            />
+          </svg>
+          Colecoes
+          <span id="count-collections" class="badge badge-gold text-[10px] py-0 px-1.5 ml-1 hidden"
+            >0</span
+          >
+        </button>
+        <button
+          onclick="showTab('testimonials')"
+          id="tab-testimonials"
+          class="tab-btn px-5 py-3.5 text-sm transition-colors flex items-center gap-2 font-display"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+            />
+          </svg>
+          Depoimentos
+          <span id="count-testimonials" class="badge badge-gold text-[10px] py-0 px-1.5 ml-1 hidden"
+            >0</span
+          >
+        </button>
+        <button
+          onclick="showTab('settings')"
+          id="tab-settings"
+          class="tab-btn px-5 py-3.5 text-sm transition-colors flex items-center gap-2 font-display"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          Configuracoes
+        </button>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="mx-auto max-w-6xl px-5 py-8">
+      <!-- Collections Tab -->
+      <div id="panel-collections" class="fade-in">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold font-display">Colecoes</h2>
+          <button onclick="openAddCollection()" class="btn btn-gold">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Nova colecao
+          </button>
+        </div>
+        <div id="collections-list" class="grid gap-5">
+          <!-- Skeleton loading -->
+          <div class="skeleton h-48 w-full"></div>
+          <div class="skeleton h-48 w-full"></div>
+        </div>
+      </div>
+
+      <!-- Testimonials Tab -->
+      <div id="panel-testimonials" class="hidden fade-in">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold font-display">Depoimentos</h2>
+          <button onclick="openAddTestimonial()" class="btn btn-gold">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Novo depoimento
+          </button>
+        </div>
+        <div id="testimonials-list" class="grid gap-4">
+          <div class="skeleton h-28 w-full"></div>
+          <div class="skeleton h-28 w-full"></div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="panel-settings" class="hidden fade-in">
+        <h2 class="text-xl font-semibold mb-6 font-display">Configuracoes</h2>
+        <div class="card max-w-xl">
+          <div class="section-divider">
+            <span class="text-sm font-semibold text-gold flex items-center gap-2 font-display">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"
+                />
+                <path
+                  d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.11-1.14l-.29-.174-3.01.79.8-2.93-.19-.3A7.96 7.96 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"
+                />
+              </svg>
+              Contato
+            </span>
+          </div>
+          <div class="space-y-4 mt-4">
+            <div>
+              <label class="text-xs font-medium text-gray-400 mb-1.5 block uppercase tracking-wider"
+                >Link do WhatsApp</label
+              >
+              <div class="relative">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
+                  </svg>
+                </span>
+                <input
+                  id="settings-whatsapp"
+                  class="input pl-10"
+                  placeholder="https://wa.me/5551999999999"
+                  oninput="onSettingsChange()"
+                />
+              </div>
+              <p class="text-xs text-gray-500 mt-2 flex items-center gap-1.5">
+                <svg
+                  class="w-3 h-3 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                Formato:
+                <code
+                  class="px-1.5 py-0.5 rounded"
+                  style="background: var(--admin-code-bg); color: var(--admin-text-muted)"
+                  >https://wa.me/55XXXXXXXXXXX</code
+                >
+                (pais + DDD + numero)
+              </p>
+            </div>
+            <div class="flex justify-end pt-2">
+              <button onclick="saveSettings()" id="btn-save-settings" class="btn btn-gold" disabled>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Salvar
+              </button>
+            </div>
           </div>
         </div>
       </div>
+    </main>
+
+    <!-- Modal backdrop -->
+    <div id="modal-backdrop" class="modal-backdrop hidden" onclick="closeModal()"></div>
+
+    <!-- Modal -->
+    <div
+      id="modal"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden overflow-y-auto"
+    >
+      <div
+        class="w-full max-w-lg rounded-2xl bg-surface p-6 shadow-2xl my-8 relative modal-content max-h-[calc(100vh-4rem)] overflow-y-auto"
+        onclick="event.stopPropagation()"
+      >
+        <button
+          onclick="closeModal()"
+          class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-300 transition-colors p-1 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800/50"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <h3 id="modal-title" class="text-lg font-semibold mb-5 pr-8 font-display"></h3>
+        <div id="modal-body"></div>
+      </div>
     </div>
-  </main>
 
-  <!-- Modal backdrop -->
-  <div id="modal-backdrop" class="modal-backdrop hidden" onclick="closeModal()"></div>
+    <!-- Toast container -->
+    <div id="toast-container" class="toast-container"></div>
 
-  <!-- Modal -->
-  <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden overflow-y-auto">
-    <div class="w-full max-w-lg rounded-2xl bg-surface p-6 shadow-2xl my-8 relative modal-content max-h-[calc(100vh-4rem)] overflow-y-auto"
-         onclick="event.stopPropagation()">
-      <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-300 transition-colors p-1 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800/50">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-      <h3 id="modal-title" class="text-lg font-semibold mb-5 pr-8 font-display"></h3>
-      <div id="modal-body"></div>
-    </div>
-  </div>
+    <script>
+      const API = "";
 
-  <!-- Toast container -->
-  <div id="toast-container" class="toast-container"></div>
+      // --- State ---
+      let collections = [];
+      let testimonials = [];
+      let settings = {};
+      let settingsOriginal = "";
 
-<script>
-const API = '';
+      // --- Tabs ---
+      const TABS = ["collections", "testimonials", "settings"];
+      function showTab(tab) {
+        TABS.forEach((t) => {
+          const panel = document.getElementById("panel-" + t);
+          const btn = document.getElementById("tab-" + t);
+          panel.classList.toggle("hidden", t !== tab);
+          btn.classList.toggle("tab-active", t === tab);
+        });
+      }
 
-// --- State ---
-let collections = [];
-let testimonials = [];
-let settings = {};
-let settingsOriginal = '';
+      // --- Toast ---
+      function toast(msg, type = "success") {
+        const container = document.getElementById("toast-container");
+        const item = document.createElement("div");
+        const icon =
+          type === "success"
+            ? '<svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+            : '<svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+        const bgClass =
+          type === "success"
+            ? "bg-emerald-950/90 text-emerald-200 border border-emerald-800/50"
+            : "bg-red-950/90 text-red-200 border border-red-800/50";
+        const progressColor = type === "success" ? "bg-emerald-500" : "bg-red-500";
 
-// --- Tabs ---
-const TABS = ['collections', 'testimonials', 'settings'];
-function showTab(tab) {
-  TABS.forEach(t => {
-    const panel = document.getElementById('panel-' + t);
-    const btn = document.getElementById('tab-' + t);
-    panel.classList.toggle('hidden', t !== tab);
-    btn.classList.toggle('tab-active', t === tab);
-  });
-}
+        item.className = `toast-item ${bgClass}`;
+        item.innerHTML = `${icon}<span>${esc(msg)}</span><div class="toast-progress ${progressColor}"></div>`;
+        container.appendChild(item);
 
-// --- Toast ---
-function toast(msg, type = 'success') {
-  const container = document.getElementById('toast-container');
-  const item = document.createElement('div');
-  const icon = type === 'success'
-    ? '<svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
-    : '<svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-  const bgClass = type === 'success'
-    ? 'bg-emerald-950/90 text-emerald-200 border border-emerald-800/50'
-    : 'bg-red-950/90 text-red-200 border border-red-800/50';
-  const progressColor = type === 'success' ? 'bg-emerald-500' : 'bg-red-500';
+        setTimeout(() => {
+          item.classList.add("toast-out");
+          setTimeout(() => item.remove(), 300);
+        }, 3000);
+      }
 
-  item.className = `toast-item ${bgClass}`;
-  item.innerHTML = `${icon}<span>${esc(msg)}</span><div class="toast-progress ${progressColor}"></div>`;
-  container.appendChild(item);
-
-  setTimeout(() => {
-    item.classList.add('toast-out');
-    setTimeout(() => item.remove(), 300);
-  }, 3000);
-}
-
-function toastUndo(msg, onUndo) {
-  const container = document.getElementById('toast-container');
-  const item = document.createElement('div');
-  let undone = false;
-  item.className = 'toast-item bg-emerald-950/90 text-emerald-200 border border-emerald-800/50';
-  item.innerHTML = `
+      function toastUndo(msg, onUndo) {
+        const container = document.getElementById("toast-container");
+        const item = document.createElement("div");
+        let undone = false;
+        item.className =
+          "toast-item bg-emerald-950/90 text-emerald-200 border border-emerald-800/50";
+        item.innerHTML = `
     <svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
     <span class="flex-1">${esc(msg)}</span>
     <button class="undo-btn text-xs font-bold text-gold hover:text-gold-light underline underline-offset-2 ml-2 flex-shrink-0">Desfazer</button>
     <div class="toast-progress bg-emerald-500" style="animation-duration:5s"></div>
   `;
-  item.querySelector('.undo-btn').addEventListener('click', () => {
-    if (undone) return;
-    undone = true;
-    onUndo();
-    item.classList.add('toast-out');
-    setTimeout(() => item.remove(), 300);
-  });
-  container.appendChild(item);
-  setTimeout(() => {
-    if (!undone) {
-      item.classList.add('toast-out');
-      setTimeout(() => item.remove(), 300);
-    }
-  }, 5000);
-}
+        item.querySelector(".undo-btn").addEventListener("click", () => {
+          if (undone) return;
+          undone = true;
+          onUndo();
+          item.classList.add("toast-out");
+          setTimeout(() => item.remove(), 300);
+        });
+        container.appendChild(item);
+        setTimeout(() => {
+          if (!undone) {
+            item.classList.add("toast-out");
+            setTimeout(() => item.remove(), 300);
+          }
+        }, 5000);
+      }
 
-// --- Modal ---
-function openModal(title, html) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-body').innerHTML = html;
-  const modal = document.getElementById('modal');
-  const backdrop = document.getElementById('modal-backdrop');
-  modal.classList.remove('hidden');
-  backdrop.classList.remove('hidden');
-  backdrop.classList.add('show');
-  modal.querySelector('.modal-content').classList.add('show');
-}
+      // --- Modal ---
+      function openModal(title, html) {
+        document.getElementById("modal-title").textContent = title;
+        document.getElementById("modal-body").innerHTML = html;
+        const modal = document.getElementById("modal");
+        const backdrop = document.getElementById("modal-backdrop");
+        modal.classList.remove("hidden");
+        backdrop.classList.remove("hidden");
+        backdrop.classList.add("show");
+        modal.querySelector(".modal-content").classList.add("show");
+      }
 
-function closeModal() {
-  document.getElementById('modal').classList.add('hidden');
-  document.getElementById('modal-backdrop').classList.add('hidden');
-  document.getElementById('modal-backdrop').classList.remove('show');
-}
+      function closeModal() {
+        document.getElementById("modal").classList.add("hidden");
+        document.getElementById("modal-backdrop").classList.add("hidden");
+        document.getElementById("modal-backdrop").classList.remove("show");
+      }
 
-// --- Confirm dialog (replaces native confirm) ---
-let _pendingConfirmCallback = null;
-function confirmDialog(message, detail, onConfirm, options = {}) {
-  const { confirmText = 'Confirmar', confirmClass = 'btn-danger', iconColor = 'bg-red-900/50 text-red-400' } = options;
-  _pendingConfirmCallback = onConfirm;
-  openModal('', `
+      // --- Confirm dialog (replaces native confirm) ---
+      let _pendingConfirmCallback = null;
+      function confirmDialog(message, detail, onConfirm, options = {}) {
+        const {
+          confirmText = "Confirmar",
+          confirmClass = "btn-danger",
+          iconColor = "bg-red-900/50 text-red-400",
+        } = options;
+        _pendingConfirmCallback = onConfirm;
+        openModal(
+          "",
+          `
     <div class="text-center">
       <div class="confirm-icon ${iconColor}">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
@@ -655,84 +941,96 @@ function confirmDialog(message, detail, onConfirm, options = {}) {
         </button>
       </div>
     </div>
-  `);
-}
-function _runConfirmCallback() {
-  if (_pendingConfirmCallback) {
-    const cb = _pendingConfirmCallback;
-    _pendingConfirmCallback = null;
-    cb();
-  }
-}
+  `,
+        );
+      }
+      function _runConfirmCallback() {
+        if (_pendingConfirmCallback) {
+          const cb = _pendingConfirmCallback;
+          _pendingConfirmCallback = null;
+          cb();
+        }
+      }
 
-// --- Update tab counters ---
-function updateCounters() {
-  const cc = document.getElementById('count-collections');
-  const ct = document.getElementById('count-testimonials');
-  if (collections.length > 0) {
-    cc.textContent = collections.length;
-    cc.classList.remove('hidden');
-  } else {
-    cc.classList.add('hidden');
-  }
-  if (testimonials.length > 0) {
-    ct.textContent = testimonials.length;
-    ct.classList.remove('hidden');
-  } else {
-    ct.classList.add('hidden');
-  }
-}
+      // --- Update tab counters ---
+      function updateCounters() {
+        const cc = document.getElementById("count-collections");
+        const ct = document.getElementById("count-testimonials");
+        if (collections.length > 0) {
+          cc.textContent = collections.length;
+          cc.classList.remove("hidden");
+        } else {
+          cc.classList.add("hidden");
+        }
+        if (testimonials.length > 0) {
+          ct.textContent = testimonials.length;
+          ct.classList.remove("hidden");
+        } else {
+          ct.classList.add("hidden");
+        }
+      }
 
-// --- Settings ---
-async function loadSettings() {
-  const res = await fetch(`${API}/api/settings`);
-  if (!res.ok) { toast('Erro ao carregar configuracoes.', 'error'); return; }
-  settings = await res.json();
-  const input = document.getElementById('settings-whatsapp');
-  input.value = settings.whatsappUrl || '';
-  settingsOriginal = input.value;
-  document.getElementById('btn-save-settings').disabled = true;
-}
+      // --- Settings ---
+      async function loadSettings() {
+        const res = await fetch(`${API}/api/settings`);
+        if (!res.ok) {
+          toast("Erro ao carregar configuracoes.", "error");
+          return;
+        }
+        settings = await res.json();
+        const input = document.getElementById("settings-whatsapp");
+        input.value = settings.whatsappUrl || "";
+        settingsOriginal = input.value;
+        document.getElementById("btn-save-settings").disabled = true;
+      }
 
-function onSettingsChange() {
-  const current = document.getElementById('settings-whatsapp').value.trim();
-  document.getElementById('btn-save-settings').disabled = (current === settingsOriginal);
-}
+      function onSettingsChange() {
+        const current = document.getElementById("settings-whatsapp").value.trim();
+        document.getElementById("btn-save-settings").disabled = current === settingsOriginal;
+      }
 
-async function saveSettings() {
-  const whatsappUrl = document.getElementById('settings-whatsapp').value.trim();
-  const btn = document.getElementById('btn-save-settings');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Salvando...';
+      async function saveSettings() {
+        const whatsappUrl = document.getElementById("settings-whatsapp").value.trim();
+        const btn = document.getElementById("btn-save-settings");
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Salvando...';
 
-  const res = await fetch(`${API}/api/settings`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ whatsappUrl }),
-  });
+        const res = await fetch(`${API}/api/settings`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ whatsappUrl }),
+        });
 
-  btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Salvar';
+        btn.innerHTML =
+          '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Salvar';
 
-  if (!res.ok) { toast('Erro ao salvar.', 'error'); btn.disabled = false; return; }
-  settings = await res.json();
-  settingsOriginal = whatsappUrl;
-  btn.disabled = true;
-  toast('Configuracoes salvas!');
-}
+        if (!res.ok) {
+          toast("Erro ao salvar.", "error");
+          btn.disabled = false;
+          return;
+        }
+        settings = await res.json();
+        settingsOriginal = whatsappUrl;
+        btn.disabled = true;
+        toast("Configuracoes salvas!");
+      }
 
-// --- Collections ---
-async function loadCollections() {
-  const res = await fetch(`${API}/api/collections`);
-  if (!res.ok) { toast('Erro ao carregar colecoes.', 'error'); return; }
-  collections = await res.json();
-  renderCollections();
-  updateCounters();
-}
+      // --- Collections ---
+      async function loadCollections() {
+        const res = await fetch(`${API}/api/collections`);
+        if (!res.ok) {
+          toast("Erro ao carregar colecoes.", "error");
+          return;
+        }
+        collections = await res.json();
+        renderCollections();
+        updateCounters();
+      }
 
-function renderCollections() {
-  const el = document.getElementById('collections-list');
-  if (collections.length === 0) {
-    el.innerHTML = `
+      function renderCollections() {
+        const el = document.getElementById("collections-list");
+        if (collections.length === 0) {
+          el.innerHTML = `
       <div class="card flex flex-col items-center justify-center py-16 text-center">
         <div class="w-16 h-16 rounded-2xl bg-gold/10 flex items-center justify-center mb-4">
           <svg class="w-8 h-8 text-gold/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
@@ -744,9 +1042,11 @@ function renderCollections() {
           Criar primeira colecao
         </button>
       </div>`;
-    return;
-  }
-  el.innerHTML = collections.map(c => `
+          return;
+        }
+        el.innerHTML = collections
+          .map(
+            (c) => `
     <div class="card overflow-hidden fade-in">
       <!-- Cover banner -->
       <div class="relative -mx-5 -mt-5 mb-4 h-40 bg-deeper overflow-hidden img-thumb">
@@ -762,20 +1062,22 @@ function renderCollections() {
       <div class="flex flex-col sm:flex-row items-start justify-between gap-3 mb-3">
         <div>
           <h3 class="text-lg font-bold text-gold font-display">${esc(c.name)}</h3>
-          <p class="text-xs text-gray-500 mt-0.5">${esc(c.slug)}${c.hidden ? '<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-yellow-900/30 text-yellow-400 border border-yellow-800/50">Oculta</span>' : ''}</p>
+          <p class="text-xs text-gray-500 mt-0.5">${esc(c.slug)}${c.hidden ? '<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-yellow-900/30 text-yellow-400 border border-yellow-800/50">Oculta</span>' : ""}</p>
         </div>
         <div class="flex flex-wrap sm:flex-nowrap gap-2 flex-shrink-0">
           <button onclick="openEditCollection('${c.slug}')" class="btn btn-outline text-xs py-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             Editar
           </button>
-          <button onclick="toggleCollectionVisibility('${c.slug}')" class="btn ${c.hidden ? 'btn-green' : 'btn-outline'} text-xs py-1.5">
+          <button onclick="toggleCollectionVisibility('${c.slug}')" class="btn ${c.hidden ? "btn-green" : "btn-outline"} text-xs py-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              ${c.hidden
-                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>'
-                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>'}
+              ${
+                c.hidden
+                  ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>'
+                  : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>'
+              }
             </svg>
-            ${c.hidden ? 'Exibir' : 'Ocultar'}
+            ${c.hidden ? "Exibir" : "Ocultar"}
           </button>
           <button onclick="confirmDeleteCollection('${c.slug}')" class="btn btn-danger text-xs py-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
@@ -792,15 +1094,21 @@ function renderCollections() {
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
           ${c.cardCount} cartas
         </span>
-        ${c.deckcheckUrl
-          ? '<span class="badge badge-green"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>DeckCheck</span>'
-          : '<span class="badge badge-gray">DeckCheck</span>'}
-        ${c.moxfieldUrl
-          ? '<span class="badge badge-green"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Moxfield</span>'
-          : '<span class="badge badge-gray">Moxfield</span>'}
-        ${c.manualUrl
-          ? '<span class="badge badge-green"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Manual</span>'
-          : '<span class="badge badge-gray">Manual</span>'}
+        ${
+          c.deckcheckUrl
+            ? '<span class="badge badge-green"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>DeckCheck</span>'
+            : '<span class="badge badge-gray">DeckCheck</span>'
+        }
+        ${
+          c.moxfieldUrl
+            ? '<span class="badge badge-green"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Moxfield</span>'
+            : '<span class="badge badge-gray">Moxfield</span>'
+        }
+        ${
+          c.manualUrl
+            ? '<span class="badge badge-green"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Manual</span>'
+            : '<span class="badge badge-gray">Manual</span>'
+        }
         <span class="text-xs text-gray-500 flex items-center gap-1">
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
           ${c.sampleImages.length} amostras
@@ -808,23 +1116,35 @@ function renderCollections() {
       </div>
 
       <!-- Sample images gallery -->
-      ${c.sampleImages.length > 0 ? `
+      ${
+        c.sampleImages.length > 0
+          ? `
         <div class="flex gap-3 overflow-x-auto pb-2 -mb-2">
-          ${c.sampleImages.map(img => `
+          ${c.sampleImages
+            .map(
+              (img) => `
             <div class="img-thumb flex-shrink-0 overflow-hidden border border-transparent hover:border-gold/20" style="border-color:var(--admin-border-faint)">
               <img src="${img}" class="h-28 w-20 object-cover"
                    onerror="this.style.display='none'" />
             </div>
-          `).join('')}
+          `,
+            )
+            .join("")}
         </div>
-      ` : ''}
+      `
+          : ""
+      }
     </div>
-  `).join('');
-}
+  `,
+          )
+          .join("");
+      }
 
-function openAddCollection() {
-  createSampleFiles = [];
-  openModal('Nova colecao', `
+      function openAddCollection() {
+        createSampleFiles = [];
+        openModal(
+          "Nova colecao",
+          `
     <div class="space-y-4">
       <div class="section-divider">
         <span class="text-xs font-semibold text-gold uppercase tracking-wider font-display">Informacoes</span>
@@ -910,144 +1230,174 @@ function openAddCollection() {
         </button>
       </div>
     </div>
-  `);
-}
+  `,
+        );
+      }
 
-let createSampleFiles = [];
+      let createSampleFiles = [];
 
-function previewSamples(input) {
-  const files = Array.from(input.files);
-  if (createSampleFiles.length + files.length > 6) {
-    toast('Maximo de 6 imagens de amostra.', 'error');
-    input.value = '';
-    return;
-  }
-  createSampleFiles = [...createSampleFiles, ...files].slice(0, 6);
-  renderSamplePreviews();
-  input.value = '';
-}
+      function previewSamples(input) {
+        const files = Array.from(input.files);
+        if (createSampleFiles.length + files.length > 6) {
+          toast("Maximo de 6 imagens de amostra.", "error");
+          input.value = "";
+          return;
+        }
+        createSampleFiles = [...createSampleFiles, ...files].slice(0, 6);
+        renderSamplePreviews();
+        input.value = "";
+      }
 
-function removeSamplePreview(idx) {
-  createSampleFiles.splice(idx, 1);
-  renderSamplePreviews();
-}
+      function removeSamplePreview(idx) {
+        createSampleFiles.splice(idx, 1);
+        renderSamplePreviews();
+      }
 
-function renderSamplePreviews() {
-  const grid = document.getElementById('f-samples-preview');
-  const counter = document.getElementById('f-samples-counter');
-  const zone = document.getElementById('f-samples-zone');
-  const count = createSampleFiles.length;
+      function renderSamplePreviews() {
+        const grid = document.getElementById("f-samples-preview");
+        const counter = document.getElementById("f-samples-counter");
+        const zone = document.getElementById("f-samples-zone");
+        const count = createSampleFiles.length;
 
-  counter.textContent = count + '/6 imagens selecionadas';
-  counter.className = 'text-xs font-medium ' + (count >= 6 ? 'text-red-400' : 'text-emerald-400');
+        counter.textContent = count + "/6 imagens selecionadas";
+        counter.className =
+          "text-xs font-medium " + (count >= 6 ? "text-red-400" : "text-emerald-400");
 
-  if (count >= 6) {
-    zone.classList.add('opacity-50', 'pointer-events-none');
-  } else {
-    zone.classList.remove('opacity-50', 'pointer-events-none');
-  }
+        if (count >= 6) {
+          zone.classList.add("opacity-50", "pointer-events-none");
+        } else {
+          zone.classList.remove("opacity-50", "pointer-events-none");
+        }
 
-  if (count === 0) {
-    grid.classList.add('hidden');
-    grid.innerHTML = '';
-    return;
-  }
+        if (count === 0) {
+          grid.classList.add("hidden");
+          grid.innerHTML = "";
+          return;
+        }
 
-  grid.classList.remove('hidden');
-  grid.innerHTML = '';
+        grid.classList.remove("hidden");
+        grid.innerHTML = "";
 
-  createSampleFiles.forEach((file, i) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const div = document.createElement('div');
-      div.className = 'relative group rounded-xl overflow-hidden border border-gray-700/60 hover:border-gold/30 transition-all duration-200';
-      div.innerHTML = `
+        createSampleFiles.forEach((file, i) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const div = document.createElement("div");
+            div.className =
+              "relative group rounded-xl overflow-hidden border border-gray-700/60 hover:border-gold/30 transition-all duration-200";
+            div.innerHTML = `
         <span class="absolute top-1.5 left-1.5 z-10 bg-black/70 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${i + 1}</span>
         <img src="${e.target.result}" class="w-full object-cover" style="aspect-ratio: 2/3;" />
         <button onclick="removeSamplePreview(${i})" class="absolute top-1.5 right-1.5 z-10 w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity" title="Remover">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       `;
-      grid.appendChild(div);
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function previewCover(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    document.getElementById('f-cover-img').src = e.target.result;
-    document.getElementById('f-cover-preview').classList.remove('hidden');
-    document.getElementById('f-cover-placeholder').classList.add('hidden');
-  };
-  reader.readAsDataURL(file);
-}
-
-async function addCollection() {
-  const name = document.getElementById('f-name').value.trim();
-  const description = document.getElementById('f-desc').value.trim();
-  const cardCount = parseInt(document.getElementById('f-cards').value);
-  const deckcheckUrl = document.getElementById('f-deckcheck').value.trim();
-  const moxfieldUrl = document.getElementById('f-moxfield').value.trim();
-  const coverFile = document.getElementById('f-cover').files[0];
-
-  if (!name || !description || !cardCount) { toast('Preencha nome, descricao e quantidade.', 'error'); return; }
-  if (!coverFile) { toast('A imagem de capa e obrigatoria!', 'error'); return; }
-
-  const btn = document.getElementById('btn-add-collection');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Adicionando...'; }
-
-  try {
-  const res = await fetch(`${API}/api/collections`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
-  });
-
-  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
-
-  const newCol = await res.json();
-
-  // Upload cover
-  const fd = new FormData();
-  fd.append('file', coverFile);
-  const coverRes = await fetch(`${API}/api/collections/${newCol.slug}/cover`, { method: 'POST', body: fd });
-  if (!coverRes.ok) { toast('Erro ao enviar capa.', 'error'); }
-
-  // Upload sample images if any
-  if (createSampleFiles.length > 0) {
-    const sfd = new FormData();
-    for (const f of createSampleFiles) sfd.append('files', f);
-    const imgRes = await fetch(`${API}/api/collections/${newCol.slug}/images`, { method: 'POST', body: sfd });
-    if (imgRes.ok) {
-      const { processed } = await imgRes.json();
-      if (processed.length > 0) {
-        await fetch(`${API}/api/collections/${newCol.slug}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sampleImages: processed }),
+            grid.appendChild(div);
+          };
+          reader.readAsDataURL(file);
         });
       }
-    }
-  }
 
-  createSampleFiles = [];
-  closeModal();
-  toast(`Colecao "${name}" adicionada com capa!`);
-  await loadCollections();
-  } finally {
-    if (btn) { btn.disabled = false; btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Adicionar'; }
-  }
-}
+      function previewCover(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById("f-cover-img").src = e.target.result;
+          document.getElementById("f-cover-preview").classList.remove("hidden");
+          document.getElementById("f-cover-placeholder").classList.add("hidden");
+        };
+        reader.readAsDataURL(file);
+      }
 
-function openEditCollection(slug) {
-  const c = collections.find(x => x.slug === slug);
-  if (!c) return;
+      async function addCollection() {
+        const name = document.getElementById("f-name").value.trim();
+        const description = document.getElementById("f-desc").value.trim();
+        const cardCount = parseInt(document.getElementById("f-cards").value);
+        const deckcheckUrl = document.getElementById("f-deckcheck").value.trim();
+        const moxfieldUrl = document.getElementById("f-moxfield").value.trim();
+        const coverFile = document.getElementById("f-cover").files[0];
 
-  openModal(`Editar: ${c.name}`, `
+        if (!name || !description || !cardCount) {
+          toast("Preencha nome, descricao e quantidade.", "error");
+          return;
+        }
+        if (!coverFile) {
+          toast("A imagem de capa e obrigatoria!", "error");
+          return;
+        }
+
+        const btn = document.getElementById("btn-add-collection");
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner"></span> Adicionando...';
+        }
+
+        try {
+          const res = await fetch(`${API}/api/collections`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
+          });
+
+          if (!res.ok) {
+            const e = await res.json();
+            toast(e.error, "error");
+            return;
+          }
+
+          const newCol = await res.json();
+
+          // Upload cover
+          const fd = new FormData();
+          fd.append("file", coverFile);
+          const coverRes = await fetch(`${API}/api/collections/${newCol.slug}/cover`, {
+            method: "POST",
+            body: fd,
+          });
+          if (!coverRes.ok) {
+            toast("Erro ao enviar capa.", "error");
+          }
+
+          // Upload sample images if any
+          if (createSampleFiles.length > 0) {
+            const sfd = new FormData();
+            for (const f of createSampleFiles) sfd.append("files", f);
+            const imgRes = await fetch(`${API}/api/collections/${newCol.slug}/images`, {
+              method: "POST",
+              body: sfd,
+            });
+            if (imgRes.ok) {
+              const { processed } = await imgRes.json();
+              if (processed.length > 0) {
+                await fetch(`${API}/api/collections/${newCol.slug}`, {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ sampleImages: processed }),
+                });
+              }
+            }
+          }
+
+          createSampleFiles = [];
+          closeModal();
+          toast(`Colecao "${name}" adicionada com capa!`);
+          await loadCollections();
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML =
+              '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Adicionar';
+          }
+        }
+      }
+
+      function openEditCollection(slug) {
+        const c = collections.find((x) => x.slug === slug);
+        if (!c) return;
+
+        openModal(
+          `Editar: ${c.name}`,
+          `
     <div class="space-y-4">
       <div class="section-divider">
         <span class="text-xs font-semibold text-gold uppercase tracking-wider font-display">Informacoes</span>
@@ -1096,8 +1446,8 @@ function openEditCollection(slug) {
         </div>
         <div class="flex items-center justify-between">
           <span class="text-xs text-gray-400">Manual PDF</span>
-          <label class="text-xs cursor-pointer hover:underline ${c.manualUrl ? 'text-gold' : 'text-gray-500'}" id="upload-manual-${c.slug}">
-            ${c.manualUrl ? 'Substituir PDF' : 'Enviar PDF'}
+          <label class="text-xs cursor-pointer hover:underline ${c.manualUrl ? "text-gold" : "text-gray-500"}" id="upload-manual-${c.slug}">
+            ${c.manualUrl ? "Substituir PDF" : "Enviar PDF"}
             <input type="file" accept=".pdf" class="hidden" onchange="uploadManual('${esc(slug)}', this)" />
           </label>
         </div>
@@ -1116,38 +1466,58 @@ function openEditCollection(slug) {
       </div>
 
       <div class="flex items-center justify-between mb-3">
-        <span class="text-xs font-medium ${c.sampleImages.length >= 6 ? 'text-red-400' : 'text-emerald-400'}">${c.sampleImages.length}/6 imagens</span>
+        <span class="text-xs font-medium ${c.sampleImages.length >= 6 ? "text-red-400" : "text-emerald-400"}">${c.sampleImages.length}/6 imagens</span>
       </div>
 
-      ${c.sampleImages.length > 0 ? `
+      ${
+        c.sampleImages.length > 0
+          ? `
         <div id="edit-samples-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
-          ${c.sampleImages.map((img, i) => `
+          ${c.sampleImages
+            .map(
+              (img, i) => `
             <div class="relative group rounded-xl overflow-hidden border border-gray-700/60 hover:border-gold/30 transition-all duration-200">
               <span class="absolute top-1.5 left-1.5 z-10 bg-black/70 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${i + 1}</span>
               <img src="${img}" class="w-full object-cover" style="aspect-ratio: 2/3;" onerror="this.style.display='none'" />
               <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onclick="removeImage('${esc(slug)}', '${esc(img.split('/').pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+                <button onclick="removeImage('${esc(slug)}', '${esc(img.split("/").pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
-                ${i > 0 ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
+                ${
+                  i > 0
+                    ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
-                </button>` : ''}
-                ${i < c.sampleImages.length - 1 ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
+                </button>`
+                    : ""
+                }
+                ${
+                  i < c.sampleImages.length - 1
+                    ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>` : ''}
+                </button>`
+                    : ""
+                }
               </div>
             </div>
-          `).join('')}
+          `,
+            )
+            .join("")}
         </div>
-      ` : '<p class="text-xs text-gray-500 mb-3">Nenhuma imagem de amostra adicionada.</p>'}
+      `
+          : '<p class="text-xs text-gray-500 mb-3">Nenhuma imagem de amostra adicionada.</p>'
+      }
 
-      ${c.sampleImages.length < 6 ? `
-        <label class="upload-zone block cursor-pointer text-center ${c.sampleImages.length >= 6 ? 'opacity-50 pointer-events-none' : ''}" onclick="document.getElementById('f-edit-samples').click()">
+      ${
+        c.sampleImages.length < 6
+          ? `
+        <label class="upload-zone block cursor-pointer text-center ${c.sampleImages.length >= 6 ? "opacity-50 pointer-events-none" : ""}">
           <svg class="w-6 h-6 mx-auto text-gray-600 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
           <p class="text-xs text-gray-500">Adicionar imagens (max ${6 - c.sampleImages.length})</p>
           <input id="f-edit-samples" type="file" accept="image/*" multiple class="hidden" onchange="uploadEditSamples('${esc(slug)}', this)" />
         </label>
-      ` : ''}
+      `
+          : ""
+      }
 
       <div class="section-divider section-divider-danger mt-6">
         <span class="text-xs font-semibold text-red-400 uppercase tracking-wider font-display">Zona de perigo</span>
@@ -1168,305 +1538,364 @@ function openEditCollection(slug) {
         </button>
       </div>
     </div>
-  `);
+  `,
+        );
 
-  // Set modal title with gold gradient for the collection name
-  const titleEl = document.getElementById('modal-title');
-  titleEl.innerHTML = 'Editar: <span class="text-gold-gradient">' + esc(c.name) + '</span>';
-}
+        // Set modal title with gold gradient for the collection name
+        const titleEl = document.getElementById("modal-title");
+        titleEl.innerHTML = 'Editar: <span class="text-gold-gradient">' + esc(c.name) + "</span>";
+      }
 
-async function removeImage(slug, filename) {
-  const c = collections.find(x => x.slug === slug);
-  if (!c) return;
+      async function removeImage(slug, filename) {
+        const c = collections.find((x) => x.slug === slug);
+        if (!c) return;
 
-  const imagePath = `/images/decks/${slug}/${filename}`;
-  const removedIdx = c.sampleImages.indexOf(imagePath);
-  if (removedIdx === -1) return;
+        const imagePath = `/images/decks/${slug}/${filename}`;
+        const removedIdx = c.sampleImages.indexOf(imagePath);
+        if (removedIdx === -1) return;
 
-  // Optimistic: remove from local state and update grid in-place
-  const backup = [...c.sampleImages];
-  c.sampleImages.splice(removedIdx, 1);
-  updateEditSamplesGrid(slug);
+        // Optimistic: remove from local state and update grid in-place
+        const backup = [...c.sampleImages];
+        c.sampleImages.splice(removedIdx, 1);
+        updateEditSamplesGrid(slug);
 
-  // Call API
-  const res = await fetch(`${API}/api/collections/${slug}/images/${filename}`, { method: 'DELETE' });
-  if (!res.ok) {
-    // Rollback
-    c.sampleImages = backup;
-    updateEditSamplesGrid(slug);
-    toast('Erro ao remover imagem.', 'error');
-    return;
-  }
+        // Call API
+        const res = await fetch(`${API}/api/collections/${slug}/images/${filename}`, {
+          method: "DELETE",
+        });
+        if (!res.ok) {
+          // Rollback
+          c.sampleImages = backup;
+          updateEditSamplesGrid(slug);
+          toast("Erro ao remover imagem.", "error");
+          return;
+        }
 
-  // Show undo toast (re-add via API if undone)
-  toastUndo('Imagem removida!', async () => {
-    // Undo: re-upload would be complex, just reload from server
-    await loadCollections();
-    updateEditSamplesGrid(slug);
-    toast('Operacao desfeita — recarregue as imagens se necessario.');
-  });
+        // Show undo toast (re-add via API if undone)
+        toastUndo("Imagem removida!", async () => {
+          // Undo: re-upload would be complex, just reload from server
+          await loadCollections();
+          updateEditSamplesGrid(slug);
+          toast("Operacao desfeita — recarregue as imagens se necessario.");
+        });
 
-  // Sync global state
-  await loadCollections();
-  updateEditSamplesGrid(slug);
-}
+        // Sync global state
+        await loadCollections();
+        updateEditSamplesGrid(slug);
+      }
 
-async function moveImage(slug, fromIdx, toIdx) {
-  const c = collections.find(x => x.slug === slug);
-  if (!c) return;
+      async function moveImage(slug, fromIdx, toIdx) {
+        const c = collections.find((x) => x.slug === slug);
+        if (!c) return;
 
-  // Optimistic: reorder locally first
-  const [moved] = c.sampleImages.splice(fromIdx, 1);
-  c.sampleImages.splice(toIdx, 0, moved);
-  updateEditSamplesGrid(slug);
+        // Optimistic: reorder locally first
+        const [moved] = c.sampleImages.splice(fromIdx, 1);
+        c.sampleImages.splice(toIdx, 0, moved);
+        updateEditSamplesGrid(slug);
 
-  const res = await fetch(`${API}/api/collections/${slug}/images/reorder`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sampleImages: c.sampleImages }),
-  });
+        const res = await fetch(`${API}/api/collections/${slug}/images/reorder`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sampleImages: c.sampleImages }),
+        });
 
-  if (!res.ok) {
-    // Rollback
-    const [m] = c.sampleImages.splice(toIdx, 1);
-    c.sampleImages.splice(fromIdx, 0, m);
-    updateEditSamplesGrid(slug);
-    toast('Erro ao reordenar.', 'error');
-    return;
-  }
+        if (!res.ok) {
+          // Rollback
+          const [m] = c.sampleImages.splice(toIdx, 1);
+          c.sampleImages.splice(fromIdx, 0, m);
+          updateEditSamplesGrid(slug);
+          toast("Erro ao reordenar.", "error");
+          return;
+        }
 
-  toast('Ordem atualizada!');
-  await loadCollections();
-  updateEditSamplesGrid(slug);
-}
+        toast("Ordem atualizada!");
+        await loadCollections();
+        updateEditSamplesGrid(slug);
+      }
 
-async function uploadEditSamples(slug, input) {
-  const files = input.files;
-  if (!files.length) return;
+      async function uploadEditSamples(slug, input) {
+        const files = input.files;
+        if (!files.length) return;
 
-  const c = collections.find(x => x.slug === slug);
-  if (c && c.sampleImages.length + files.length > 6) {
-    toast(`Maximo de 6 imagens. Voce pode adicionar mais ${6 - c.sampleImages.length}.`, 'error');
-    return;
-  }
+        const c = collections.find((x) => x.slug === slug);
+        if (c && c.sampleImages.length + files.length > 6) {
+          toast(
+            `Maximo de 6 imagens. Voce pode adicionar mais ${6 - c.sampleImages.length}.`,
+            "error",
+          );
+          return;
+        }
 
-  input.disabled = true;
-  toast(`Processando ${files.length} imagens...`);
+        input.disabled = true;
+        toast(`Processando ${files.length} imagens...`);
 
-  try {
-    const fd = new FormData();
-    for (const f of files) fd.append('files', f);
+        try {
+          const fd = new FormData();
+          for (const f of files) fd.append("files", f);
 
-    const res = await fetch(`${API}/api/collections/${slug}/images`, { method: 'POST', body: fd });
+          const res = await fetch(`${API}/api/collections/${slug}/images`, {
+            method: "POST",
+            body: fd,
+          });
 
-    if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+          if (!res.ok) {
+            const e = await res.json();
+            toast(e.error, "error");
+            return;
+          }
 
-    const { processed } = await res.json();
+          const { processed } = await res.json();
 
-    // Add processed images as samples
-    if (c) {
-      const allSamples = [...new Set([...c.sampleImages, ...processed])];
-      const updateRes = await fetch(`${API}/api/collections/${slug}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sampleImages: allSamples }),
-      });
-      if (!updateRes.ok) { toast('Erro ao atualizar imagens da colecao.', 'error'); }
-    }
+          // Add processed images as samples
+          if (c) {
+            const allSamples = [...new Set([...c.sampleImages, ...processed])];
+            const updateRes = await fetch(`${API}/api/collections/${slug}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ sampleImages: allSamples }),
+            });
+            if (!updateRes.ok) {
+              toast("Erro ao atualizar imagens da colecao.", "error");
+            }
+          }
 
-    toast(`${processed.length} imagens adicionadas!`);
-    input.value = '';
-    await loadCollections();
-    updateEditSamplesGrid(slug);
-  } finally {
-    input.disabled = false;
-  }
-}
+          toast(`${processed.length} imagens adicionadas!`);
+          input.value = "";
+          await loadCollections();
+          updateEditSamplesGrid(slug);
+        } finally {
+          input.disabled = false;
+        }
+      }
 
-function updateEditSamplesGrid(slug) {
-  const c = collections.find(x => x.slug === slug);
-  if (!c) return;
+      function updateEditSamplesGrid(slug) {
+        const c = collections.find((x) => x.slug === slug);
+        if (!c) return;
 
-  const grid = document.getElementById('edit-samples-grid');
-  if (!grid) return;
+        const grid = document.getElementById("edit-samples-grid");
+        if (!grid) return;
 
-  if (c.sampleImages.length === 0) {
-    grid.innerHTML = '<p class="text-xs text-gray-500 col-span-full">Nenhuma imagem de amostra.</p>';
-  } else {
-    grid.innerHTML = c.sampleImages.map((img, i) => `
+        if (c.sampleImages.length === 0) {
+          grid.innerHTML =
+            '<p class="text-xs text-gray-500 col-span-full">Nenhuma imagem de amostra.</p>';
+        } else {
+          grid.innerHTML = c.sampleImages
+            .map(
+              (img, i) => `
       <div class="relative group rounded-xl overflow-hidden border border-gray-700/60 hover:border-gold/30 transition-all duration-200" style="animation: fade-in 0.25s ease-out">
         <span class="absolute top-1.5 left-1.5 z-10 bg-black/70 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${i + 1}</span>
         <img src="${img}" class="w-full object-cover" style="aspect-ratio: 2/3;" onerror="this.style.display='none'" />
         <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button onclick="removeImage('${esc(slug)}', '${esc(img.split('/').pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+          <button onclick="removeImage('${esc(slug)}', '${esc(img.split("/").pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
-          ${i > 0 ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
+          ${
+            i > 0
+              ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
-          </button>` : ''}
-          ${i < c.sampleImages.length - 1 ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
+          </button>`
+              : ""
+          }
+          ${
+            i < c.sampleImages.length - 1
+              ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </button>` : ''}
+          </button>`
+              : ""
+          }
         </div>
       </div>
-    `).join('');
-  }
+    `,
+            )
+            .join("");
+        }
 
-  // Update counter
-  const counterEl = grid.closest('.space-y-4')?.querySelector('.text-xs.font-medium');
-  if (counterEl) {
-    counterEl.textContent = `${c.sampleImages.length}/6 imagens`;
-    counterEl.className = 'text-xs font-medium ' + (c.sampleImages.length >= 6 ? 'text-red-400' : 'text-emerald-400');
-  }
-}
-
-function refreshEditModal(slug) {
-  closeModal();
-  setTimeout(() => openEditCollection(slug), 100);
-}
-
-async function saveCollection(slug) {
-  const name = document.getElementById('f-name').value.trim();
-  const description = document.getElementById('f-desc').value.trim();
-  const cardCount = parseInt(document.getElementById('f-cards').value);
-  const deckcheckUrl = document.getElementById('f-deckcheck').value.trim();
-  const moxfieldUrl = document.getElementById('f-moxfield').value.trim();
-
-  const btn = document.getElementById('btn-save-collection');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Salvando...'; }
-
-  try {
-    const res = await fetch(`${API}/api/collections/${slug}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
-    });
-
-    if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
-
-    closeModal();
-    toast('Colecao atualizada!');
-    await loadCollections();
-  } finally {
-    if (btn) { btn.disabled = false; btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Salvar'; }
-  }
-}
-
-async function toggleCollectionVisibility(slug) {
-  const c = collections.find(x => x.slug === slug);
-  if (!c) return;
-  const newHidden = !c.hidden;
-  const action = newHidden ? 'Ocultar' : 'Exibir';
-  const msg = newHidden
-    ? 'A colecao sera removida do site publico, mas pode ser reexibida a qualquer momento.'
-    : 'A colecao voltara a aparecer no site publico.';
-  confirmDialog(
-    `${action} "${c.name}"?`,
-    msg,
-    async () => {
-      // Optimistic UI: update local state immediately
-      c.hidden = newHidden;
-      renderCollections();
-
-      const res = await fetch(`${API}/api/collections/${slug}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hidden: newHidden }),
-      });
-
-      if (!res.ok) {
-        // Rollback on failure
-        c.hidden = !newHidden;
-        renderCollections();
-        toast('Erro ao alterar visibilidade.', 'error');
-        return;
+        // Update counter
+        const counterEl = grid.closest(".space-y-4")?.querySelector(".text-xs.font-medium");
+        if (counterEl) {
+          counterEl.textContent = `${c.sampleImages.length}/6 imagens`;
+          counterEl.className =
+            "text-xs font-medium " +
+            (c.sampleImages.length >= 6 ? "text-red-400" : "text-emerald-400");
+        }
       }
 
-      toast(`Colecao ${newHidden ? 'ocultada' : 'exibida'}!`);
-      await loadCollections();
-    },
-    { confirmText: action, confirmClass: newHidden ? 'btn-outline' : 'btn-green' }
-  );
-}
+      function refreshEditModal(slug) {
+        closeModal();
+        setTimeout(() => openEditCollection(slug), 100);
+      }
 
-function confirmDeleteCollection(slug) {
-  const c = collections.find(x => x.slug === slug);
-  confirmDialog(
-    `Excluir "${c?.name}" permanentemente?`,
-    '<div class="flex gap-3 items-start"><svg class="w-6 h-6 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg><div><p class="font-semibold text-red-400">ATENCAO: Esta acao e IRREVERSIVEL!</p><p class="mt-1 text-sm text-gray-400">A colecao, suas imagens e dados serao excluidos permanentemente. Se voce quer apenas remover temporariamente do site, use a opcao <strong class="text-yellow-400">Ocultar</strong> em vez disso.</p></div></div>',
-    () => deleteCollection(slug),
-    { confirmText: 'Excluir permanentemente', confirmClass: 'btn-danger' }
-  );
-}
+      async function saveCollection(slug) {
+        const name = document.getElementById("f-name").value.trim();
+        const description = document.getElementById("f-desc").value.trim();
+        const cardCount = parseInt(document.getElementById("f-cards").value);
+        const deckcheckUrl = document.getElementById("f-deckcheck").value.trim();
+        const moxfieldUrl = document.getElementById("f-moxfield").value.trim();
 
-async function deleteCollection(slug) {
-  const res = await fetch(`${API}/api/collections/${slug}`, { method: 'DELETE' });
-  if (!res.ok) { toast('Erro ao excluir colecao.', 'error'); return; }
-  toast('Colecao removida.');
-  await loadCollections();
-}
+        const btn = document.getElementById("btn-save-collection");
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner"></span> Salvando...';
+        }
 
-async function uploadCover(slug, input) {
-  const file = input.files[0];
-  if (!file) return;
+        try {
+          const res = await fetch(`${API}/api/collections/${slug}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
+          });
 
-  input.disabled = true;
-  toast('Enviando capa...');
+          if (!res.ok) {
+            const e = await res.json();
+            toast(e.error, "error");
+            return;
+          }
 
-  try {
-    const fd = new FormData();
-    fd.append('file', file);
+          closeModal();
+          toast("Colecao atualizada!");
+          await loadCollections();
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML =
+              '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Salvar';
+          }
+        }
+      }
 
-    const res = await fetch(`${API}/api/collections/${slug}/cover`, { method: 'POST', body: fd });
+      async function toggleCollectionVisibility(slug) {
+        const c = collections.find((x) => x.slug === slug);
+        if (!c) return;
+        const newHidden = !c.hidden;
+        const action = newHidden ? "Ocultar" : "Exibir";
+        const msg = newHidden
+          ? "A colecao sera removida do site publico, mas pode ser reexibida a qualquer momento."
+          : "A colecao voltara a aparecer no site publico.";
+        confirmDialog(
+          `${action} "${c.name}"?`,
+          msg,
+          async () => {
+            // Optimistic UI: update local state immediately
+            c.hidden = newHidden;
+            renderCollections();
 
-    if (!res.ok) { toast('Erro ao enviar capa.', 'error'); return; }
+            const res = await fetch(`${API}/api/collections/${slug}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ hidden: newHidden }),
+            });
 
-    toast('Capa atualizada!');
-    input.value = '';
-    await loadCollections();
-    refreshEditModal(slug);
-  } finally {
-    input.disabled = false;
-  }
-}
+            if (!res.ok) {
+              // Rollback on failure
+              c.hidden = !newHidden;
+              renderCollections();
+              toast("Erro ao alterar visibilidade.", "error");
+              return;
+            }
 
-async function uploadManual(slug, input) {
-  const file = input.files[0];
-  if (!file) return;
+            toast(`Colecao ${newHidden ? "ocultada" : "exibida"}!`);
+            await loadCollections();
+          },
+          { confirmText: action, confirmClass: newHidden ? "btn-outline" : "btn-green" },
+        );
+      }
 
-  input.disabled = true;
-  toast('Enviando PDF...');
+      function confirmDeleteCollection(slug) {
+        const c = collections.find((x) => x.slug === slug);
+        confirmDialog(
+          `Excluir "${c?.name}" permanentemente?`,
+          '<div class="flex gap-3 items-start"><svg class="w-6 h-6 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg><div><p class="font-semibold text-red-400">ATENCAO: Esta acao e IRREVERSIVEL!</p><p class="mt-1 text-sm text-gray-400">A colecao, suas imagens e dados serao excluidos permanentemente. Se voce quer apenas remover temporariamente do site, use a opcao <strong class="text-yellow-400">Ocultar</strong> em vez disso.</p></div></div>',
+          () => deleteCollection(slug),
+          { confirmText: "Excluir permanentemente", confirmClass: "btn-danger" },
+        );
+      }
 
-  try {
-    const fd = new FormData();
-    fd.append('file', file);
+      async function deleteCollection(slug) {
+        const res = await fetch(`${API}/api/collections/${slug}`, { method: "DELETE" });
+        if (!res.ok) {
+          toast("Erro ao excluir colecao.", "error");
+          return;
+        }
+        toast("Colecao removida.");
+        await loadCollections();
+      }
 
-    const res = await fetch(`${API}/api/collections/${slug}/manual`, { method: 'POST', body: fd });
+      async function uploadCover(slug, input) {
+        const file = input.files[0];
+        if (!file) return;
 
-    if (!res.ok) { toast('Erro ao enviar manual.', 'error'); return; }
+        input.disabled = true;
+        toast("Enviando capa...");
 
-    toast('Manual enviado!');
-    input.value = '';
-    await loadCollections();
-    refreshEditModal(slug);
-  } finally {
-    input.disabled = false;
-  }
-}
+        try {
+          const fd = new FormData();
+          fd.append("file", file);
 
-// --- Testimonials ---
-async function loadTestimonials() {
-  const res = await fetch(`${API}/api/testimonials`);
-  if (!res.ok) { toast('Erro ao carregar depoimentos.', 'error'); return; }
-  testimonials = await res.json();
-  renderTestimonials();
-  updateCounters();
-}
+          const res = await fetch(`${API}/api/collections/${slug}/cover`, {
+            method: "POST",
+            body: fd,
+          });
 
-function renderTestimonials() {
-  const el = document.getElementById('testimonials-list');
-  if (testimonials.length === 0) {
-    el.innerHTML = `
+          if (!res.ok) {
+            toast("Erro ao enviar capa.", "error");
+            return;
+          }
+
+          toast("Capa atualizada!");
+          input.value = "";
+          await loadCollections();
+          refreshEditModal(slug);
+        } finally {
+          input.disabled = false;
+        }
+      }
+
+      async function uploadManual(slug, input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        input.disabled = true;
+        toast("Enviando PDF...");
+
+        try {
+          const fd = new FormData();
+          fd.append("file", file);
+
+          const res = await fetch(`${API}/api/collections/${slug}/manual`, {
+            method: "POST",
+            body: fd,
+          });
+
+          if (!res.ok) {
+            toast("Erro ao enviar manual.", "error");
+            return;
+          }
+
+          toast("Manual enviado!");
+          input.value = "";
+          await loadCollections();
+          refreshEditModal(slug);
+        } finally {
+          input.disabled = false;
+        }
+      }
+
+      // --- Testimonials ---
+      async function loadTestimonials() {
+        const res = await fetch(`${API}/api/testimonials`);
+        if (!res.ok) {
+          toast("Erro ao carregar depoimentos.", "error");
+          return;
+        }
+        testimonials = await res.json();
+        renderTestimonials();
+        updateCounters();
+      }
+
+      function renderTestimonials() {
+        const el = document.getElementById("testimonials-list");
+        if (testimonials.length === 0) {
+          el.innerHTML = `
       <div class="card flex flex-col items-center justify-center py-16 text-center">
         <div class="w-16 h-16 rounded-2xl bg-gold/10 flex items-center justify-center mb-4">
           <svg class="w-8 h-8 text-gold/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
@@ -1478,9 +1907,11 @@ function renderTestimonials() {
           Adicionar primeiro depoimento
         </button>
       </div>`;
-    return;
-  }
-  el.innerHTML = testimonials.map((t, i) => `
+          return;
+        }
+        el.innerHTML = testimonials
+          .map(
+            (t, i) => `
     <div class="card fade-in">
       <div class="flex items-start gap-4">
         <!-- Decorative quote -->
@@ -1493,9 +1924,11 @@ function renderTestimonials() {
               </div>
               <div>
                 <p class="font-semibold text-gray-200">${esc(t.name)}</p>
-                ${t.deck
-                  ? `<span class="badge badge-gold text-[10px] mt-0.5">${esc(t.deck)}</span>`
-                  : '<span class="text-xs text-gray-600">Sem deck associado</span>'}
+                ${
+                  t.deck
+                    ? `<span class="badge badge-gold text-[10px] mt-0.5">${esc(t.deck)}</span>`
+                    : '<span class="text-xs text-gray-600">Sem deck associado</span>'
+                }
               </div>
             </div>
             <div class="flex gap-2 flex-shrink-0">
@@ -1513,15 +1946,19 @@ function renderTestimonials() {
         </div>
       </div>
     </div>
-  `).join('');
-}
+  `,
+          )
+          .join("");
+      }
 
-function openAddTestimonial() {
-  const deckOptions = collections.map(c =>
-    `<option value="${esc(c.name)}">${esc(c.name)}</option>`
-  ).join('');
+      function openAddTestimonial() {
+        const deckOptions = collections
+          .map((c) => `<option value="${esc(c.name)}">${esc(c.name)}</option>`)
+          .join("");
 
-  openModal('Novo depoimento', `
+        openModal(
+          "Novo depoimento",
+          `
     <div class="space-y-4">
       <div>
         <label class="text-xs font-medium text-gray-400 mb-1.5 block uppercase tracking-wider">Nome do cliente <span class="text-gold">*</span></label>
@@ -1546,38 +1983,51 @@ function openAddTestimonial() {
         </button>
       </div>
     </div>
-  `);
-}
+  `,
+        );
+      }
 
-async function addTestimonial() {
-  const name = document.getElementById('f-tname').value.trim();
-  const text = document.getElementById('f-ttext').value.trim();
-  const deck = document.getElementById('f-tdeck').value;
+      async function addTestimonial() {
+        const name = document.getElementById("f-tname").value.trim();
+        const text = document.getElementById("f-ttext").value.trim();
+        const deck = document.getElementById("f-tdeck").value;
 
-  if (!name || !text) { toast('Nome e texto sao obrigatorios.', 'error'); return; }
+        if (!name || !text) {
+          toast("Nome e texto sao obrigatorios.", "error");
+          return;
+        }
 
-  const res = await fetch(`${API}/api/testimonials`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, text, deck }),
-  });
+        const res = await fetch(`${API}/api/testimonials`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, text, deck }),
+        });
 
-  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+        if (!res.ok) {
+          const e = await res.json();
+          toast(e.error, "error");
+          return;
+        }
 
-  closeModal();
-  toast(`Depoimento de "${name}" adicionado!`);
-  await loadTestimonials();
-}
+        closeModal();
+        toast(`Depoimento de "${name}" adicionado!`);
+        await loadTestimonials();
+      }
 
-function openEditTestimonial(idx) {
-  const t = testimonials[idx];
-  if (!t) return;
+      function openEditTestimonial(idx) {
+        const t = testimonials[idx];
+        if (!t) return;
 
-  const deckOptions = collections.map(c =>
-    `<option value="${esc(c.name)}" ${c.name === t.deck ? 'selected' : ''}>${esc(c.name)}</option>`
-  ).join('');
+        const deckOptions = collections
+          .map(
+            (c) =>
+              `<option value="${esc(c.name)}" ${c.name === t.deck ? "selected" : ""}>${esc(c.name)}</option>`,
+          )
+          .join("");
 
-  openModal('Editar depoimento', `
+        openModal(
+          "Editar depoimento",
+          `
     <div class="space-y-4">
       <div>
         <label class="text-xs font-medium text-gray-400 mb-1.5 block uppercase tracking-wider">Nome do cliente</label>
@@ -1602,255 +2052,294 @@ function openEditTestimonial(idx) {
         </button>
       </div>
     </div>
-  `);
-}
+  `,
+        );
+      }
 
-async function saveTestimonial(idx) {
-  const name = document.getElementById('f-tname').value.trim();
-  const text = document.getElementById('f-ttext').value.trim();
-  const deck = document.getElementById('f-tdeck').value;
+      async function saveTestimonial(idx) {
+        const name = document.getElementById("f-tname").value.trim();
+        const text = document.getElementById("f-ttext").value.trim();
+        const deck = document.getElementById("f-tdeck").value;
 
-  const res = await fetch(`${API}/api/testimonials/${idx}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, text, deck }),
-  });
+        const res = await fetch(`${API}/api/testimonials/${idx}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, text, deck }),
+        });
 
-  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+        if (!res.ok) {
+          const e = await res.json();
+          toast(e.error, "error");
+          return;
+        }
 
-  closeModal();
-  toast('Depoimento atualizado!');
-  await loadTestimonials();
-}
+        closeModal();
+        toast("Depoimento atualizado!");
+        await loadTestimonials();
+      }
 
-function confirmDeleteTestimonial(idx) {
-  const t = testimonials[idx];
-  confirmDialog(
-    `Remover depoimento de "${t?.name}"?`,
-    'Essa acao nao pode ser desfeita.',
-    () => deleteTestimonial(idx),
-    { confirmText: 'Remover', confirmClass: 'btn-danger' }
-  );
-}
+      function confirmDeleteTestimonial(idx) {
+        const t = testimonials[idx];
+        confirmDialog(
+          `Remover depoimento de "${t?.name}"?`,
+          "Essa acao nao pode ser desfeita.",
+          () => deleteTestimonial(idx),
+          { confirmText: "Remover", confirmClass: "btn-danger" },
+        );
+      }
 
-async function deleteTestimonial(idx) {
-  const res = await fetch(`${API}/api/testimonials/${idx}`, { method: 'DELETE' });
-  if (!res.ok) { toast('Erro ao remover depoimento.', 'error'); return; }
-  toast('Depoimento removido.');
-  await loadTestimonials();
-}
+      async function deleteTestimonial(idx) {
+        const res = await fetch(`${API}/api/testimonials/${idx}`, { method: "DELETE" });
+        if (!res.ok) {
+          toast("Erro ao remover depoimento.", "error");
+          return;
+        }
+        toast("Depoimento removido.");
+        await loadTestimonials();
+      }
 
-// --- Utils ---
-function esc(str) {
-  if (!str) return '';
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
-}
+      // --- Utils ---
+      function esc(str) {
+        if (!str) return "";
+        const d = document.createElement("div");
+        d.textContent = str;
+        return d.innerHTML;
+      }
 
-// --- Publish ---
-async function publish() {
-  confirmDialog(
-    'Publicar todas as alteracoes?',
-    'Isso vai atualizar o site online. O deploy leva alguns minutos.',
-    () => doPublish(),
-    {
-      confirmText: 'Publicar',
-      confirmClass: 'btn-green',
-      iconColor: 'bg-emerald-900/50 text-emerald-400'
-    }
-  );
-}
+      // --- Publish ---
+      async function publish() {
+        confirmDialog(
+          "Publicar todas as alteracoes?",
+          "Isso vai atualizar o site online. O deploy leva alguns minutos.",
+          () => doPublish(),
+          {
+            confirmText: "Publicar",
+            confirmClass: "btn-green",
+            iconColor: "bg-emerald-900/50 text-emerald-400",
+          },
+        );
+      }
 
-async function doPublish() {
-  const btn = document.getElementById('btn-publish');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Publicando...';
+      async function doPublish() {
+        const btn = document.getElementById("btn-publish");
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Publicando...';
 
-  // Show progress modal
-  const steps = [
-    { label: 'Compilando site...', key: 'build' },
-    { label: 'Salvando alteracoes...', key: 'save' },
-    { label: 'Enviando para GitHub...', key: 'push' },
-    { label: 'Disparando deploy no Render...', key: 'deploy' },
-  ];
+        // Show progress modal
+        const steps = [
+          { label: "Compilando site...", key: "build" },
+          { label: "Salvando alteracoes...", key: "save" },
+          { label: "Enviando para GitHub...", key: "push" },
+          { label: "Disparando deploy no Render...", key: "deploy" },
+        ];
 
-  openModal('Publicando...', `
+        openModal(
+          "Publicando...",
+          `
     <div class="space-y-1" id="publish-steps">
-      ${steps.map((s, i) => `
+      ${steps
+        .map(
+          (s, i) => `
         <div class="publish-step" id="publish-step-${i}">
           <div class="step-icon bg-gray-800 text-gray-500">
             <span class="spinner text-xs"></span>
           </div>
           <span class="text-gray-400">${s.label}</span>
         </div>
-      `).join('')}
+      `,
+        )
+        .join("")}
     </div>
     <div id="publish-footer" class="hidden pt-4 mt-4 border-t border-gray-800/60">
       <button onclick="closeModal()" class="btn btn-gold w-full justify-center">Fechar</button>
     </div>
-  `);
+  `,
+        );
 
-  try {
-    const res = await fetch(`${API}/api/publish`, { method: 'POST' });
-    const data = await res.json();
+        try {
+          const res = await fetch(`${API}/api/publish`, { method: "POST" });
+          const data = await res.json();
 
-    if (data.success) {
-      // Animate steps — detect warnings (Aviso) per step
-      const serverSteps = data.steps || [];
-      steps.forEach((s, i) => {
-        setTimeout(() => {
-          const stepEl = document.getElementById('publish-step-' + i);
-          if (!stepEl) return;
-          // Check if the corresponding server step has a warning
-          const serverMsg = serverSteps.find(m => m.toLowerCase().includes(s.key)) || '';
-          const isWarning = serverMsg.startsWith('Aviso');
-          if (isWarning) {
-            stepEl.querySelector('.step-icon').className = 'step-icon bg-yellow-900/50 text-yellow-400';
-            stepEl.querySelector('.step-icon').innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>';
-            stepEl.querySelector('span:last-child').className = 'text-yellow-400';
-            stepEl.querySelector('span:last-child').textContent = serverMsg;
+          if (data.success) {
+            // Animate steps — detect warnings (Aviso) per step
+            const serverSteps = data.steps || [];
+            steps.forEach((s, i) => {
+              setTimeout(() => {
+                const stepEl = document.getElementById("publish-step-" + i);
+                if (!stepEl) return;
+                // Check if the corresponding server step has a warning
+                const serverMsg = serverSteps.find((m) => m.toLowerCase().includes(s.key)) || "";
+                const isWarning = serverMsg.startsWith("Aviso");
+                if (isWarning) {
+                  stepEl.querySelector(".step-icon").className =
+                    "step-icon bg-yellow-900/50 text-yellow-400";
+                  stepEl.querySelector(".step-icon").innerHTML =
+                    '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>';
+                  stepEl.querySelector("span:last-child").className = "text-yellow-400";
+                  stepEl.querySelector("span:last-child").textContent = serverMsg;
+                } else {
+                  stepEl.querySelector(".step-icon").className =
+                    "step-icon bg-emerald-900/50 text-emerald-400";
+                  stepEl.querySelector(".step-icon").innerHTML =
+                    '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                  stepEl.querySelector("span:last-child").className = "text-gray-200";
+                  stepEl.querySelector("span:last-child").textContent = s.label.replace("...", "");
+                }
+              }, i * 400);
+            });
+
+            const hasWarning = serverSteps.some((m) => m.startsWith("Aviso"));
+            setTimeout(
+              () => {
+                document.getElementById("modal-title").textContent = hasWarning
+                  ? "Publicado com avisos"
+                  : "Publicacao concluida!";
+                const footer = document.getElementById("publish-footer");
+                if (footer) footer.classList.remove("hidden");
+              },
+              steps.length * 400 + 200,
+            );
+
+            toast(
+              hasWarning
+                ? "Publicado, mas com avisos. Verifique os detalhes."
+                : "Site publicado com sucesso!",
+              hasWarning ? "error" : "success",
+            );
           } else {
-            stepEl.querySelector('.step-icon').className = 'step-icon bg-emerald-900/50 text-emerald-400';
-            stepEl.querySelector('.step-icon').innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
-            stepEl.querySelector('span:last-child').className = 'text-gray-200';
-            stepEl.querySelector('span:last-child').textContent = s.label.replace('...', '');
+            // Show error state
+            const failIndex = data.steps ? data.steps.findIndex((s) => s.startsWith("Erro")) : 0;
+            steps.forEach((s, i) => {
+              const stepEl = document.getElementById("publish-step-" + i);
+              if (!stepEl) return;
+              if (i < failIndex || failIndex === -1) {
+                stepEl.querySelector(".step-icon").className =
+                  "step-icon bg-emerald-900/50 text-emerald-400";
+                stepEl.querySelector(".step-icon").innerHTML =
+                  '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+              } else if (i === failIndex || (failIndex === -1 && i === 0)) {
+                stepEl.querySelector(".step-icon").className =
+                  "step-icon bg-red-900/50 text-red-400";
+                stepEl.querySelector(".step-icon").innerHTML =
+                  '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+                stepEl.querySelector("span:last-child").className = "text-red-400";
+              } else {
+                stepEl.querySelector(".step-icon").className =
+                  "step-icon bg-gray-800 text-gray-600";
+                stepEl.querySelector(".step-icon").innerHTML =
+                  '<span class="text-xs">&mdash;</span>';
+                stepEl.querySelector("span:last-child").className = "text-gray-600";
+              }
+            });
+
+            document.getElementById("modal-title").textContent = "Erro na publicacao";
+            const footer = document.getElementById("publish-footer");
+            if (footer) footer.classList.remove("hidden");
+
+            toast("Erro ao publicar.", "error");
           }
-        }, i * 400);
-      });
+        } catch (err) {
+          // Connection error — mark all as failed
+          document.getElementById("modal-title").textContent = "Erro de conexao";
+          const stepEl = document.getElementById("publish-step-0");
+          if (stepEl) {
+            stepEl.querySelector(".step-icon").className = "step-icon bg-red-900/50 text-red-400";
+            stepEl.querySelector(".step-icon").innerHTML =
+              '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+            stepEl.querySelector("span:last-child").className = "text-red-400";
+            stepEl.querySelector("span:last-child").textContent = "Erro de conexao com o servidor";
+          }
+          const footer = document.getElementById("publish-footer");
+          if (footer) footer.classList.remove("hidden");
 
-      const hasWarning = serverSteps.some(m => m.startsWith('Aviso'));
-      setTimeout(() => {
-        document.getElementById('modal-title').textContent = hasWarning ? 'Publicado com avisos' : 'Publicacao concluida!';
-        const footer = document.getElementById('publish-footer');
-        if (footer) footer.classList.remove('hidden');
-      }, steps.length * 400 + 200);
+          toast("Erro de conexao ao publicar.", "error");
+        }
 
-      toast(hasWarning ? 'Publicado, mas com avisos. Verifique os detalhes.' : 'Site publicado com sucesso!', hasWarning ? 'error' : 'success');
-    } else {
-      // Show error state
-      const failIndex = data.steps ? data.steps.findIndex(s => s.startsWith('Erro')) : 0;
-      steps.forEach((s, i) => {
-        const stepEl = document.getElementById('publish-step-' + i);
-        if (!stepEl) return;
-        if (i < failIndex || (failIndex === -1)) {
-          stepEl.querySelector('.step-icon').className = 'step-icon bg-emerald-900/50 text-emerald-400';
-          stepEl.querySelector('.step-icon').innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
-        } else if (i === failIndex || (failIndex === -1 && i === 0)) {
-          stepEl.querySelector('.step-icon').className = 'step-icon bg-red-900/50 text-red-400';
-          stepEl.querySelector('.step-icon').innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
-          stepEl.querySelector('span:last-child').className = 'text-red-400';
-        } else {
-          stepEl.querySelector('.step-icon').className = 'step-icon bg-gray-800 text-gray-600';
-          stepEl.querySelector('.step-icon').innerHTML = '<span class="text-xs">&mdash;</span>';
-          stepEl.querySelector('span:last-child').className = 'text-gray-600';
+        btn.disabled = false;
+        btn.innerHTML =
+          '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg> Publicar';
+      }
+
+      // --- Escape key closes modals ---
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          const modal = document.getElementById("modal");
+          if (modal && !modal.classList.contains("hidden")) {
+            closeModal();
+          }
         }
       });
 
-      document.getElementById('modal-title').textContent = 'Erro na publicacao';
-      const footer = document.getElementById('publish-footer');
-      if (footer) footer.classList.remove('hidden');
+      // --- Drag-and-drop for upload zones ---
+      document.addEventListener("dragover", (e) => {
+        const zone = e.target.closest(".upload-zone");
+        if (zone) {
+          e.preventDefault();
+          zone.classList.add("border-gold/40", "bg-gold/5");
+        }
+      });
+      document.addEventListener("dragleave", (e) => {
+        const zone = e.target.closest(".upload-zone");
+        if (zone) {
+          zone.classList.remove("border-gold/40", "bg-gold/5");
+        }
+      });
+      document.addEventListener("drop", (e) => {
+        const zone = e.target.closest(".upload-zone");
+        if (zone) {
+          e.preventDefault();
+          zone.classList.remove("border-gold/40", "bg-gold/5");
+          const input = zone.querySelector('input[type="file"]');
+          if (input && e.dataTransfer.files.length > 0) {
+            input.files = e.dataTransfer.files;
+            input.dispatchEvent(new Event("change"));
+          }
+        }
+      });
 
-      toast('Erro ao publicar.', 'error');
-    }
-  } catch (err) {
-    // Connection error — mark all as failed
-    document.getElementById('modal-title').textContent = 'Erro de conexao';
-    const stepEl = document.getElementById('publish-step-0');
-    if (stepEl) {
-      stepEl.querySelector('.step-icon').className = 'step-icon bg-red-900/50 text-red-400';
-      stepEl.querySelector('.step-icon').innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
-      stepEl.querySelector('span:last-child').className = 'text-red-400';
-      stepEl.querySelector('span:last-child').textContent = 'Erro de conexao com o servidor';
-    }
-    const footer = document.getElementById('publish-footer');
-    if (footer) footer.classList.remove('hidden');
+      // --- Theme toggle ---
+      const SUN_SVG =
+        '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>';
+      const MOON_SVG =
+        '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>';
 
-    toast('Erro de conexao ao publicar.', 'error');
-  }
+      function toggleAdminTheme() {
+        document.documentElement.classList.toggle("dark");
+        const isDark = document.documentElement.classList.contains("dark");
+        localStorage.setItem("admin-theme", isDark ? "dark" : "light");
+        updateAdminThemeIcon();
+      }
 
-  btn.disabled = false;
-  btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg> Publicar';
-}
+      function updateAdminThemeIcon() {
+        const isDark = document.documentElement.classList.contains("dark");
+        const el = document.getElementById("admin-theme-icon");
+        if (el) el.innerHTML = isDark ? SUN_SVG : MOON_SVG;
+      }
 
-// --- Escape key closes modals ---
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    const modal = document.getElementById('modal');
-    if (modal && !modal.classList.contains('hidden')) {
-      closeModal();
-    }
-  }
-});
+      // Set icon on load
+      document.addEventListener("DOMContentLoaded", updateAdminThemeIcon);
 
-// --- Drag-and-drop for upload zones ---
-document.addEventListener('dragover', (e) => {
-  const zone = e.target.closest('.upload-zone');
-  if (zone) {
-    e.preventDefault();
-    zone.classList.add('border-gold/40', 'bg-gold/5');
-  }
-});
-document.addEventListener('dragleave', (e) => {
-  const zone = e.target.closest('.upload-zone');
-  if (zone) {
-    zone.classList.remove('border-gold/40', 'bg-gold/5');
-  }
-});
-document.addEventListener('drop', (e) => {
-  const zone = e.target.closest('.upload-zone');
-  if (zone) {
-    e.preventDefault();
-    zone.classList.remove('border-gold/40', 'bg-gold/5');
-    const input = zone.querySelector('input[type="file"]');
-    if (input && e.dataTransfer.files.length > 0) {
-      input.files = e.dataTransfer.files;
-      input.dispatchEvent(new Event('change'));
-    }
-  }
-});
-
-// --- Theme toggle ---
-const SUN_SVG = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>';
-const MOON_SVG = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>';
-
-function toggleAdminTheme() {
-  document.documentElement.classList.toggle('dark');
-  const isDark = document.documentElement.classList.contains('dark');
-  localStorage.setItem('admin-theme', isDark ? 'dark' : 'light');
-  updateAdminThemeIcon();
-}
-
-function updateAdminThemeIcon() {
-  const isDark = document.documentElement.classList.contains('dark');
-  const el = document.getElementById('admin-theme-icon');
-  if (el) el.innerHTML = isDark ? SUN_SVG : MOON_SVG;
-}
-
-// Set icon on load
-document.addEventListener('DOMContentLoaded', updateAdminThemeIcon);
-
-// --- Init with error handling ---
-async function init() {
-  try {
-    await loadCollections();
-  } catch (err) {
-    document.getElementById('collections-list').innerHTML =
-      '<div class="card text-center py-8"><p class="text-red-400 mb-3">Erro ao carregar colecoes</p><button onclick="loadCollections()" class="btn btn-outline text-xs">Tentar novamente</button></div>';
-  }
-  try {
-    await loadTestimonials();
-  } catch (err) {
-    document.getElementById('testimonials-list').innerHTML =
-      '<div class="card text-center py-8"><p class="text-red-400 mb-3">Erro ao carregar depoimentos</p><button onclick="loadTestimonials()" class="btn btn-outline text-xs">Tentar novamente</button></div>';
-  }
-  try {
-    await loadSettings();
-  } catch (err) {
-    toast('Erro ao carregar configuracoes', 'error');
-  }
-}
-init();
-</script>
-</body>
+      // --- Init with error handling ---
+      async function init() {
+        try {
+          await loadCollections();
+        } catch (err) {
+          document.getElementById("collections-list").innerHTML =
+            '<div class="card text-center py-8"><p class="text-red-400 mb-3">Erro ao carregar colecoes</p><button onclick="loadCollections()" class="btn btn-outline text-xs">Tentar novamente</button></div>';
+        }
+        try {
+          await loadTestimonials();
+        } catch (err) {
+          document.getElementById("testimonials-list").innerHTML =
+            '<div class="card text-center py-8"><p class="text-red-400 mb-3">Erro ao carregar depoimentos</p><button onclick="loadTestimonials()" class="btn btn-outline text-xs">Tentar novamente</button></div>';
+        }
+        try {
+          await loadSettings();
+        } catch (err) {
+          toast("Erro ao carregar configuracoes", "error");
+        }
+      }
+      init();
+    </script>
+  </body>
 </html>
