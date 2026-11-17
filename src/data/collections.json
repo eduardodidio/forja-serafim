@@ -14,7 +14,8 @@
     ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/9g2_y6GTfdaf",
-    "manualUrl": ""
+    "manualUrl": "",
+    "hidden": false
   },
   {
     "slug": "cavaleiros-do-zodiaco",
@@ -31,7 +32,8 @@
     ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/T7W3nZ6zFfUJ",
-    "manualUrl": ""
+    "manualUrl": "",
+    "hidden": false
   },
   {
     "slug": "final-fantasy-vii",
@@ -48,6 +50,7 @@
     ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/T7W3nZ6zFfUJ",
-    "manualUrl": "/manuals/final-fantasy-vii.pdf"
+    "manualUrl": "/manuals/final-fantasy-vii.pdf",
+    "hidden": false
   }
 ]

@@ -12,6 +12,7 @@ export type Collection = {
   moxfieldUrl: string;
   deckcheckUrl: string;
   manualUrl: string;
+  hidden: boolean;
 };
 
 export type Testimonial = {
@@ -21,6 +22,7 @@ export type Testimonial = {
 };
 
 export const collections: Collection[] = collectionsData;
+export const visibleCollections: Collection[] = collectionsData.filter(c => !c.hidden);
 export const testimonials: Testimonial[] = testimonialsData as Testimonial[];
 export const WHATSAPP_URL: string = settingsData.whatsappUrl;
 

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/page-shell";
 import { CollectionCard } from "@/components/card-tile";
-import { collections } from "@/lib/store-data";
+import { visibleCollections } from "@/lib/store-data";
 
 export const Route = createFileRoute("/colecoes/")({
   component: Colecoes,
@@ -19,7 +19,7 @@ function Colecoes() {
         </p>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {collections.map((c) => (
+          {visibleCollections.map((c) => (
             <CollectionCard key={c.slug} collection={c} />
           ))}
         </div>

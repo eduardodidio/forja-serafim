@@ -5,14 +5,14 @@ const MAX_WIDTH = 600;
 const QUALITY = 80;
 
 function createWatermarkSvg(width: number, height: number): Buffer {
-  const fontSize = Math.max(24, Math.round(width * 0.06));
+  const fontSize = Math.max(24, Math.round(width * 0.08));
   const lines = 5;
   const svgParts: string[] = [];
 
   for (let i = 0; i < lines; i++) {
     const y = Math.round((height / (lines + 1)) * (i + 1));
     svgParts.push(
-      `<text x="${width / 2}" y="${y}" font-family="sans-serif" font-size="${fontSize}" font-weight="bold" fill="white" fill-opacity="0.25" text-anchor="middle" transform="rotate(-30, ${width / 2}, ${y})">${WATERMARK_TEXT}</text>`,
+      `<text x="${width / 2}" y="${y}" font-family="sans-serif" font-size="${fontSize}" font-weight="bold" fill="white" fill-opacity="0.40" stroke="black" stroke-width="1" stroke-opacity="0.15" text-anchor="middle" transform="rotate(-30, ${width / 2}, ${y})">${WATERMARK_TEXT}</text>`,
     );
   }
 

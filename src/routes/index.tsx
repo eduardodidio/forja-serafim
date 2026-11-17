@@ -14,8 +14,8 @@ import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import hero from "@/assets/hero.jpg";
 import { PageShell } from "@/components/page-shell";
 import { CollectionCard } from "@/components/card-tile";
-import { collections, testimonials, WHATSAPP_URL, whatsappLink } from "@/lib/store-data";
-import { WingsIcon } from "@/components/wings-icon";
+import { visibleCollections, testimonials, WHATSAPP_URL, whatsappLink } from "@/lib/store-data";
+
 import { useReveal } from "@/hooks/useReveal";
 import { SITE } from "@/lib/seo";
 
@@ -123,7 +123,7 @@ function Home() {
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {collections.map((c, i) => (
+          {visibleCollections.map((c, i) => (
             <Reveal key={c.slug} delay={i * 120}>
               <CollectionCard collection={c} />
             </Reveal>
@@ -292,7 +292,7 @@ function ThemeBuilderSection() {
             Conte pra gente qual e a vibe e nos criamos a arte completa.
           </p>
           <div className="mt-6">
-            <WingsIcon className="size-16 text-gold/30" />
+            <img src="/images/logo-forja-serafim.jpg" alt="Forja Serafim" className="size-20 rounded-full object-cover opacity-30" />
           </div>
         </div>
 

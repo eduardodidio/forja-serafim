@@ -70,6 +70,7 @@ type Collection = {
   moxfieldUrl: string;
   deckcheckUrl: string;
   manualUrl: string;
+  hidden: boolean;
 };
 
 type Testimonial = {
@@ -205,6 +206,7 @@ async function handleRequest(req: Request): Promise<Response> {
       moxfieldUrl: body.moxfieldUrl ?? "",
       deckcheckUrl: body.deckcheckUrl ?? "",
       manualUrl: "",
+      hidden: body.hidden ?? false,
     };
 
     collections.push(newCol);
@@ -228,6 +230,7 @@ async function handleRequest(req: Request): Promise<Response> {
       if (body.cardCount !== undefined && body.cardCount > 0) col.cardCount = body.cardCount;
       if (body.moxfieldUrl !== undefined) col.moxfieldUrl = body.moxfieldUrl;
       if (body.deckcheckUrl !== undefined) col.deckcheckUrl = body.deckcheckUrl;
+      if (body.hidden !== undefined) col.hidden = body.hidden;
       if (body.sampleImages !== undefined) col.sampleImages = body.sampleImages;
       writeJson(COLLECTIONS_JSON, collections);
       return json(col);
