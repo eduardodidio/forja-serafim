@@ -566,8 +566,10 @@ async function handleRequest(req: Request): Promise<Response> {
     try {
       // 1. Build
       steps.push("Compilando site...");
+      console.log("[publish] Building...");
       execSync("bun run build", { ...opts, stdio: "pipe" });
       steps.push("Build concluido.");
+      console.log("[publish] Build done.");
 
       // 2. Stage data files, covers, decks, manuals
       const filesToAdd = [
@@ -587,6 +589,7 @@ async function handleRequest(req: Request): Promise<Response> {
       }
 
       // 3. Check if there are staged changes to commit
+      console.log("[publish] Checking staged changes...");
       const diff = execSync("git diff --cached --name-only", { ...opts, stdio: "pipe" }).trim();
       if (diff) {
         const now = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
@@ -597,6 +600,7 @@ async function handleRequest(req: Request): Promise<Response> {
       }
 
       // 4. Push to GitHub
+      console.log("[publish] Preparing push...");
       // Ensure we're on main branch (Render clones may be in detached HEAD)
       try {
         const branch = execSync("git rev-parse --abbrev-ref HEAD", {
@@ -672,7 +676,13 @@ async function handleRequest(req: Request): Promise<Response> {
       return json({ success: true, steps }, 200, req);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      return json({ success: false, steps: [...steps, `Erro: ${msg}`] }, 500, req);
+      const stderr =
+        err && typeof err === "object" && "stderr" in err
+          ? String((err as { stderr: unknown }).stderr).trim()
+          : "";
+      const detail = stderr ? `${msg} — ${stderr}` : msg;
+      console.error("Publish error:", detail);
+      return json({ success: false, steps: [...steps, `Erro: ${detail}`] }, 500, req);
     }
   }
 
