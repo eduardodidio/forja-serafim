@@ -44,7 +44,7 @@ function CollectionPage() {
   }
 
   const whatsappHref = whatsappLink(
-    `Oi! Vim pelo site e tenho interesse no deck ${collection.name} da Casa do Serafim. Pode me passar mais detalhes?`,
+    `Oi! Vim pelo site e tenho interesse no deck ${collection.name} da Forja Serafim. Pode me passar mais detalhes?`,
   );
 
   const productJsonLd = getProductJsonLd(slug);

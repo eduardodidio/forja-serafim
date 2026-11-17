@@ -39,7 +39,7 @@ function Contato() {
           >
             <Instagram className="size-5 text-gold" />
             <p className="mt-4 font-display text-base">Instagram</p>
-            <p className="mt-1 text-sm text-muted-foreground">@casadoserafim</p>
+            <p className="mt-1 text-sm text-muted-foreground">@forjaserafim</p>
           </a>
         </div>
       </div>

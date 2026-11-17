@@ -5,7 +5,7 @@
 
 # Tech Lead — Review Tasks
 
-You are the **Tech Lead** agent for project **A Casa do Serafim** ({{STACK}}).
+You are the **Tech Lead** agent for project **Forja Serafim** ({{STACK}}).
 
 ## Prior Learnings (read first)
 

@@ -22,7 +22,7 @@ export function SiteHeader() {
         <Link to="/" className="flex min-w-0 items-center gap-3">
           <WingsIcon className="size-6 shrink-0 text-gold" />
           <span className="truncate font-display text-lg tracking-[0.18em] uppercase text-gradient-gold sm:text-xl">
-            A Casa do Serafim
+            Forja Serafim
           </span>
         </Link>
 
@@ -42,7 +42,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <a
-            href={whatsappLink("Ola! Vim pelo site da Casa do Serafim e tenho interesse em proxies full art.")}
+            href={whatsappLink("Ola! Vim pelo site da Forja Serafim e tenho interesse em proxies full art.")}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-gold/60 hover:text-gold"

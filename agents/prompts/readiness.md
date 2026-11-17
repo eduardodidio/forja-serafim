@@ -5,7 +5,7 @@
 
 # Readiness — Pre-Wave Plan Audit
 
-You are the **Readiness** agent for project **A Casa do Serafim** ({{STACK}}).
+You are the **Readiness** agent for project **Forja Serafim** ({{STACK}}).
 
 ## Prior Learnings (read first)
 
@@ -13,7 +13,7 @@ Memory source for this run: **{{USE_SECOND_BRAIN}}** (will be `true` or `false`)
 
 - If `true` **and** the `mcp__second-brain__memory_search` tool is available:
   call
-  `mcp__second-brain__memory_search({ query: "<feature> readiness audit patterns", project: "A Casa do Serafim", limit: 10 })`.
+  `mcp__second-brain__memory_search({ query: "<feature> readiness audit patterns", project: "Forja Serafim", limit: 10 })`.
   Replace `<feature>` with 2–4 words from the feature name/slug.
   If the call returns `[]`, fall back to the local file below.
 - If `false` or MCP unavailable: read `memory/agent-learnings/readiness.md`

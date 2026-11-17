@@ -1,4 +1,4 @@
-# A Casa do Serafim
+# Forja Serafim
 
 Loja de proxies full art premium para Magic: The Gathering.
 
@@ -31,6 +31,13 @@ bun run preview
 - Cavaleiros do Zodiaco
 - Final Fantasy VII
 
+## Changelog
+
+- **F04**: Rebrand para "Forja Serafim" — novo logo, favicon, migracao de repo, rename completo
+- **F03**: SEO, PWA, lightbox, animacoes, admin UX, 404 tematico
+- **F02**: Redesign do painel admin — tema escuro premium com acentos dourados
+- **F01**: Build inicial do site — dados, UI, admin CLI
+
 ## Contato
 
 WhatsApp: [+55 51 8431-5964](https://wa.me/5551984315964)
@@ -42,4 +49,4 @@ respectivos nomes sao marcas registradas de seus proprietarios. As proxies
 produzidas destinam-se exclusivamente ao uso casual, colecionismo e
 personalizacao artistica, nao sendo validas para torneios oficiais.
 
-&copy; A Casa do Serafim. Todos os direitos reservados.
+&copy; Forja Serafim. Todos os direitos reservados.

@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul 2>&1
-title A Casa do Serafim - Instalacao
+title Forja Serafim - Instalacao
 
 echo.
 echo  ============================================
-echo    A Casa do Serafim - Instalacao
+echo    Forja Serafim - Instalacao
 echo  ============================================
 echo.
 echo  Este script instala tudo que voce precisa.

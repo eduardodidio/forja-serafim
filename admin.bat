@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul 2>&1
-title A Casa do Serafim - Admin
+title Forja Serafim - Admin
 
 echo.
 echo  ============================================
-echo    A Casa do Serafim - Painel Admin
+echo    Forja Serafim - Painel Admin
 echo  ============================================
 echo.
 

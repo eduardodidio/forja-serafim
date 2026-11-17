@@ -1,7 +1,7 @@
 import { collections } from "./store-data";
 
-const SITE_URL = "https://casadoserafim.com.br";
-const SITE_NAME = "A Casa do Serafim";
+const SITE_URL = "https://forjaserafim.com.br";
+const SITE_NAME = "Forja Serafim";
 const DEFAULT_DESCRIPTION =
   "Proxies Full Art artesanais para Magic: The Gathering. Decks tematicos completos com arte autoral premium.";
 const DEFAULT_IMAGE = `${SITE_URL}/images/covers/castlevania.jpg`;
@@ -34,7 +34,7 @@ export function getMetaTags(page: MetaTags) {
 
 export function getHomeMetaTags() {
   return getMetaTags({
-    title: "A Casa do Serafim — Proxies Full Art para MTG",
+    title: "Forja Serafim — Proxies Full Art para MTG",
     description: DEFAULT_DESCRIPTION,
     url: SITE_URL,
     image: DEFAULT_IMAGE,

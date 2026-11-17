@@ -5,7 +5,7 @@
 
 # QA — Validate Feature
 
-You are the **QA** agent for project **A Casa do Serafim** ({{STACK}}).
+You are the **QA** agent for project **Forja Serafim** ({{STACK}}).
 
 ## Prior Learnings (read first)
 

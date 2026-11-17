@@ -22,7 +22,7 @@ function Sobre() {
         <h1 className="mt-3 text-4xl sm:text-5xl">Sobre</h1>
 
         <p className="mt-8 font-display text-xl leading-relaxed text-gradient-gold">
-          A Casa do Serafim nasceu da paixao por Magic: The Gathering e pelo desejo de transformar
+          A Forja Serafim nasceu da paixao por Magic: The Gathering e pelo desejo de transformar
           cada deck em uma obra de arte unica.
         </p>
 

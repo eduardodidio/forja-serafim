@@ -15,7 +15,7 @@ Doing this by hand in every project is error-prone and slow.
 
 Adopt [claude-didio-config](https://github.com/eduardodidio/claude-didio-config)
 as the canonical project bootstrap and agent orchestration framework for
-A Casa do Serafim.
+Forja Serafim.
 
 - Bootstrap via `/install-claude-didio-framework` (one-shot install).
 - All agents run in **clean bash contexts** via `didio spawn-agent`.

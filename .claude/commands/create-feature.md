@@ -9,7 +9,7 @@ argument-hint: <FXX> <feature description>
 -->
 
 You are orchestrating the claude-didio-config 4-agent Waves workflow for
-project **A Casa do Serafim**.
+project **Forja Serafim**.
 
 The user asked for feature: **$ARGUMENTS**
 

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Project: **A Casa do Serafim**
+Project: **Forja Serafim**
 Stack: **TanStack Start + React 19 + TypeScript + Tailwind CSS v4 + shadcn/ui**
 Framework: [claude-didio-config](https://github.com/eduardodidio/claude-didio-config)
 

@@ -1,6 +1,6 @@
 import sharp from "sharp";
 
-const WATERMARK_TEXT = "A Casa do Serafim";
+const WATERMARK_TEXT = "Forja Serafim";
 const MAX_WIDTH = 600;
 const QUALITY = 80;
 

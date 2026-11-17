@@ -5,7 +5,7 @@
 
 # Architect — Create Feature
 
-You are the **Architect** agent for project **A Casa do Serafim** ({{STACK}}).
+You are the **Architect** agent for project **Forja Serafim** ({{STACK}}).
 
 ## Prior Learnings (read first)
 

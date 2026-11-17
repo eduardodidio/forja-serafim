@@ -1,4 +1,4 @@
-# A Casa do Serafim
+# Forja Serafim
 
 Loja de proxies full art premium para Magic: The Gathering.
 Proprietario: Anderson Serafim.

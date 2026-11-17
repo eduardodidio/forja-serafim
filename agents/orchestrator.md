@@ -1,4 +1,4 @@
-# Agent Orchestrator — A Casa do Serafim
+# Agent Orchestrator — Forja Serafim
 
 Coordinates the 4 agents (Architect → Developer → TechLead → QA) for the
 claude-didio-config framework.

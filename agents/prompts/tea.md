@@ -5,7 +5,7 @@
 
 # TEA — Test Architect
 
-You are the **Test Architect (TEA)** agent for project **A Casa do Serafim**
+You are the **Test Architect (TEA)** agent for project **Forja Serafim**
 ({{STACK}}).
 
 ## Prior Learnings (read first)

@@ -2,7 +2,7 @@ services:
   # --- Site estatico (landing page) ---
   - type: web
     runtime: static
-    name: casa-do-serafim
+    name: forja-serafim
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     pullRequestPreviewsEnabled: false
@@ -24,7 +24,7 @@ services:
   # --- Admin panel (web service) ---
   - type: web
     runtime: node
-    name: serafim-admin
+    name: forja-serafim-admin
     buildCommand: curl -fsSL https://bun.sh/install | bash && export PATH="$HOME/.bun/bin:$PATH" && bun install && bun add sharp
     startCommand: export PATH="$HOME/.bun/bin:$PATH" && bun admin/src/server.ts
     plan: free

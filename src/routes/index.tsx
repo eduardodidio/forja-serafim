@@ -34,15 +34,15 @@ export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
     meta: [
-      { title: `A Casa do Serafim — Proxies Full Art para MTG` },
+      { title: `Forja Serafim — Proxies Full Art para MTG` },
       { name: "description", content: SITE.DESCRIPTION },
-      { property: "og:title", content: "A Casa do Serafim — Proxies Full Art para MTG" },
+      { property: "og:title", content: "Forja Serafim — Proxies Full Art para MTG" },
       { property: "og:description", content: SITE.DESCRIPTION },
       { property: "og:image", content: SITE.IMAGE },
       { property: "og:url", content: SITE.URL },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "A Casa do Serafim — Proxies Full Art para MTG" },
+      { name: "twitter:title", content: "Forja Serafim — Proxies Full Art para MTG" },
       { name: "twitter:description", content: SITE.DESCRIPTION },
       { name: "twitter:image", content: SITE.IMAGE },
     ],
@@ -66,7 +66,7 @@ function Home() {
         <div className="relative mx-auto flex min-h-[78vh] max-w-7xl flex-col justify-end px-5 pb-20 pt-32">
           <p className="text-xs uppercase tracking-[0.35em] text-gold">Proxies full art artesanais</p>
           <h1 className="mt-5 max-w-3xl text-4xl leading-[1.05] sm:text-6xl lg:text-7xl">
-            <span className="text-gradient-gold">A Casa do Serafim</span>
+            <span className="text-gradient-gold">Forja Serafim</span>
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Proxies Full Art feitas para transformar seu deck em uma verdadeira obra de arte.
@@ -79,7 +79,7 @@ function Home() {
               Ver Colecoes <ArrowRight className="size-4" />
             </Link>
             <a
-              href={whatsappLink("Ola! Vim pelo site da Casa do Serafim e gostaria de saber mais sobre as proxies full art.")}
+              href={whatsappLink("Ola! Vim pelo site da Forja Serafim e gostaria de saber mais sobre as proxies full art.")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3.5 text-sm font-medium transition-colors hover:border-gold/60 hover:text-gold"

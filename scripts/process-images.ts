@@ -2,7 +2,7 @@
  * process-images.ts
  *
  * Processes raw deck images: resizes to max 600px width and applies
- * a diagonal "A Casa do Serafim" watermark overlay.
+ * a diagonal "Forja Serafim" watermark overlay.
  *
  * Usage:
  *   bun scripts/process-images.ts --input /path/to/raw --output /path/to/dest --slug castlevania
@@ -12,7 +12,7 @@ import sharp from "sharp";
 import { readdirSync, mkdirSync, existsSync } from "fs";
 import { join, extname } from "path";
 
-const WATERMARK_TEXT = "A Casa do Serafim";
+const WATERMARK_TEXT = "Forja Serafim";
 const MAX_WIDTH = 600;
 const QUALITY = 80;
 

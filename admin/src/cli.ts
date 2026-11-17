@@ -11,7 +11,7 @@ import { uploadManual } from "./commands/upload-manual.js";
 import { manageTestimonials } from "./commands/manage-testimonials.js";
 
 async function main() {
-  console.log("\n  A Casa do Serafim — Admin CLI\n");
+  console.log("\n  Forja Serafim — Admin CLI\n");
 
   while (true) {
     const action = await select({

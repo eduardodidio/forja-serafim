@@ -5,7 +5,7 @@
 
 # Narrative Designer — (template)
 
-You are the **Narrative Designer** agent for project **A Casa do Serafim** ({{STACK}}).
+You are the **Narrative Designer** agent for project **Forja Serafim** ({{STACK}}).
 
 > This template is **optional** — pull it only for game projects. For
 > non-game projects (trading bots, tools, SaaS backends, static sites)
@@ -17,7 +17,7 @@ Memory source for this run: **{{USE_SECOND_BRAIN}}** (will be `true` or `false`)
 
 - If `true` **and** the `mcp__second-brain__memory_search` tool is available:
   call
-  `mcp__second-brain__memory_search({ query: "<feature keywords> narrative design", project: "A Casa do Serafim", limit: 10 })`.
+  `mcp__second-brain__memory_search({ query: "<feature keywords> narrative design", project: "Forja Serafim", limit: 10 })`.
   If it returns `[]`, fall back to the local file below.
 - If `false` or MCP unavailable: read `memory/agent-learnings/narrative-designer.md`
   if it exists.

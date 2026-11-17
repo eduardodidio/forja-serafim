@@ -1,4 +1,4 @@
-# Admin — A Casa do Serafim
+# Admin — Forja Serafim
 
 Painel administrativo para gerenciar as colecoes, imagens e depoimentos do site.
 

@@ -9,7 +9,7 @@ argument-hint: <FXX> <feature description>
 -->
 
 You are running the **planning-only** pipeline of `claude-didio-config` for
-project **A Casa do Serafim**.
+project **Forja Serafim**.
 
 The user asked to plan feature: **$ARGUMENTS**
 

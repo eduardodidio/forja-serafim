@@ -484,13 +484,13 @@ if (process.env.GITHUB_TOKEN) {
       execSync(`git remote set-url origin "${authedRemote}"`, { cwd: PROJECT_ROOT, encoding: "utf-8" });
     }
     try { execSync("git config user.email", { cwd: PROJECT_ROOT, stdio: "pipe" }); } catch {
-      execSync('git config user.email "admin@casadoserafim.com.br"', { cwd: PROJECT_ROOT });
+      execSync('git config user.email "admin@forjaserafim.com.br"', { cwd: PROJECT_ROOT });
       execSync('git config user.name "Serafim Admin"', { cwd: PROJECT_ROOT });
     }
   } catch {}
 }
 
-console.log(`\n  A Casa do Serafim — Admin Web`);
+console.log(`\n  Forja Serafim — Admin Web`);
 console.log(`  http://localhost:${PORT}/admin/`);
 console.log(`  Auth: ${isAuthEnabled() ? `Google OAuth (${ALLOWED_EMAILS.join(", ")})` : "DISABLED (local dev)"}\n`);
 

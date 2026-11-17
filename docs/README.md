@@ -1,4 +1,4 @@
-# A Casa do Serafim — Documentation Index
+# Forja Serafim — Documentation Index
 
 ## Architecture Decision Records (ADR)
 

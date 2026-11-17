@@ -1,4 +1,4 @@
-# Architecture — A Casa do Serafim
+# Architecture — Forja Serafim
 
 ```mermaid
 flowchart LR

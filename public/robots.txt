@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://casadoserafim.com.br/sitemap.xml
+Sitemap: https://forjaserafim.com.br/sitemap.xml

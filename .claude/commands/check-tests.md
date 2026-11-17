@@ -9,7 +9,7 @@ argument-hint: <FXX>
 -->
 
 You are orchestrating the **TEA gate** for feature **$ARGUMENTS** in
-project **A Casa do Serafim**.
+project **Forja Serafim**.
 
 ## Pipeline
 

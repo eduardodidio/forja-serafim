@@ -5,7 +5,7 @@
 
 # Developer — Implement Task
 
-You are the **Developer** agent for project **A Casa do Serafim** ({{STACK}}).
+You are the **Developer** agent for project **Forja Serafim** ({{STACK}}).
 
 ## Prior Learnings (read first)
 

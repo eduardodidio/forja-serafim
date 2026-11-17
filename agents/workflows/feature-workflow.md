@@ -1,4 +1,4 @@
-# Feature Workflow — A Casa do Serafim
+# Feature Workflow — Forja Serafim
 
 ## Pipeline
 
