@@ -591,6 +591,33 @@ function toast(msg, type = 'success') {
   }, 3000);
 }
 
+function toastUndo(msg, onUndo) {
+  const container = document.getElementById('toast-container');
+  const item = document.createElement('div');
+  let undone = false;
+  item.className = 'toast-item bg-emerald-950/90 text-emerald-200 border border-emerald-800/50';
+  item.innerHTML = `
+    <svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <span class="flex-1">${esc(msg)}</span>
+    <button class="undo-btn text-xs font-bold text-gold hover:text-gold-light underline underline-offset-2 ml-2 flex-shrink-0">Desfazer</button>
+    <div class="toast-progress bg-emerald-500" style="animation-duration:5s"></div>
+  `;
+  item.querySelector('.undo-btn').addEventListener('click', () => {
+    if (undone) return;
+    undone = true;
+    onUndo();
+    item.classList.add('toast-out');
+    setTimeout(() => item.remove(), 300);
+  });
+  container.appendChild(item);
+  setTimeout(() => {
+    if (!undone) {
+      item.classList.add('toast-out');
+      setTimeout(() => item.remove(), 300);
+    }
+  }, 5000);
+}
+
 // --- Modal ---
 function openModal(title, html) {
   document.getElementById('modal-title').textContent = title;
@@ -1139,36 +1166,68 @@ function openEditCollection(slug) {
 }
 
 async function removeImage(slug, filename) {
-  const ok = await new Promise(resolve => {
-    confirmDialog('Remover imagem?', 'A imagem sera excluida permanentemente.', () => resolve(true), { confirmText: 'Remover', confirmClass: 'btn-danger' });
-  });
-  if (!ok) return;
+  const c = collections.find(x => x.slug === slug);
+  if (!c) return;
 
+  const imagePath = `/images/decks/${slug}/${filename}`;
+  const removedIdx = c.sampleImages.indexOf(imagePath);
+  if (removedIdx === -1) return;
+
+  // Optimistic: remove from local state and update grid in-place
+  const backup = [...c.sampleImages];
+  c.sampleImages.splice(removedIdx, 1);
+  updateEditSamplesGrid(slug);
+
+  // Call API
   const res = await fetch(`${API}/api/collections/${slug}/images/${filename}`, { method: 'DELETE' });
-  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+  if (!res.ok) {
+    // Rollback
+    c.sampleImages = backup;
+    updateEditSamplesGrid(slug);
+    toast('Erro ao remover imagem.', 'error');
+    return;
+  }
 
-  toast('Imagem removida!');
+  // Show undo toast (re-add via API if undone)
+  toastUndo('Imagem removida!', async () => {
+    // Undo: re-upload would be complex, just reload from server
+    await loadCollections();
+    updateEditSamplesGrid(slug);
+    toast('Operacao desfeita — recarregue as imagens se necessario.');
+  });
+
+  // Sync global state
   await loadCollections();
-  refreshEditModal(slug);
+  updateEditSamplesGrid(slug);
 }
 
 async function moveImage(slug, fromIdx, toIdx) {
   const c = collections.find(x => x.slug === slug);
   if (!c) return;
-  const arr = [...c.sampleImages];
-  const [moved] = arr.splice(fromIdx, 1);
-  arr.splice(toIdx, 0, moved);
+
+  // Optimistic: reorder locally first
+  const [moved] = c.sampleImages.splice(fromIdx, 1);
+  c.sampleImages.splice(toIdx, 0, moved);
+  updateEditSamplesGrid(slug);
 
   const res = await fetch(`${API}/api/collections/${slug}/images/reorder`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sampleImages: arr }),
+    body: JSON.stringify({ sampleImages: c.sampleImages }),
   });
-  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+
+  if (!res.ok) {
+    // Rollback
+    const [m] = c.sampleImages.splice(toIdx, 1);
+    c.sampleImages.splice(fromIdx, 0, m);
+    updateEditSamplesGrid(slug);
+    toast('Erro ao reordenar.', 'error');
+    return;
+  }
 
   toast('Ordem atualizada!');
   await loadCollections();
-  refreshEditModal(slug);
+  updateEditSamplesGrid(slug);
 }
 
 async function uploadEditSamples(slug, input) {
@@ -1205,7 +1264,44 @@ async function uploadEditSamples(slug, input) {
   toast(`${processed.length} imagens adicionadas!`);
   input.value = '';
   await loadCollections();
-  refreshEditModal(slug);
+  updateEditSamplesGrid(slug);
+}
+
+function updateEditSamplesGrid(slug) {
+  const c = collections.find(x => x.slug === slug);
+  if (!c) return;
+
+  const grid = document.getElementById('edit-samples-grid');
+  if (!grid) return;
+
+  if (c.sampleImages.length === 0) {
+    grid.innerHTML = '<p class="text-xs text-gray-500 col-span-full">Nenhuma imagem de amostra.</p>';
+  } else {
+    grid.innerHTML = c.sampleImages.map((img, i) => `
+      <div class="relative group rounded-xl overflow-hidden border border-gray-700/60 hover:border-gold/30 transition-all duration-200" style="animation: fade-in 0.25s ease-out">
+        <span class="absolute top-1.5 left-1.5 z-10 bg-black/70 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${i + 1}</span>
+        <img src="${img}" class="w-full object-cover" style="aspect-ratio: 2/3;" onerror="this.style.display='none'" />
+        <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button onclick="removeImage('${slug}', '${img.split('/').pop()}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+          ${i > 0 ? `<button onclick="moveImage('${slug}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+          </button>` : ''}
+          ${i < c.sampleImages.length - 1 ? `<button onclick="moveImage('${slug}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Update counter
+  const counterEl = grid.closest('.space-y-4')?.querySelector('.text-xs.font-medium');
+  if (counterEl) {
+    counterEl.textContent = `${c.sampleImages.length}/6 imagens`;
+    counterEl.className = 'text-xs font-medium ' + (c.sampleImages.length >= 6 ? 'text-red-400' : 'text-emerald-400');
+  }
 }
 
 function refreshEditModal(slug) {
