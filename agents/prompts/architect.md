@@ -150,6 +150,7 @@ tasks/features/<FXX>-<slug>/
 ```
 
 Rules:
+
 - `00-overview.md` is **mandatory**. Contents: problem statement (1 paragraph), high-level scope, constraints, and AC titles only (detail goes in component shards).
 - Each `NN-<component>.md` covers **one** logical component. Use 2-digit zero-padded numbering for deterministic ordering.
 - **No content duplication** between shards. Shared context belongs in `00-overview.md`.

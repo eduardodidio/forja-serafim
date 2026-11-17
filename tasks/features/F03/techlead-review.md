@@ -70,11 +70,11 @@ Output: dist/ with 4 assets (index.html, hero.jpg, CSS 28.84KB, JS 370.57KB)
 
 ## Issues to Track (non-blocking)
 
-| # | Severity | Description |
-|---|----------|-------------|
-| 1 | Low | Dead code in `seo.ts`: `getHomeMetaTags`, `getCollectionMetaTags`, `generateSitemap` unused |
-| 2 | Low | PWA icons declared as 192x192/512x512 but actual `favicon.png` is 32x32 |
-| 3 | Low | Lightbox image `pointerEvents: none` makes clicking image close the lightbox (passes through to backdrop) |
+| #   | Severity | Description                                                                                               |
+| --- | -------- | --------------------------------------------------------------------------------------------------------- |
+| 1   | Low      | Dead code in `seo.ts`: `getHomeMetaTags`, `getCollectionMetaTags`, `generateSitemap` unused               |
+| 2   | Low      | PWA icons declared as 192x192/512x512 but actual `favicon.png` is 32x32                                   |
+| 3   | Low      | Lightbox image `pointerEvents: none` makes clicking image close the lightbox (passes through to backdrop) |
 
 ## Verdict
 

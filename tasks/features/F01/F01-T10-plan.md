@@ -10,6 +10,7 @@
 ## Data Schema
 
 ### src/data/collections.json
+
 ```json
 [
   {
@@ -27,28 +28,30 @@
 ```
 
 ### src/data/testimonials.json
+
 ```json
 []
 ```
 
 ## CLI Commands
 
-| Command | Descricao |
-|---------|-----------|
-| `list-collections` | Lista colecoes (tabela) |
-| `add-collection` | Adiciona colecao interativamente |
-| `edit-collection` | Edita campos de uma colecao |
-| `remove-collection` | Remove colecao |
-| `process-images` | Watermark+resize imagens, seleciona amostras |
-| `set-cover` | Define imagem de capa de colecao |
-| `set-deckcheck-url` | Define URL do DeckCheck |
-| `set-moxfield-url` | Define URL do Moxfield |
-| `upload-manual` | Copia PDF para public/manuals/{slug}.pdf |
-| `manage-testimonials` | CRUD de depoimentos (add/edit/remove/list) |
+| Command               | Descricao                                    |
+| --------------------- | -------------------------------------------- |
+| `list-collections`    | Lista colecoes (tabela)                      |
+| `add-collection`      | Adiciona colecao interativamente             |
+| `edit-collection`     | Edita campos de uma colecao                  |
+| `remove-collection`   | Remove colecao                               |
+| `process-images`      | Watermark+resize imagens, seleciona amostras |
+| `set-cover`           | Define imagem de capa de colecao             |
+| `set-deckcheck-url`   | Define URL do DeckCheck                      |
+| `set-moxfield-url`    | Define URL do Moxfield                       |
+| `upload-manual`       | Copia PDF para public/manuals/{slug}.pdf     |
+| `manage-testimonials` | CRUD de depoimentos (add/edit/remove/list)   |
 
 ## Subtasks
 
 ### T10.1: Migrar dados para JSON + refatorar store-data.ts
+
 - Criar `src/data/collections.json` com as 3 colecoes existentes
 - Criar `src/data/testimonials.json` como `[]`
 - Mover cover images de `src/assets/col-*.jpg` para `public/images/covers/{slug}.jpg`
@@ -58,6 +61,7 @@
 - Verificar build
 
 ### T10.2: Scaffold admin project
+
 - Criar `admin/package.json` (deps: `@inquirer/prompts`, `sharp`)
 - Criar `admin/tsconfig.json`
 - Criar `admin/src/cli.ts` com menu principal e roteamento
@@ -65,22 +69,27 @@
 - Adicionar scripts no root `package.json`
 
 ### T10.3: CRUD de colecoes
+
 - add-collection, edit-collection, remove-collection, list-collections
 
 ### T10.4: Processamento de imagens
+
 - Extrair logica de watermark de `scripts/process-images.ts`
 - process-images command (interativo, seleciona amostras)
 - set-cover command
 
 ### T10.5: URLs e manual PDF
+
 - set-url command (deckcheck + moxfield)
 - upload-manual command
 - Criar `public/manuals/` com `.gitkeep`
 
 ### T10.6: Depoimentos
+
 - manage-testimonials com sub-menu add/edit/remove/list
 
 ### T10.7: README do Anderson + teste end-to-end
+
 - README.md em portugues com exemplos de cada comando
 - Teste completo do fluxo
 

@@ -232,11 +232,7 @@
     position: absolute;
     inset: 0;
     opacity: 0;
-    background: radial-gradient(
-      circle at 50% 15%,
-      oklch(0.75 0.09 82 / 0.28),
-      transparent 65%
-    );
+    background: radial-gradient(circle at 50% 15%, oklch(0.75 0.09 82 / 0.28), transparent 65%);
     transition: opacity 0.45s ease;
     pointer-events: none;
   }

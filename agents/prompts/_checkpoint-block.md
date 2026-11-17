@@ -15,7 +15,7 @@ ferramenta: `⚠️ Session budget at NN%`. Quando você vir essa string:
      "role": "$DIDIO_ROLE",
      "updated_at": "<ISO-8601 UTC>",
      "task_progress": "<uma frase descrevendo o que já foi concluído>",
-     "todo_state": [ "<próximo passo>", "<passo seguinte>", "..." ],
+     "todo_state": ["<próximo passo>", "<passo seguinte>", "..."],
      "context_summary": "<até 500 chars: fatos, invariantes e decisões que você já absorveu e que um retomado precisa saber>",
      "next_action_hint": "<instrução imperativa de UMA linha com o próximo passo exato a tomar>"
    }

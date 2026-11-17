@@ -25,9 +25,11 @@ Você é o QE rodando `/bmad-testarch-automate $ARGUMENTS` no
    `usage: /bmad-testarch-automate <FXX> (e.g. /bmad-testarch-automate F27)`
 
 2. **Resolva o diretório da feature**:
+
    ```bash
    FEATURE_DIR=$(ls -d tasks/features/<FXX>-* 2>/dev/null | head -n1)
    ```
+
    Se vazio, abort: `feature directory not found for <FXX>`.
 
 3. **Calcule o slug.** Pegue o nome do diretório (`<FXX>-<slug>`), remova
@@ -49,12 +51,15 @@ Você é o QE rodando `/bmad-testarch-automate $ARGUMENTS` no
    _Gerado em <YYYY-MM-DD> por /bmad-testarch-automate._
 
    ## Escopo já coberto
+
    <o que a suíte padrão já cobre, do test-plan>
 
    ## Gaps de automação
+
    <o que vale automatizar adicionalmente: E2E, smoke, perf>
 
    ## Esboço de scripts
+
    <esboço de comandos/scripts propostos>
    ```
 

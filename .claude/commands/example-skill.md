@@ -16,5 +16,4 @@ It carries sentinels verbatim: {{USE_SECOND_BRAIN}} and {{DIDIO_CHECKPOINT}}.
 Invoke this as `/example-skill` in Claude Code. Project instructions live in
 `CLAUDE.md`.
 
-
 Another shared line at the end.

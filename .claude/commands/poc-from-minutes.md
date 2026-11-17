@@ -61,9 +61,11 @@ Stream stdout/stderr to the user.
 If exit 0, print:
 
 > POC criado em <dest>. Para abrir:
+>
 > ```
 > cd <dest> && npm run dev
 > ```
+>
 > Manifest gerado: `<dest>/_pipeline/manifest.json`
 > Log do pipeline: `<dest>/_pipeline/log.jsonl`
 
@@ -78,7 +80,7 @@ the failing step's `msg`, and suggest:
 - exit 6 (smoke fail): "porta 5173 ocupada ou erro em runtime. Verifique
   `<dest>/_pipeline/log.jsonl` e `/tmp/poc-dev.log`."
 - exit 7 (git fail): "git config faltando? Rode `git -C <dest> commit
-  -m 'scaffold from meeting <slug>'` manualmente."
+-m 'scaffold from meeting <slug>'` manualmente."
 
 ## Constraints
 

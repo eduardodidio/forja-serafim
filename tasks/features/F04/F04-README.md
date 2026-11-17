@@ -19,11 +19,11 @@ servicos, packages, SEO, PWA, watermarks, admin, agent prompts, docs e Render co
 
 ## Waves
 
-- **Wave 0**: F04-T01, F04-T02        (setup: copiar codigo para novo repo, gerar favicon do logo)
+- **Wave 0**: F04-T01, F04-T02 (setup: copiar codigo para novo repo, gerar favicon do logo)
 - **Wave 1**: F04-T03, F04-T04, F04-T05 (rebrand: config files, source code, admin)
-- **Wave 2**: F04-T06, F04-T07        (rebrand: agents/docs, SEO/PWA)
-- **Wave 3**: F04-T08                 (Render config + deploy prep)
-- **Wave 4**: F04-T09                 (validacao final, build test, cleanup)
+- **Wave 2**: F04-T06, F04-T07 (rebrand: agents/docs, SEO/PWA)
+- **Wave 3**: F04-T08 (Render config + deploy prep)
+- **Wave 4**: F04-T09 (validacao final, build test, cleanup)
 
 ## Global acceptance criteria
 
@@ -47,16 +47,18 @@ servicos, packages, SEO, PWA, watermarks, admin, agent prompts, docs e Render co
 ## Scope of renaming (reference)
 
 ### Brand name mappings
-| Old | New |
-|-----|-----|
-| A Casa do Serafim | Forja Serafim |
-| Casa do Serafim | Forja Serafim |
-| casa-do-serafim | forja-serafim |
+
+| Old                   | New                 |
+| --------------------- | ------------------- |
+| A Casa do Serafim     | Forja Serafim       |
+| Casa do Serafim       | Forja Serafim       |
+| casa-do-serafim       | forja-serafim       |
 | casa-do-serafim-admin | forja-serafim-admin |
-| serafim-arcana-forge | forja-serafim |
-| serafim-admin | forja-serafim-admin |
+| serafim-arcana-forge  | forja-serafim       |
+| serafim-admin         | forja-serafim-admin |
 
 ### Files affected (non-exhaustive, ~70+ occurrences)
+
 - package.json, admin/package.json, bun.lock, package-lock.json
 - render.yaml
 - public/manifest.json
@@ -68,8 +70,8 @@ servicos, packages, SEO, PWA, watermarks, admin, agent prompts, docs e Render co
 - admin/src/server.ts, admin/src/cli.ts, admin/src/lib/image-processor.ts
 - admin/public/index.html, admin/public/login.html
 - scripts/process-images.ts
-- agents/prompts/*.md, agents/orchestrator.md, agents/workflows/*.md
+- agents/prompts/_.md, agents/orchestrator.md, agents/workflows/_.md
 - .claude/commands/*.md
-- docs/adr/*.md, docs/diagrams/*.md, docs/estrategia-negocio-serafim.html
+- docs/adr/_.md, docs/diagrams/_.md, docs/estrategia-negocio-serafim.html
 - tasks/features/ (historical — rename for consistency)
 - public/favicon.ico, public/favicon.png, public/favicon.svg

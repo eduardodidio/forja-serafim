@@ -26,7 +26,7 @@ Escopo/input informado pelo usuário: **$ARGUMENTS**
    ao usuário via `AskUserQuestion`:
    - "Qual fluxo principal o usuário precisa completar?"
    - "Existem telas/estados de erro críticos a cobrir?"
-   Se `AskUserQuestion` indisponível, peça em texto e aguarde resposta.
+     Se `AskUserQuestion` indisponível, peça em texto e aguarde resposta.
 
 2. **Calcule o slug.** A partir de `$ARGUMENTS` (sem aspas/path), lowercase,
    não-alphanumérico → `-`, colapse `-+`, trim, limite 60 chars.
@@ -44,15 +44,19 @@ Escopo/input informado pelo usuário: **$ARGUMENTS**
    _Gerado em <YYYY-MM-DD> por /bmad-create-ux-design._
 
    ## Contexto
+
    <resumo do brief/PRD lido, ou das respostas à clarificação>
 
    ## Telas
+
    <lista das telas/views principais, com propósito de cada uma>
 
    ## Fluxos
+
    <fluxo(s) principal(is) passo a passo, do ponto de entrada ao objetivo>
 
    ## Estados
+
    <estados relevantes: loading, vazio, erro, sucesso>
    ```
 

@@ -39,15 +39,19 @@ the verdict line must be exactly parseable.
 ## Pre-condition: Status check
 
 **Override mode (debug/sanity only):** Before reading the README, run:
+
 ```bash
 printenv DIDIO_READINESS_FORCE 2>/dev/null || echo ""
 ```
+
 If the output is `1`, this is a forced sanity run — skip the abort in step 3
 and continue to the 5 checks regardless of the feature's status. When writing
 the report header, add this line immediately after `**Generated:**`:
+
 ```
 **Forced run:** DIDIO_READINESS_FORCE=1 (status was: <actual>)
 ```
+
 where `<actual>` is the actual status value found in the README.
 
 1. Read `tasks/features/<FXX>-*/<FXX>-README.md`.
@@ -71,6 +75,7 @@ Output section. A single FAIL in any check makes the overall verdict `BLOCKED`.
 **Goal:** every AC declared in the README is referenced by at least one task.
 
 **Input:**
+
 - Parse `<FXX>-README.md` for AC IDs. Look for lines matching
   `^[0-9]+\.\s+\*\*AC[0-9]+\b` under a section like
   `## Global acceptance criteria`. Collect all IDs: `AC1`, `AC2`, …
@@ -114,7 +119,7 @@ tasks.
 **FAIL:** a path appears in 2+ tasks of the same Wave. Report the colliding
 path and the list of task IDs.
 
-> **Heuristic note:** tasks that only *read* a file will still be counted as
+> **Heuristic note:** tasks that only _read_ a file will still be counted as
 > "touching" it — this tool accepts false positives as a deliberate cost of
 > simplicity. The operator resolves real collisions manually or adds an inline
 > note to the task.
@@ -128,6 +133,7 @@ that Wave≥1 tasks need is declared or created by a Wave 0 task.
 
 **Input:** scan "Dev Notes", "Implementation details", and "Acceptance
 criteria" sections of every Wave≥1 task for patterns indicating setup work:
+
 - `mkdir -p <path>` / "criar diretório" / "new directory"
 - `permissions.allow` / `settings.json`
 - `npm install` / `pip install` / `mvn` / package dependency
@@ -167,6 +173,7 @@ placeholders (`_TODO_`, `TBD`, `N/A` without explanation).
 ## Output
 
 Write the report to:
+
 ```
 tasks/features/<FXX>-*/readiness-report.md
 ```
@@ -185,30 +192,36 @@ Minimum required structure:
 **Total ACs declared:** <M>
 
 ## Check 1 — AC coverage (every AC has ≥1 task)
+
 | AC ID | Status | Tasks covering | Detail |
-|-------|--------|----------------|--------|
+| ----- | ------ | -------------- | ------ |
 | AC1   | PASS   | T03, T07       |        |
 
 ## Check 2 — Bidirectional traceability (every task cites ≥1 AC)
+
 | Task | Status | ACs cited | Detail |
-|------|--------|-----------|--------|
+| ---- | ------ | --------- | ------ |
 | T01  | PASS   | AC10      |        |
 
 ## Check 3 — File collision (same-Wave tasks don't share files)
+
 | Wave | Status | Colliding paths | Tasks involved |
-|------|--------|-----------------|----------------|
+| ---- | ------ | --------------- | -------------- |
 | 1    | PASS   | (none)          |                |
 
 ## Check 4 — Wave 0 completeness (deps/perms/scaffolding)
+
 | Item needed by Wave≥1 | Status | Wave 0 covers? | Detail |
-|------------------------|--------|----------------|--------|
+| --------------------- | ------ | -------------- | ------ |
 
 ## Check 5 — Testing section non-empty
+
 | Task | Status | Detail |
-|------|--------|--------|
+| ---- | ------ | ------ |
 | T01  | PASS   |        |
 
 ## Summary
+
 - PASS: <X>
 - FAIL: <Y>
 
@@ -217,6 +230,7 @@ Minimum required structure:
 
 The verdict line **must** appear literally, at the start of a line, with no
 surrounding whitespace or quotes:
+
 - `**Verdict:** READY` — all 5 checks produced zero FAILs
 - `**Verdict:** BLOCKED` — one or more FAILs exist
 

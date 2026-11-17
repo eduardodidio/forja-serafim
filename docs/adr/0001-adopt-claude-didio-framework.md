@@ -26,12 +26,14 @@ Forja Serafim.
 ## Consequences
 
 **Easier:**
+
 - New features follow the same ritual without re-explaining the Waves prompt
 - Agent runs are auditable (logs + meta.json per run)
 - Parallel Waves use cores effectively
 - Context pollution between agents is eliminated by design
 
 **Harder:**
+
 - Each agent spawn pays the `claude -p` cold-start cost
 - Framework updates must be pulled from upstream manually (no auto-update yet)
 

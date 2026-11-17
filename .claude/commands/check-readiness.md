@@ -26,6 +26,7 @@ If either is missing, print an error and stop.
 ## Step 2 — Bypass check
 
 If env var `DIDIO_SKIP_READINESS=1` is set:
+
 - Print: `⚠️  DIDIO_SKIP_READINESS=1 — skipping readiness audit`
 - Exit 0 (bypass approved by operator)
 
@@ -60,6 +61,7 @@ If the file is missing or the verdict line is absent, treat as BLOCKED.
 ## Step 6 — Report to user
 
 Print a colored summary:
+
 - READY → green `✅ READY — proceed to Wave 0`
 - BLOCKED → red `❌ BLOCKED — see tasks/features/<FXX>-*/readiness-report.md`
 

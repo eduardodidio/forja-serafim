@@ -10,20 +10,28 @@ export const Route = createFileRoute("/contato")({
   head: () => ({
     meta: [
       { title: `Contato | ${SITE.NAME}` },
-      { name: "description", content: "Entre em contato com a Forja Serafim pelo WhatsApp ou Instagram. Respondemos em ate 24 horas." },
+      {
+        name: "description",
+        content:
+          "Entre em contato com a Forja Serafim pelo WhatsApp ou Instagram. Respondemos em ate 24 horas.",
+      },
       { property: "og:title", content: "Contato" },
-      { property: "og:description", content: "Entre em contato com a Forja Serafim pelo WhatsApp ou Instagram." },
+      {
+        property: "og:description",
+        content: "Entre em contato com a Forja Serafim pelo WhatsApp ou Instagram.",
+      },
       { property: "og:image", content: SITE.IMAGE },
       { property: "og:url", content: `${SITE.URL}/contato` },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Contato" },
-      { name: "twitter:description", content: "Entre em contato com a Forja Serafim pelo WhatsApp ou Instagram." },
+      {
+        name: "twitter:description",
+        content: "Entre em contato com a Forja Serafim pelo WhatsApp ou Instagram.",
+      },
       { name: "twitter:image", content: SITE.IMAGE },
     ],
-    links: [
-      { rel: "canonical", href: `${SITE.URL}/contato` },
-    ],
+    links: [{ rel: "canonical", href: `${SITE.URL}/contato` }],
   }),
 });
 
@@ -35,13 +43,14 @@ function Contato() {
         <h1 className="mt-3 text-4xl sm:text-5xl">Contato</h1>
 
         <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-          A forma mais rapida de falar com a gente e pelo WhatsApp.
-          Respondemos em ate 24 horas.
+          A forma mais rapida de falar com a gente e pelo WhatsApp. Respondemos em ate 24 horas.
         </p>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
           <a
-            href={whatsappLink("Ola! Vim pela pagina de contato do site e gostaria de falar sobre proxies full art.")}
+            href={whatsappLink(
+              "Ola! Vim pela pagina de contato do site e gostaria de falar sobre proxies full art.",
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="surface-card flex items-center gap-4 p-6 transition-colors hover:border-gold/60"

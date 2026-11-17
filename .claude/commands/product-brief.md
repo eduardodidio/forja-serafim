@@ -107,6 +107,7 @@ test -f .claude/commands/elicit-prd.md
 **Se brainstorm foi escolhido (não skipped e não "Nenhum"):**
 
 Leia o arquivo via ferramenta `Read`. Extraia:
+
 - Título (primeira linha `#` ou `##`).
 - Contexto (parágrafos antes do primeiro `### Direção`).
 - Cada bloco `### Direção` (título + esforço + risco + recomendação se
@@ -115,6 +116,7 @@ Leia o arquivo via ferramenta `Read`. Extraia:
 **Se research foi escolhido (não skipped e não "Nenhum"):**
 
 Leia o arquivo via ferramenta `Read`. Extraia:
+
 - Seção `## Sources` completa.
 - Seção `## Key findings` completa.
 - Seção `## Open questions` completa.
@@ -122,6 +124,7 @@ Leia o arquivo via ferramenta `Read`. Extraia:
 **Se ambos skipped:**
 
 Pergunte ao usuário via `AskUserQuestion` (kind: `freeform`):
+
 > "Descreva brevemente o problema ou oportunidade que motiva este brief:"
 
 Use a resposta como `TOPIC_TEXT`.
@@ -148,10 +151,12 @@ Conteúdo obrigatório (5 seções literais, nessa ordem):
 _Gerado em <YYYY-MM-DD> por /product-brief, alvo: <FXX>._
 
 ## Topic
+
 <1 parágrafo descrevendo o problema/oportunidade. Derive do brainstorm se
 presente, senão do research, senão use TOPIC_TEXT coletado acima.>
 
 ## Brainstorm directions chosen
+
 <Se brainstorm escolhido: lista as direções com 1 linha cada (título +
 esforço + risco). Indique qual é a recomendada com base nas trade-offs;
 se não houver recomendação clara, pergunte ao usuário via AskUserQuestion
@@ -160,17 +165,20 @@ antes de escrever.>
 _(skipped — sem brainstorm)_
 
 ## Research highlights
+
 <Se research escolhido: copie `## Key findings` na íntegra e referencie
 `## Sources` por link ou lista resumida.>
 
 _(skipped — sem research)_
 
 ## Open questions
+
 <Funde `## Open questions` do research (se presente) + perguntas levantadas
 ao analisar o brainstorm. Se ambos skipped: inclua pelo menos a pergunta
 "Qual é o problema concreto que motiva esse brief?".>
 
 ## Suggested next step
+
 <NEXT_STEP do Step 3>
 ```
 
@@ -178,7 +186,7 @@ ao analisar o brainstorm. Se ambos skipped: inclua pelo menos a pergunta
 
 - `## Brainstorm directions chosen`: use o bloco com conteúdo se brainstorm
   foi escolhido; caso contrário use apenas a linha `_(skipped — sem
-  brainstorm)_`.
+brainstorm)_`.
 - `## Research highlights`: use o bloco com conteúdo se research foi
   escolhido; caso contrário use apenas a linha `_(skipped — sem research)_`.
 - Nunca omita nenhuma das 5 seções — mesmo que o conteúdo seja o placeholder

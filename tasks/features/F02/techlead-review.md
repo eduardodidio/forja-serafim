@@ -22,7 +22,7 @@ The code quality is good for a vanilla HTML+JS single-page admin tool. All exist
 
 ### MINOR
 
-4. **`c.name` unescaped in modal title (line 717):** `openModal(\`Editar: ${c.name}\`, ...)` -- however, `openModal` uses `.textContent` assignment (line 404), which auto-escapes. So this is safe. Just noting for clarity.
+4. **`c.name` unescaped in modal title (line 717):** `openModal(\`Editar: ${c.name}\`, ...)`-- however,`openModal`uses`.textContent` assignment (line 404), which auto-escapes. So this is safe. Just noting for clarity.
 
 5. **Hardcoded port 8080 in "Ver site" link (line 239):** `http://localhost:8080` is hardcoded. If the dev server port changes, this link breaks. Minor since it is a convenience link for local use.
 

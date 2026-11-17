@@ -20,6 +20,7 @@ The user provides: `$ARGUMENTS` (optional decision-id, e.g. `D-20260605-001`)
 
 1. Read `didio.config.json` and check `meta_agents.t1000.enabled`.
    If `false` or missing, inform the user:
+
    > Saruman is disabled. To enable: set `meta_agents.t1000.enabled: true`
    > in `didio.config.json`.
 

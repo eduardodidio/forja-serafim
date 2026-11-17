@@ -19,7 +19,7 @@ Which layers/modules are affected.
   - **Wave <N>**: FXX-T01, FXX-T02, ...
 -->
 
-- **Wave 0**: FXX-T01, FXX-T02            (setup, permissions, scaffolding)
+- **Wave 0**: FXX-T01, FXX-T02 (setup, permissions, scaffolding)
 - **Wave 1**: FXX-T03, FXX-T04
 - **Wave 2**: FXX-T05
 

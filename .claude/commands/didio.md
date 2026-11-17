@@ -67,7 +67,6 @@ opção mais próxima do menu numerado (1–24) abaixo.
    Bypass de emergência: se `DIDIO_SKIP_READINESS=1` está no env,
    pule o gate (com aviso amarelo visível). **Nunca pule silenciosamente.**
 
-
    **Fase 1.6 — TEA gate (opcional):**
 
    <!-- F13:tea-gate coexists with F10:readiness — when F10 lands, run readiness FIRST and only proceed to TEA if verdict=READY -->
@@ -130,7 +129,7 @@ opção mais próxima do menu numerado (1–24) abaixo.
    **Retrospectiva:** Ao final da revisão, como não há QA neste fluxo,
    o TechLead é responsável pela retrospectiva. Passe a instrução extra:
    `REVIEW_ONLY=true — você é o agente final neste fluxo. Execute a
-   lightweight retrospective antes de terminar.`
+lightweight retrospective antes de terminar.`
 
 4. **📊 Status da execução atual**
    Leia `logs/agents/state.json` (se existir) e mostre:
@@ -155,72 +154,70 @@ opção mais próxima do menu numerado (1–24) abaixo.
    Mostre os prompts pré-configurados do README (criar feature,
    bug fix, revisão, plan mode, retro) pra o usuário copiar.
 
-14. **🗓️ Planejar feature (BMad, sem executar)**
-    Pergunte: id da feature (F0X) e descrição.
+9. **🗓️ Planejar feature (BMad, sem executar)**
+   Pergunte: id da feature (F0X) e descrição.
 
-    **Fase 0 — Gandalf Strategic Gate (condicional):** Se
-    `meta_agents.t800.enabled=true` em `didio.config.json`, o Gandalf
-    analisa o pedido antes do Architect. Se governance escala, pipeline
-    para. Se disabled (default), esta fase nao existe.
+   **Fase 0 — Gandalf Strategic Gate (condicional):** Se
+   `meta_agents.t800.enabled=true` em `didio.config.json`, o Gandalf
+   analisa o pedido antes do Architect. Se governance escala, pipeline
+   para. Se disabled (default), esta fase nao existe.
 
-    **Rode APENAS o Architect em modo PLAN_ONLY:**
+   **Rode APENAS o Architect em modo PLAN_ONLY:**
 
-    ```bash
-    DIDIO_PLAN_ONLY=true didio spawn-agent architect <FXX> tasks/features/<FXX>-_tmp-brief.md
-    ```
+   ```bash
+   DIDIO_PLAN_ONLY=true didio spawn-agent architect <FXX> tasks/features/<FXX>-_tmp-brief.md
+   ```
 
-    O resultado são tasks em padrão BMad (User Story, Dev Notes, Testing)
-    com `Status: planned`. **Não rode Developer, TechLead ou QA.** Ao final,
-    informe o caminho dos arquivos e diga que o usuário pode rodar
-    `/create-feature <FXX>` (ou opção 1) para executar depois.
+   O resultado são tasks em padrão BMad (User Story, Dev Notes, Testing)
+   com `Status: planned`. **Não rode Developer, TechLead ou QA.** Ao final,
+   informe o caminho dos arquivos e diga que o usuário pode rodar
+   `/create-feature <FXX>` (ou opção 1) para executar depois.
 
-    Equivale ao slash command `/plan-feature <FXX> <descrição>`.
+   Equivale ao slash command `/plan-feature <FXX> <descrição>`.
 
-    **Nota:** opção 14 não roda readiness gate — não dispara Waves.
+   **Nota:** opção 14 não roda readiness gate — não dispara Waves.
 
-15. **📋 Listar features planejadas**
+10. **📋 Listar features planejadas**
     Varra `tasks/features/*/` procurando READMEs com `**Status:** planned`.
     Para cada feature encontrada, extraia ID, título e conte os arquivos
     `<FXX>-T*.md`. Apresente uma tabela: ID, #tasks, Título, Path.
     Se nenhuma feature planejada existir, sugira a opção 14.
 
-16. **📝 Criar PRD antes de planejar (opt-in, interativo)**
+11. **📝 Criar PRD antes de planejar (opt-in, interativo)**
     Pergunte: id da feature (F0X) e título curto. Execute
     `/elicit-prd <FXX> "<título>"` que faz 8 perguntas focadas e gera
     um draft em `claude-didio-out/prd-drafts/<FXX>-prd.md`.
 
     **Quando usar:** features novas em projetos downstream onde o brief
     ainda não está escrito. Após confirmação, copie o draft para
-    `tasks/features/<FXX>-*/_brief.md` e siga com `/plan-feature` (opção
-    14) ou `/create-feature` (opção 1).
+    `tasks/features/<FXX>-*/_brief.md` e siga com `/plan-feature` (opção 14) ou `/create-feature` (opção 1).
 
     **Quando pular:** features triviais ou bugs — vá direto pra opção 1
     ou 2.
 
-9. **⚡ Turbo Mode** (toggle)
-   Ativa paralelismo maximo (ignora max_parallel). Combinado com
-   Highlander, aciona Auto Mode do Claude Code.
-   Toggle: `didio_write_config turbo true/false`
+12. **⚡ Turbo Mode** (toggle)
+    Ativa paralelismo maximo (ignora max_parallel). Combinado com
+    Highlander, aciona Auto Mode do Claude Code.
+    Toggle: `didio_write_config turbo true/false`
 
-10. **💰 Economy Mode** (toggle)
+13. **💰 Economy Mode** (toggle)
     Troca modelos para versoes mais baratas:
     Architect = Sonnet, Developer/TechLead/QA = Haiku.
     Toggle: `didio_write_config economy true/false`
 
-11. **🔀 Max paralelismo**
+14. **🔀 Max paralelismo**
     Configura quantos agentes rodam simultaneamente por Wave.
     Recomendacoes: Opus 3-4, Sonnet 5-8, Haiku 8-12. Use 0 para ilimitado.
 
-12. **🤖 Configurar modelos**
+15. **🤖 Configurar modelos**
     Mostra e permite alterar o modelo de cada agente.
     Presets: Padrao, Economy, Tudo Opus, Tudo Sonnet.
 
-13. **🛡️ Highlander Mode** (toggle) — _equivalente a Auto Mode on_
+16. **🛡️ Highlander Mode** (toggle) — _equivalente a Auto Mode on_
     Ativa o Auto Mode nativo do Claude Code via
     `permissions.defaultMode: "auto"` com allow-list liberal como
     fallback. Waves rodam sem interrupcao.
     Usar apenas em projetos sandbox sem segredos.
-
 
 17. **🧠 Brainstorm — explorar 3–5 direções (greenfield, opt-in)**
     Pergunte: topic para brainstorm.
@@ -330,5 +327,6 @@ lembre o usuário:
 ## Voltar ao menu
 
 Pra voltar a este menu a qualquer momento, o usuário pode:
+
 - Dentro do Claude Code: `/didio`
 - No terminal: `didio menu` (ou só `didio` sem argumentos)

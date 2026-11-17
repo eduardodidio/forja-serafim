@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, mkdirSync, copyFileSync, statSync, unlinkSync } from "fs";
+import { readFileSync, existsSync, mkdirSync, statSync, unlinkSync } from "fs";
 import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
@@ -33,6 +33,10 @@ function getAllowedOrigin(req: Request): string {
   return ALLOWED_ORIGINS.has(origin) ? origin : "";
 }
 
+function isValidSlug(s: string): boolean {
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(s);
+}
+
 function isValidUrl(url: string): boolean {
   if (url === "") return true; // empty is allowed
   try {
@@ -49,7 +53,7 @@ const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
   .split(",")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
-const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
+const _SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
 // In-memory session store (resets on deploy — user just logs in again)
 const sessions = new Map<string, { email: string; expires: number }>();
@@ -260,6 +264,14 @@ async function handleRequest(req: Request): Promise<Response> {
     if (!body.name || !body.description || !body.cardCount || body.cardCount <= 0) {
       return json({ error: "Nome, descricao e cardCount (>0) sao obrigatorios." }, 400, req);
     }
+    if (body.name.length > 100)
+      return json({ error: "Nome da colecao deve ter no maximo 100 caracteres." }, 400, req);
+    if (body.description.length > 500)
+      return json({ error: "Descricao deve ter no maximo 500 caracteres." }, 400, req);
+    if (body.moxfieldUrl && body.moxfieldUrl.length > 500)
+      return json({ error: "moxfieldUrl deve ter no maximo 500 caracteres." }, 400, req);
+    if (body.deckcheckUrl && body.deckcheckUrl.length > 500)
+      return json({ error: "deckcheckUrl deve ter no maximo 500 caracteres." }, 400, req);
 
     const slug = toSlug(body.name);
     if (collections.some((c) => c.slug === slug)) {
@@ -294,6 +306,7 @@ async function handleRequest(req: Request): Promise<Response> {
   const colMatch = path.match(/^\/api\/collections\/([^/]+)$/);
   if (colMatch) {
     const slug = colMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
     const collections = readJson<Collection[]>(COLLECTIONS_JSON);
     const idx = collections.findIndex((c) => c.slug === slug);
 
@@ -301,6 +314,14 @@ async function handleRequest(req: Request): Promise<Response> {
 
     if (method === "PUT") {
       const body = (await req.json()) as Partial<Collection>;
+      if (body.name !== undefined && body.name.length > 100)
+        return json({ error: "Nome da colecao deve ter no maximo 100 caracteres." }, 400, req);
+      if (body.description !== undefined && body.description.length > 500)
+        return json({ error: "Descricao deve ter no maximo 500 caracteres." }, 400, req);
+      if (body.moxfieldUrl !== undefined && body.moxfieldUrl.length > 500)
+        return json({ error: "moxfieldUrl deve ter no maximo 500 caracteres." }, 400, req);
+      if (body.deckcheckUrl !== undefined && body.deckcheckUrl.length > 500)
+        return json({ error: "deckcheckUrl deve ter no maximo 500 caracteres." }, 400, req);
       if (body.moxfieldUrl !== undefined && !isValidUrl(body.moxfieldUrl)) {
         return json({ error: "moxfieldUrl deve ser uma URL valida (http/https)." }, 400, req);
       }
@@ -330,6 +351,7 @@ async function handleRequest(req: Request): Promise<Response> {
   const coverMatch = path.match(/^\/api\/collections\/([^/]+)\/cover$/);
   if (coverMatch && method === "POST") {
     const slug = coverMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     if (!file) return json({ error: "Nenhum arquivo enviado." }, 400, req);
@@ -342,7 +364,7 @@ async function handleRequest(req: Request): Promise<Response> {
     if (!existsSync(COVERS_DIR)) mkdirSync(COVERS_DIR, { recursive: true });
     const dest = join(COVERS_DIR, `${slug}.jpg`);
     const buffer = Buffer.from(await file.arrayBuffer());
-    Bun.write(dest, buffer);
+    await Bun.write(dest, buffer);
     return json({ path: `/images/covers/${slug}.jpg` }, 200, req);
   }
 
@@ -350,16 +372,19 @@ async function handleRequest(req: Request): Promise<Response> {
   const manualMatch = path.match(/^\/api\/collections\/([^/]+)\/manual$/);
   if (manualMatch && method === "POST") {
     const slug = manualMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     if (!file) return json({ error: "Nenhum arquivo enviado." }, 400, req);
-    if (!file.name.toLowerCase().endsWith(".pdf"))
-      return json({ error: "Arquivo deve ser PDF." }, 400, req);
+    const isPdf =
+      file.name.toLowerCase().endsWith(".pdf") &&
+      (file.type === "application/pdf" || file.type === "");
+    if (!isPdf) return json({ error: "Arquivo deve ser PDF." }, 400, req);
 
     if (!existsSync(MANUALS_DIR)) mkdirSync(MANUALS_DIR, { recursive: true });
     const dest = join(MANUALS_DIR, `${slug}.pdf`);
     const buffer = Buffer.from(await file.arrayBuffer());
-    Bun.write(dest, buffer);
+    await Bun.write(dest, buffer);
 
     const collections = readJson<Collection[]>(COLLECTIONS_JSON);
     const col = collections.find((c) => c.slug === slug);
@@ -375,6 +400,7 @@ async function handleRequest(req: Request): Promise<Response> {
   const reorderMatch = path.match(/^\/api\/collections\/([^/]+)\/images\/reorder$/);
   if (reorderMatch && method === "PUT") {
     const slug = reorderMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
     const collections = readJson<Collection[]>(COLLECTIONS_JSON);
     const col = collections.find((c) => c.slug === slug);
     if (!col) return json({ error: "Colecao nao encontrada." }, 404, req);
@@ -401,6 +427,7 @@ async function handleRequest(req: Request): Promise<Response> {
   const imageDeleteMatch = path.match(/^\/api\/collections\/([^/]+)\/images\/([^/]+)$/);
   if (imageDeleteMatch && method === "DELETE") {
     const slug = imageDeleteMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
     const filename = imageDeleteMatch[2]!;
     // Prevent path traversal
     if (filename.includes("..") || filename.includes("/") || filename.includes("\\")) {
@@ -433,6 +460,7 @@ async function handleRequest(req: Request): Promise<Response> {
   const imagesMatch = path.match(/^\/api\/collections\/([^/]+)\/images$/);
   if (imagesMatch && method === "POST") {
     const slug = imagesMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
     const formData = await req.formData();
     const files = formData.getAll("files") as File[];
 
@@ -461,6 +489,7 @@ async function handleRequest(req: Request): Promise<Response> {
     if (!existsSync(destDir)) mkdirSync(destDir, { recursive: true });
 
     const processed: string[] = [];
+    const failed: Array<{ file: string; error: string }> = [];
     const tmpDir = join(destDir, ".tmp-upload");
     if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
 
@@ -479,7 +508,7 @@ async function handleRequest(req: Request): Promise<Response> {
 
       const tmpPath = join(tmpDir, file.name);
       const buffer = Buffer.from(await file.arrayBuffer());
-      Bun.write(tmpPath, buffer);
+      await Bun.write(tmpPath, buffer);
 
       const outputPath = join(destDir, `${safeName}.jpg`);
       try {
@@ -487,6 +516,7 @@ async function handleRequest(req: Request): Promise<Response> {
         processed.push(`/images/decks/${slug}/${safeName}.jpg`);
       } catch (err) {
         console.error(`Failed to process ${file.name}:`, err);
+        failed.push({ file: file.name, error: String(err) });
       }
     }
 
@@ -494,11 +524,11 @@ async function handleRequest(req: Request): Promise<Response> {
     try {
       const { rmSync } = await import("fs");
       rmSync(tmpDir, { recursive: true, force: true });
-    } catch {
-      /* cleanup best-effort */
+    } catch (err) {
+      console.warn("[Upload] Failed to cleanup tmp dir:", err);
     }
 
-    return json({ processed }, 200, req);
+    return json({ processed, failed }, 200, req);
   }
 
   // --- Testimonials API ---
@@ -511,6 +541,12 @@ async function handleRequest(req: Request): Promise<Response> {
     const body = (await req.json()) as Partial<Testimonial>;
     if (!body.name || !body.text)
       return json({ error: "Nome e texto sao obrigatorios." }, 400, req);
+    if (body.name.length > 100)
+      return json({ error: "Nome deve ter no maximo 100 caracteres." }, 400, req);
+    if (body.text.length > 500)
+      return json({ error: "Texto do depoimento deve ter no maximo 500 caracteres." }, 400, req);
+    if (body.deck && body.deck.length > 100)
+      return json({ error: "Nome do deck deve ter no maximo 100 caracteres." }, 400, req);
 
     const testimonials = readJson<Testimonial[]>(TESTIMONIALS_JSON);
     const t: Testimonial = { name: body.name, text: body.text, deck: body.deck ?? "" };
@@ -528,6 +564,12 @@ async function handleRequest(req: Request): Promise<Response> {
 
     if (method === "PUT") {
       const body = (await req.json()) as Partial<Testimonial>;
+      if (body.name !== undefined && body.name.length > 100)
+        return json({ error: "Nome deve ter no maximo 100 caracteres." }, 400, req);
+      if (body.text !== undefined && body.text.length > 500)
+        return json({ error: "Texto do depoimento deve ter no maximo 500 caracteres." }, 400, req);
+      if (body.deck !== undefined && body.deck.length > 100)
+        return json({ error: "Nome do deck deve ter no maximo 100 caracteres." }, 400, req);
       const t = testimonials[idx]!;
       if (body.name !== undefined) t.name = body.name;
       if (body.text !== undefined) t.text = body.text;

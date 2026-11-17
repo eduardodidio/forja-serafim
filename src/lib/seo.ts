@@ -120,11 +120,20 @@ export function generateSitemap() {
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${allRoutes.map((r) => `  <url>
+${allRoutes
+  .map(
+    (r) => `  <url>
     <loc>${SITE_URL}${r.loc}</loc>
     <priority>${r.priority}</priority>
-  </url>`).join("\n")}
+  </url>`,
+  )
+  .join("\n")}
 </urlset>`;
 }
 
-export const SITE = { URL: SITE_URL, NAME: SITE_NAME, DESCRIPTION: DEFAULT_DESCRIPTION, IMAGE: DEFAULT_IMAGE };
+export const SITE = {
+  URL: SITE_URL,
+  NAME: SITE_NAME,
+  DESCRIPTION: DEFAULT_DESCRIPTION,
+  IMAGE: DEFAULT_IMAGE,
+};

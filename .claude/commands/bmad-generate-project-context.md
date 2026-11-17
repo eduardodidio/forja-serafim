@@ -43,15 +43,19 @@ Foco opcional informado pelo usuário: **$ARGUMENTS**
    _Gerado em <YYYY-MM-DD> por /bmad-generate-project-context._
 
    ## Stack
+
    <resumo da stack lida de CLAUDE.md ou inferida da estrutura>
 
    ## Módulos / Layout
+
    <principais diretórios e responsabilidades>
 
    ## Convenções
+
    <convenções relevantes encontradas em CLAUDE.md>
 
    ## Notas
+
    <observações adicionais relevantes ao foco "$ARGUMENTS", se houver>
    ```
 

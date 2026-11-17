@@ -89,23 +89,23 @@ pelo slash command `/elicit-prd`. Editar aqui muda o comportamento do command.
 
 ## Mapeamento para template.md
 
-| id           | target                                              |
-|--------------|-----------------------------------------------------|
-| problem      | `## Problem`                                        |
-| persona      | `## Problem` (parágrafo "Quem é o usuário")         |
-| out_of_scope | `## Scope > Out of scope`                           |
-| risks        | `## Open questions` (subseção "Riscos conhecidos")  |
-| constraints  | `## Open questions` (subseção "Restrições")         |
-| success      | `## Success metrics`                                |
+| id           | target                                                 |
+| ------------ | ------------------------------------------------------ |
+| problem      | `## Problem`                                           |
+| persona      | `## Problem` (parágrafo "Quem é o usuário")            |
+| out_of_scope | `## Scope > Out of scope`                              |
+| risks        | `## Open questions` (subseção "Riscos conhecidos")     |
+| constraints  | `## Open questions` (subseção "Restrições")            |
+| success      | `## Success metrics`                                   |
 | dependencies | `## Open questions` (subseção "Dependências upstream") |
-| deadline     | `## Open questions` (subseção "Deadline")           |
-| stakeholders | `## Open questions`                                 |
-| platform     | `## Scope > In scope`                               |
+| deadline     | `## Open questions` (subseção "Deadline")              |
+| stakeholders | `## Open questions`                                    |
+| platform     | `## Scope > In scope`                                  |
 
 ## Inferred fields
 
-| id   | síntese                       | fonte   |
-|------|-------------------------------|---------|
-| goal | síntese de problem + success  | Q1 + Q6 |
+| id   | síntese                      | fonte   |
+| ---- | ---------------------------- | ------- |
+| goal | síntese de problem + success | Q1 + Q6 |
 
 O command deriva `## Goal` automaticamente a partir das respostas de Q1 e Q6 — não é pergunta direta ao usuário.

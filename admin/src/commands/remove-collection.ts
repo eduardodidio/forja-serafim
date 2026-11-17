@@ -28,7 +28,10 @@ export async function removeCollection(): Promise<void> {
   });
 
   const col = collections.find((c) => c.slug === slug)!;
-  const ok = await confirm({ message: `Tem certeza que deseja remover "${col.name}"?`, default: false });
+  const ok = await confirm({
+    message: `Tem certeza que deseja remover "${col.name}"?`,
+    default: false,
+  });
 
   if (!ok) {
     console.log("  Cancelado.");

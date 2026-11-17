@@ -7,7 +7,7 @@ claude-didio-config framework.
 
 **Every agent runs in a new, clean bash process via `didio spawn-agent`.**
 No agent inherits the context of the orchestrator. This is intentional:
-each role reads *only* the task file and the project state, which makes
+each role reads _only_ the task file and the project state, which makes
 their output reproducible and auditable (via `logs/agents/*.jsonl`).
 
 ## Flow

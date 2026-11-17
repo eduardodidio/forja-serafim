@@ -26,10 +26,18 @@ export async function manageTestimonials(): Promise<void> {
   });
 
   switch (action) {
-    case "list": await listTestimonials(); break;
-    case "add": await addTestimonial(); break;
-    case "edit": await editTestimonial(); break;
-    case "remove": await removeTestimonial(); break;
+    case "list":
+      await listTestimonials();
+      break;
+    case "add":
+      await addTestimonial();
+      break;
+    case "edit":
+      await editTestimonial();
+      break;
+    case "remove":
+      await removeTestimonial();
+      break;
   }
 }
 

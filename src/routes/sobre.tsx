@@ -9,28 +9,48 @@ export const Route = createFileRoute("/sobre")({
   head: () => ({
     meta: [
       { title: `Sobre | ${SITE.NAME}` },
-      { name: "description", content: "Conheca a historia da Forja Serafim. Proxies full art artesanais para Magic: The Gathering, feitas com paixao e identidade visual unica." },
+      {
+        name: "description",
+        content:
+          "Conheca a historia da Forja Serafim. Proxies full art artesanais para Magic: The Gathering, feitas com paixao e identidade visual unica.",
+      },
       { property: "og:title", content: "Sobre a Forja Serafim" },
-      { property: "og:description", content: "Conheca a historia da Forja Serafim. Proxies full art artesanais para MTG." },
+      {
+        property: "og:description",
+        content: "Conheca a historia da Forja Serafim. Proxies full art artesanais para MTG.",
+      },
       { property: "og:image", content: SITE.IMAGE },
       { property: "og:url", content: `${SITE.URL}/sobre` },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Sobre a Forja Serafim" },
-      { name: "twitter:description", content: "Conheca a historia da Forja Serafim. Proxies full art artesanais para MTG." },
+      {
+        name: "twitter:description",
+        content: "Conheca a historia da Forja Serafim. Proxies full art artesanais para MTG.",
+      },
       { name: "twitter:image", content: SITE.IMAGE },
     ],
-    links: [
-      { rel: "canonical", href: `${SITE.URL}/sobre` },
-    ],
+    links: [{ rel: "canonical", href: `${SITE.URL}/sobre` }],
   }),
 });
 
 const values = [
-  { icon: ShieldCheck, t: "Qualidade", d: "Revisao de cor e nitidez em cada carta antes do envio." },
+  {
+    icon: ShieldCheck,
+    t: "Qualidade",
+    d: "Revisao de cor e nitidez em cada carta antes do envio.",
+  },
   { icon: Brush, t: "Criatividade", d: "Composicoes autorais inspiradas em universos que amamos." },
-  { icon: Printer, t: "Impressao Premium", d: "Papel de alta gramatura, acabamento fosco ou foil." },
-  { icon: HeartHandshake, t: "Atendimento Personalizado", d: "Acompanhamento direto do inicio ao envio." },
+  {
+    icon: Printer,
+    t: "Impressao Premium",
+    d: "Papel de alta gramatura, acabamento fosco ou foil.",
+  },
+  {
+    icon: HeartHandshake,
+    t: "Atendimento Personalizado",
+    d: "Acompanhamento direto do inicio ao envio.",
+  },
 ];
 
 function Sobre() {

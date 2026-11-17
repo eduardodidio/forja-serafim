@@ -58,6 +58,7 @@ Caminho do draft: `claude-didio-out/prd-drafts/<FXX>-prd.md`
 (substituir `<FXX>` pelo valor validado no Step 1).
 
 Se o arquivo já existir, perguntar ao usuário via `AskUserQuestion`:
+
 > "O arquivo `claude-didio-out/prd-drafts/<FXX>-prd.md` já existe.
 > O que deseja fazer?"
 > Opções: `overwrite` / `keep` (manter e sair) / `abort`
@@ -93,6 +94,7 @@ estrutura e preencher as seções com as respostas coletadas).
 **Não** reproduzir a estrutura de `templates/docs/prd/template.md` inline aqui.
 
 Mapeamento de respostas:
+
 - Para cada `id` com valor `__SKIP__`, escrever literalmente
   `**Não respondido — preencher antes de planejar**` na seção
   correspondente do draft.
@@ -117,6 +119,7 @@ Exibir resumo ao usuário:
 ## Step 7 — Perguntar cópia para brief
 
 Via `AskUserQuestion`, perguntar:
+
 > "Deseja copiar este draft para `tasks/features/<FXX>-*/_brief.md` agora?"
 > Opções: `yes` / `no`
 
@@ -125,6 +128,7 @@ Via `AskUserQuestion`, perguntar:
 ## Step 8 — Se sim, copiar para brief
 
 Derivar `<slug>` a partir do `<título>`:
+
 1. Converter para lowercase.
 2. Substituir espaços por hífens.
 3. Remover caracteres que não sejam `[a-z0-9-]` (strip non-ASCII,
@@ -135,11 +139,13 @@ Derivar `<slug>` a partir do `<título>`:
 Exemplo: `"Minha Feature 2!"` → `minha-feature-2`.
 
 Verificar se já existe algum diretório `tasks/features/<FXX>-*/`:
+
 - Se sim: reutilizar o diretório existente (independente do slug),
   avisar o usuário: `⚠️ Diretório existente reutilizado: tasks/features/<FXX>-<slug-existente>/`
 - Se não: criar `tasks/features/<FXX>-<slug>/` via `mkdir -p`.
 
 Copiar o draft:
+
 ```
 cp claude-didio-out/prd-drafts/<FXX>-prd.md tasks/features/<FXX>-<slug>/_brief.md
 ```
@@ -162,14 +168,14 @@ Sempre (independente da escolha yes/no no Step 7), exibir:
 
 ## Tabela de erros
 
-| Situação                                | Ação                                                     |
-|-----------------------------------------|----------------------------------------------------------|
-| FXX inválido (não bate `^F[0-9]+$`)     | exit 1 com mensagem de uso                               |
-| Título vazio                            | exit 1 com mensagem de uso                               |
-| `elicit-questions.md` ausente           | exit 1 com sugestão de sync                              |
-| Draft já existe                         | AskUserQuestion: `overwrite` / `keep` / `abort`          |
-| Feature dir já existe com slug diferente| Reutilizar dir existente, avisar usuário                 |
-| `claude-didio-out/` inexistente         | Criar com `mkdir -p`                                     |
+| Situação                                 | Ação                                            |
+| ---------------------------------------- | ----------------------------------------------- |
+| FXX inválido (não bate `^F[0-9]+$`)      | exit 1 com mensagem de uso                      |
+| Título vazio                             | exit 1 com mensagem de uso                      |
+| `elicit-questions.md` ausente            | exit 1 com sugestão de sync                     |
+| Draft já existe                          | AskUserQuestion: `overwrite` / `keep` / `abort` |
+| Feature dir já existe com slug diferente | Reutilizar dir existente, avisar usuário        |
+| `claude-didio-out/` inexistente          | Criar com `mkdir -p`                            |
 
 ---
 
@@ -180,4 +186,3 @@ Sempre (independente da escolha yes/no no Step 7), exibir:
 - **NÃO** inventar perguntas além das definidas em `templates/docs/prd/elicit-questions.md`.
 - **NÃO** duplicar a estrutura de seções de `templates/docs/prd/template.md` neste command.
 - `skip` (case-insensitive) → sempre registrar como `__SKIP__`, nunca rejeitar.
-

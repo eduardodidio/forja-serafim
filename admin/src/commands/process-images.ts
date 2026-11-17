@@ -92,5 +92,7 @@ export async function processImages(): Promise<void> {
   col.sampleImages = samples;
   writeJson(COLLECTIONS_JSON, collections);
 
-  console.log(`  ${processedFiles.length} imagens processadas. ${samples.length} selecionadas como amostra.`);
+  console.log(
+    `  ${processedFiles.length} imagens processadas. ${samples.length} selecionadas como amostra.`,
+  );
 }

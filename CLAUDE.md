@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 Project: **Forja Serafim**
-Stack: **TanStack Start + React 19 + TypeScript + Tailwind CSS v4 + shadcn/ui**
+Stack: **Vite + React 19 + TanStack Router + TypeScript + Tailwind CSS v4**
 Framework: [claude-didio-config](https://github.com/eduardodidio/claude-didio-config)
 
 ## Mission
@@ -13,14 +13,15 @@ Area administrativa separada para que o Anderson faca manutencao dos decks sem d
 
 ## Architecture
 
-TanStack Start (Vite + React 19 + SSR) com roteamento file-based.
+Vite + React 19 com TanStack Router (file-based routing, client-side SPA).
 Layout:
-  - src/routes/     — paginas (file-based routing via TanStack Router)
-  - src/components/ — componentes reutilizaveis (page-shell, card-tile, header, footer)
-  - src/lib/        — dados, store (zustand-like), utils
-  - src/assets/     — imagens das colecoes e hero
-  - decks/          — ZIPs com os decks reais do Anderson (Castlevania, Cavaleiros do Zodiaco, Final Fantasy VII)
-  - public/         — favicon, robots.txt
+
+- src/routes/ — paginas (file-based routing via TanStack Router)
+- src/components/ — componentes reutilizaveis (page-shell, card-tile, header, footer)
+- src/lib/ — dados, store (zustand-like), utils
+- src/assets/ — imagens das colecoes e hero
+- decks/ — ZIPs com os decks reais do Anderson (Castlevania, Cavaleiros do Zodiaco, Final Fantasy VII)
+- public/ — favicon, robots.txt
 
 A landing page eh estatica. Os dados dos decks/colecoes vem de arquivos JSON/TS locais.
 A area admin sera uma aplicacao separada (local) que gera/atualiza os dados do site.
@@ -102,6 +103,7 @@ its own learnings file at the start of every run.
 ## Guardrails de Seguranca
 
 **Git**
+
 - NUNCA rodar `git rebase` em branches compartilhadas (`main`, `master`, `develop`)
 - NUNCA rodar `git push --force` ou `--force-with-lease` sem pedir
 - NUNCA rodar `git reset --hard` sobre trabalho nao commitado
@@ -110,12 +112,14 @@ its own learnings file at the start of every run.
 - NUNCA commitar arquivos com segredos (`.env`, `credentials.*`, chaves privadas, tokens, `*.pem`, `*.key`)
 
 **Codigo**
+
 - NUNCA desabilitar validacao, auth ou testes "so pra fazer funcionar"
 - NUNCA hardcodear secrets — sempre variaveis de ambiente
 - Validar input nas fronteiras do sistema (user input, APIs externas)
 - Nao introduzir dependencias novas sem confirmacao
 
 **Infra / operacoes destrutivas**
+
 - NUNCA modificar CI/CD sem confirmacao explicita
 - NUNCA rodar `rm -rf`, `DROP TABLE`, `kill -9` sem confirmar
 

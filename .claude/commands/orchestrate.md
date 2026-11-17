@@ -17,6 +17,7 @@ Saruman meta-agents.
 The user provides: `$ARGUMENTS` (expected format: `<FXX> <description>`)
 
 Parse the arguments:
+
 - First token: feature ID (e.g. `F25`)
 - Remaining tokens: decision context / feature description
 
@@ -24,6 +25,7 @@ Parse the arguments:
 
 1. Read `didio.config.json` and check `meta_agents.t800.enabled`.
    If `false` or missing, inform the user:
+
    > Gandalf is disabled. To enable: set `meta_agents.t800.enabled: true`
    > in `didio.config.json`. This is opt-in to avoid unexpected token costs.
 
@@ -66,6 +68,7 @@ This spawns the Gandalf agent which produces a decision record in
 ### Phase 3 — Report Results
 
 After Gandalf completes:
+
 1. Read the decision record from `logs/decisions/`
 2. If auto_governance ran, read the governance report from `logs/governance/`
 3. Present a summary to the user:
@@ -78,6 +81,7 @@ After Gandalf completes:
 ### Phase 4 — Execute (with user confirmation)
 
 If the decision was approved (not escalated):
+
 - List the actions from the decision record
 - Ask the user for confirmation before executing each action
 - Execute approved actions using the appropriate didio commands

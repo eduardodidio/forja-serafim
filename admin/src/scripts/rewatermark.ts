@@ -10,9 +10,9 @@
  */
 
 import { readFileSync, mkdirSync, copyFileSync, unlinkSync, existsSync } from "fs";
-import { resolve, basename, dirname } from "path";
+import { resolve, basename } from "path";
 import { processImage } from "../lib/image-processor.js";
-import { PROJECT_ROOT, COLLECTIONS_JSON, DECKS_DIR } from "../lib/paths.js";
+import { PROJECT_ROOT, COLLECTIONS_JSON } from "../lib/paths.js";
 import { tmpdir } from "os";
 import { randomUUID } from "crypto";
 
@@ -29,9 +29,7 @@ async function main(): Promise<void> {
   console.log(`[rewatermark] Project root: ${PROJECT_ROOT}`);
   console.log(`[rewatermark] Collections JSON: ${COLLECTIONS_JSON}`);
 
-  const collections: Collection[] = JSON.parse(
-    readFileSync(COLLECTIONS_JSON, "utf-8"),
-  );
+  const collections: Collection[] = JSON.parse(readFileSync(COLLECTIONS_JSON, "utf-8"));
 
   console.log(`[rewatermark] Found ${collections.length} collections`);
 

@@ -73,7 +73,7 @@ embedded below for reference).
   manifest with one `Home` screen and one `Item` entity. Do not
   refuse.
 - The first screen should reasonably be the entry — prefer a `path:
-  "/"` for it, or the orchestrator will redirect `/` to the first
+"/"` for it, or the orchestrator will redirect `/` to the first
   declared route.
 
 ## Constraints
@@ -106,7 +106,7 @@ value of `$POC_MANIFEST_PATH`.
   "type": "object",
   "required": ["name", "screens", "entities"],
   "properties": {
-    "name":          { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
     "screens": {
       "type": "array",
       "minItems": 1,
@@ -114,8 +114,8 @@ value of `$POC_MANIFEST_PATH`.
         "type": "object",
         "required": ["path", "title"],
         "properties": {
-          "path":       { "type": "string", "pattern": "^/" },
-          "title":      { "type": "string" },
+          "path": { "type": "string", "pattern": "^/" },
+          "title": { "type": "string" },
           "components": { "type": "array", "items": { "type": "string" } },
           "data_shape": { "type": ["string", "null"] }
         }
@@ -128,7 +128,7 @@ value of `$POC_MANIFEST_PATH`.
         "type": "object",
         "required": ["name", "fields"],
         "properties": {
-          "name":   { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
+          "name": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
           "fields": {
             "type": "array",
             "minItems": 1,
@@ -137,7 +137,7 @@ value of `$POC_MANIFEST_PATH`.
               "required": ["name", "type"],
               "properties": {
                 "name": { "type": "string" },
-                "type": { "enum": ["string","number","boolean","date","id"] }
+                "type": { "enum": ["string", "number", "boolean", "date", "id"] }
               }
             }
           }
@@ -147,11 +147,11 @@ value of `$POC_MANIFEST_PATH`.
     "mocks": {
       "type": "object",
       "properties": {
-        "use_msw":            { "type": "boolean", "default": false },
+        "use_msw": { "type": "boolean", "default": false },
         "records_per_entity": { "type": "integer", "minimum": 3, "maximum": 10, "default": 5 }
       }
     },
-    "style_ref":      { "type": ["string", "null"] },
+    "style_ref": { "type": ["string", "null"] },
     "uses_animation": { "type": "boolean", "default": false }
   }
 }

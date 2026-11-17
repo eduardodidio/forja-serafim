@@ -52,27 +52,28 @@ O usuário pediu pesquisa sobre: **$ARGUMENTS**
    - [<título>](url) — <1 linha sobre por que é relevante>
    - [<título>](url) — ...
    - [<título>](url) — ...
-   <... mínimo 3 entradas ...>
+     <... mínimo 3 entradas ...>
 
    ## Key findings
 
    - <achado 1>
    - <achado 2>
-   ...
+     ...
 
    ## Open questions
 
    - <pergunta que ficou em aberto 1>
-   ...
+     ...
 
    ---
+
    _Budget used: <N> WebSearch, <M> WebFetch_
    ```
 
    **Se WebSearch/WebFetch indisponível** (erro repetido / negação de
    permissão), escreva o arquivo mesmo assim: deixe `## Sources` com
    o literal `- _(WebSearch indisponível neste run)_`, popule `## Key
-   findings` e `## Open questions` com o que o modelo já sabe sobre o
+findings` e `## Open questions` com o que o modelo já sabe sobre o
    topic, e registre o motivo em `## Open questions`. Rodapé:
    `_Budget used: 0 WebSearch, 0 WebFetch (web indisponível)_`.
 

@@ -1,219 +1,260 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login — Forja Serafim</title>
-  <!-- Anti-FOUC -->
-  <script>(function(){var t=localStorage.getItem('admin-theme');if(t!=='light')document.documentElement.classList.add('dark')})()</script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://accounts.google.com/gsi/client" async></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — Forja Serafim</title>
+    <!-- Anti-FOUC -->
+    <script>
+      (function () {
+        var t = localStorage.getItem("admin-theme");
+        if (t !== "light") document.documentElement.classList.add("dark");
+      })();
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    /* Light theme */
-    :root {
-      --login-bg: #f5f3ef;
-      --login-card-bg: #ffffff;
-      --login-card-border: rgba(0,0,0,0.08);
-      --login-card-shadow: 0 20px 60px rgba(0,0,0,0.1);
-      --login-text: #1a1a2e;
-      --login-text-muted: #666;
-      --login-text-faint: #999;
-      --login-gold: #b8860b;
-      --login-gold-border: rgba(184,134,11,0.3);
-      --login-divider: rgba(0,0,0,0.08);
-      --login-error-bg: rgba(220,38,38,0.08);
-      --login-error-border: rgba(220,38,38,0.2);
-      --login-error-text: #dc2626;
-      color-scheme: light;
-    }
+      /* Light theme */
+      :root {
+        --login-bg: #f5f3ef;
+        --login-card-bg: #ffffff;
+        --login-card-border: rgba(0, 0, 0, 0.08);
+        --login-card-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        --login-text: #1a1a2e;
+        --login-text-muted: #666;
+        --login-text-faint: #999;
+        --login-gold: #b8860b;
+        --login-gold-border: rgba(184, 134, 11, 0.3);
+        --login-divider: rgba(0, 0, 0, 0.08);
+        --login-error-bg: rgba(220, 38, 38, 0.08);
+        --login-error-border: rgba(220, 38, 38, 0.2);
+        --login-error-text: #dc2626;
+        color-scheme: light;
+      }
 
-    /* Dark theme */
-    .dark {
-      --login-bg: #12121f;
-      --login-card-bg: #1a1a2e;
-      --login-card-border: rgba(255,255,255,0.08);
-      --login-card-shadow: 0 20px 60px rgba(0,0,0,0.5);
-      --login-text: #e5e5e5;
-      --login-text-muted: #888;
-      --login-text-faint: #999;
-      --login-gold: #d4a853;
-      --login-gold-border: rgba(212,168,83,0.3);
-      --login-divider: rgba(255,255,255,0.08);
-      --login-error-bg: rgba(220,38,38,0.1);
-      --login-error-border: rgba(220,38,38,0.3);
-      --login-error-text: #f87171;
-      color-scheme: dark;
-    }
+      /* Dark theme */
+      .dark {
+        --login-bg: #12121f;
+        --login-card-bg: #1a1a2e;
+        --login-card-border: rgba(255, 255, 255, 0.08);
+        --login-card-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        --login-text: #e5e5e5;
+        --login-text-muted: #888;
+        --login-text-faint: #999;
+        --login-gold: #d4a853;
+        --login-gold-border: rgba(212, 168, 83, 0.3);
+        --login-divider: rgba(255, 255, 255, 0.08);
+        --login-error-bg: rgba(220, 38, 38, 0.1);
+        --login-error-border: rgba(220, 38, 38, 0.3);
+        --login-error-text: #f87171;
+        color-scheme: dark;
+      }
 
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--login-bg);
-      color: var(--login-text);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .login-card {
-      background: var(--login-card-bg);
-      border: 1px solid var(--login-card-border);
-      border-radius: 1.5rem;
-      padding: 3rem 2.5rem;
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-      box-shadow: var(--login-card-shadow);
-      position: relative;
-    }
-    .star { font-size: 2.5rem; color: var(--login-gold); margin-bottom: 1rem; }
-    h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--login-gold);
-      letter-spacing: 0.05em;
-    }
-    .subtitle {
-      font-size: 0.75rem;
-      color: var(--login-text-muted);
-      margin-top: 0.25rem;
-    }
-    .divider {
-      height: 1px;
-      background: var(--login-divider);
-      margin: 1.5rem 0;
-    }
-    .info {
-      font-size: 0.8rem;
-      color: var(--login-text-faint);
-      margin-bottom: 1.5rem;
-    }
-    #google-btn {
-      display: flex;
-      justify-content: center;
-      min-height: 44px;
-    }
-    .error {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      background: var(--login-error-bg);
-      border: 1px solid var(--login-error-border);
-      border-radius: 0.75rem;
-      color: var(--login-error-text);
-      font-size: 0.8rem;
-      display: none;
-    }
-    .loading {
-      display: none;
-      margin-top: 1rem;
-      color: var(--login-gold);
-      font-size: 0.8rem;
-    }
-    .loading.show { display: block; }
-    .error.show { display: block; }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: var(--login-bg);
+        color: var(--login-text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .login-card {
+        background: var(--login-card-bg);
+        border: 1px solid var(--login-card-border);
+        border-radius: 1.5rem;
+        padding: 3rem 2.5rem;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        box-shadow: var(--login-card-shadow);
+        position: relative;
+      }
+      .star {
+        font-size: 2.5rem;
+        color: var(--login-gold);
+        margin-bottom: 1rem;
+      }
+      h1 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--login-gold);
+        letter-spacing: 0.05em;
+      }
+      .subtitle {
+        font-size: 0.75rem;
+        color: var(--login-text-muted);
+        margin-top: 0.25rem;
+      }
+      .divider {
+        height: 1px;
+        background: var(--login-divider);
+        margin: 1.5rem 0;
+      }
+      .info {
+        font-size: 0.8rem;
+        color: var(--login-text-faint);
+        margin-bottom: 1.5rem;
+      }
+      #google-btn {
+        display: flex;
+        justify-content: center;
+        min-height: 44px;
+      }
+      .error {
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        background: var(--login-error-bg);
+        border: 1px solid var(--login-error-border);
+        border-radius: 0.75rem;
+        color: var(--login-error-text);
+        font-size: 0.8rem;
+        display: none;
+      }
+      .loading {
+        display: none;
+        margin-top: 1rem;
+        color: var(--login-gold);
+        font-size: 0.8rem;
+      }
+      .loading.show {
+        display: block;
+      }
+      .error.show {
+        display: block;
+      }
 
-    /* Theme toggle */
-    .theme-toggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      border: 1px solid var(--login-card-border);
-      background: transparent;
-      color: var(--login-gold);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 200ms ease;
-    }
-    .theme-toggle:hover {
-      border-color: var(--login-gold);
-      background: oklch(0.75 0.09 82 / 0.1);
-    }
-  </style>
-</head>
-<body>
-  <div class="login-card">
-    <button class="theme-toggle" onclick="toggleLoginTheme()" title="Alternar tema" id="login-theme-btn">
-      <span id="login-theme-icon"></span>
-    </button>
-    <img src="/images/logo-forja-serafim.jpg" alt="Forja Serafim" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; display: block; border: 2px solid var(--login-gold-border);" />
-    <h1>Forja Serafim</h1>
-    <p class="subtitle">Painel Administrativo</p>
-    <div class="divider"></div>
-    <p class="info">Faca login com sua conta Google autorizada para acessar o admin.</p>
+      /* Theme toggle */
+      .theme-toggle {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        border: 1px solid var(--login-card-border);
+        background: transparent;
+        color: var(--login-gold);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 200ms ease;
+      }
+      .theme-toggle:hover {
+        border-color: var(--login-gold);
+        background: oklch(0.75 0.09 82 / 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-card">
+      <button
+        class="theme-toggle"
+        onclick="toggleLoginTheme()"
+        title="Alternar tema"
+        id="login-theme-btn"
+      >
+        <span id="login-theme-icon"></span>
+      </button>
+      <img
+        src="/images/logo-forja-serafim.jpg"
+        alt="Forja Serafim"
+        style="
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin: 0 auto 1rem;
+          display: block;
+          border: 2px solid var(--login-gold-border);
+        "
+      />
+      <h1>Forja Serafim</h1>
+      <p class="subtitle">Painel Administrativo</p>
+      <div class="divider"></div>
+      <p class="info">Faca login com sua conta Google autorizada para acessar o admin.</p>
 
-    <div id="google-btn">
-      <div id="g_id_onload"
-           data-client_id="__GOOGLE_CLIENT_ID__"
-           data-callback="handleCredentialResponse"
-           data-auto_prompt="false">
+      <div id="google-btn">
+        <div
+          id="g_id_onload"
+          data-client_id="__GOOGLE_CLIENT_ID__"
+          data-callback="handleCredentialResponse"
+          data-auto_prompt="false"
+        ></div>
+        <div
+          class="g_id_signin"
+          data-type="standard"
+          data-shape="pill"
+          data-theme="filled_black"
+          data-text="signin_with"
+          data-size="large"
+          data-logo_alignment="left"
+        ></div>
       </div>
-      <div class="g_id_signin"
-           data-type="standard"
-           data-shape="pill"
-           data-theme="filled_black"
-           data-text="signin_with"
-           data-size="large"
-           data-logo_alignment="left">
-      </div>
+
+      <div id="loading" class="loading">Verificando acesso...</div>
+      <div id="error" class="error"></div>
     </div>
 
-    <div id="loading" class="loading">Verificando acesso...</div>
-    <div id="error" class="error"></div>
-  </div>
+    <script>
+      // Theme toggle
+      const SUN_SVG =
+        '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>';
+      const MOON_SVG =
+        '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>';
 
-  <script>
-    // Theme toggle
-    const SUN_SVG = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>';
-    const MOON_SVG = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>';
-
-    function toggleLoginTheme() {
-      document.documentElement.classList.toggle('dark');
-      const isDark = document.documentElement.classList.contains('dark');
-      localStorage.setItem('admin-theme', isDark ? 'dark' : 'light');
-      updateLoginThemeIcon();
-    }
-
-    function updateLoginThemeIcon() {
-      const isDark = document.documentElement.classList.contains('dark');
-      document.getElementById('login-theme-icon').innerHTML = isDark ? SUN_SVG : MOON_SVG;
-    }
-
-    updateLoginThemeIcon();
-
-    async function handleCredentialResponse(response) {
-      const loading = document.getElementById('loading');
-      const error = document.getElementById('error');
-      loading.classList.add('show');
-      error.classList.remove('show');
-
-      try {
-        const res = await fetch('/auth/google', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ credential: response.credential }),
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          window.location.href = '/admin/';
-        } else {
-          loading.classList.remove('show');
-          error.textContent = data.error || 'Erro ao autenticar.';
-          error.classList.add('show');
-        }
-      } catch (err) {
-        loading.classList.remove('show');
-        error.textContent = 'Erro de conexao. Tente novamente.';
-        error.classList.add('show');
+      function toggleLoginTheme() {
+        document.documentElement.classList.toggle("dark");
+        const isDark = document.documentElement.classList.contains("dark");
+        localStorage.setItem("admin-theme", isDark ? "dark" : "light");
+        updateLoginThemeIcon();
       }
-    }
-  </script>
-</body>
+
+      function updateLoginThemeIcon() {
+        const isDark = document.documentElement.classList.contains("dark");
+        document.getElementById("login-theme-icon").innerHTML = isDark ? SUN_SVG : MOON_SVG;
+      }
+
+      updateLoginThemeIcon();
+
+      async function handleCredentialResponse(response) {
+        const loading = document.getElementById("loading");
+        const error = document.getElementById("error");
+        loading.classList.add("show");
+        error.classList.remove("show");
+
+        try {
+          const res = await fetch("/auth/google", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ credential: response.credential }),
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+            window.location.href = "/admin/";
+          } else {
+            loading.classList.remove("show");
+            error.textContent = data.error || "Erro ao autenticar.";
+            error.classList.add("show");
+          }
+        } catch (err) {
+          loading.classList.remove("show");
+          error.textContent = "Erro de conexao. Tente novamente.";
+          error.classList.add("show");
+        }
+      }
+    </script>
+  </body>
 </html>

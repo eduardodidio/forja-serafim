@@ -21,9 +21,11 @@ Você é o QE rodando `/bmad-testarch-framework $ARGUMENTS` no
    `usage: /bmad-testarch-framework <FXX> (e.g. /bmad-testarch-framework F27)`
 
 2. **Resolva o diretório da feature**:
+
    ```bash
    FEATURE_DIR=$(ls -d tasks/features/<FXX>-* 2>/dev/null | head -n1)
    ```
+
    Se vazio, abort: `feature directory not found for <FXX>`.
 
 3. **Calcule o slug.** Pegue o nome do diretório (`<FXX>-<slug>`), remova
@@ -45,15 +47,19 @@ Você é o QE rodando `/bmad-testarch-framework $ARGUMENTS` no
    _Gerado em <YYYY-MM-DD> por /bmad-testarch-framework._
 
    ## Stack detectada
+
    <stack relevante extraída de CLAUDE.md>
 
    ## Framework recomendado
+
    <framework de teste e justificativa>
 
    ## Comando de teste
+
    <comando(s) para rodar a suíte>
 
    ## Convenções
+
    <onde colocar testes novos, naming, fixtures>
    ```
 

@@ -20,9 +20,11 @@ Você é o QE rodando `/bmad-testarch-ci $ARGUMENTS` no `claude-didio-config`.
    `usage: /bmad-testarch-ci <FXX> (e.g. /bmad-testarch-ci F27)`
 
 2. **Resolva o diretório da feature**:
+
    ```bash
    FEATURE_DIR=$(ls -d tasks/features/<FXX>-* 2>/dev/null | head -n1)
    ```
+
    Se vazio, abort: `feature directory not found for <FXX>`.
 
 3. **Calcule o slug.** Pegue o nome do diretório (`<FXX>-<slug>`), remova
@@ -44,12 +46,15 @@ Você é o QE rodando `/bmad-testarch-ci $ARGUMENTS` no `claude-didio-config`.
    _Gerado em <YYYY-MM-DD> por /bmad-testarch-ci._
 
    ## CI atual
+
    <workflows existentes que rodam testes, ou "nenhum encontrado">
 
    ## Gaps
+
    <o que falta para a suíte rodar em CI: triggers, steps, caching>
 
    ## Config recomendada
+
    <trecho de workflow/job recomendado>
    ```
 

@@ -29,7 +29,9 @@ function parseArgs() {
   }
 
   if (!input || !output || !slug) {
-    console.error("Usage: bun scripts/process-images.ts --input <dir> --output <dir> --slug <name>");
+    console.error(
+      "Usage: bun scripts/process-images.ts --input <dir> --output <dir> --slug <name>",
+    );
     process.exit(1);
   }
 
@@ -59,7 +61,7 @@ async function processImage(inputPath: string, outputPath: string) {
   const resizeWidth = Math.min(MAX_WIDTH, metadata.width ?? MAX_WIDTH);
   const resized = image.resize({ width: resizeWidth, withoutEnlargement: true });
 
-  const resizedMeta = await resized.clone().metadata();
+  // metadata after resize not needed — height calculated from ratio
   // After resize, recalculate height
   const ratio = resizeWidth / (metadata.width ?? resizeWidth);
   const newHeight = Math.round((metadata.height ?? 840) * ratio);

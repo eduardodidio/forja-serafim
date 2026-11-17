@@ -19,8 +19,8 @@ O usuário pediu brainstorm sobre: **$ARGUMENTS**
    `AskUserQuestion`:
    - "Qual sistema/feature isso resolve?"
    - "Qual restrição é mais importante: tempo / qualidade / escopo?"
-   Se `AskUserQuestion` indisponível, peça em texto e aguarde resposta.
-   Se topic já for específico, pule este passo.
+     Se `AskUserQuestion` indisponível, peça em texto e aguarde resposta.
+     Se topic já for específico, pule este passo.
 
 2. **Gere 3 a 5 direções.** Cada uma DEVE ter exatamente este formato
    literal:
@@ -50,15 +50,18 @@ O usuário pediu brainstorm sobre: **$ARGUMENTS**
    _Gerado em <YYYY-MM-DD> por /brainstorm._
 
    ## Contexto
+
    <1 parágrafo: sistema/restrições aprendidos no passo 1, ou "topic já
-    específico, sem clarificação adicional">
+   específico, sem clarificação adicional">
 
    ## Direções
 
    ### Direção 1 — ...
+
    ...
 
    ### Direção 5 — ...
+
    ...
    ```
 

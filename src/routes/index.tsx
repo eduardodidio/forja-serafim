@@ -19,16 +19,24 @@ import { visibleCollections, testimonials, WHATSAPP_URL, whatsappLink } from "@/
 import { useReveal } from "@/hooks/useReveal";
 import { SITE } from "@/lib/seo";
 
-function Reveal({ direction = "up" as "up" | "left" | "right", delay = 0, children, className = "" }: {
+function Reveal({
+  direction = "up" as "up" | "left" | "right",
+  delay = 0,
+  children,
+  className = "",
+}: {
   direction?: "up" | "left" | "right";
   delay?: number;
   children: React.ReactNode;
   className?: string;
 }) {
   const { ref, style } = useReveal(direction, delay);
-  return <div ref={ref} style={style} className={className}>{children}</div>;
+  return (
+    <div ref={ref} style={style} className={className}>
+      {children}
+    </div>
+  );
 }
-
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -64,7 +72,9 @@ function Home() {
         />
         <div className="veil absolute inset-0" />
         <div className="relative mx-auto flex min-h-[78vh] max-w-7xl flex-col justify-end px-5 pb-20 pt-32">
-          <p className="text-xs uppercase tracking-[0.35em] text-gold">Proxies full art artesanais</p>
+          <p className="text-xs uppercase tracking-[0.35em] text-gold">
+            Proxies full art artesanais
+          </p>
           <h1 className="mt-5 max-w-3xl text-4xl leading-[1.05] sm:text-6xl lg:text-7xl">
             <span className="text-gradient-gold">Forja Serafim</span>
           </h1>
@@ -79,7 +89,9 @@ function Home() {
               Ver Colecoes <ArrowRight className="size-4" />
             </Link>
             <a
-              href={whatsappLink("Ola! Vim pelo site da Forja Serafim e gostaria de saber mais sobre as proxies full art.")}
+              href={whatsappLink(
+                "Ola! Vim pelo site da Forja Serafim e gostaria de saber mais sobre as proxies full art.",
+              )}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3.5 text-sm font-medium transition-colors hover:border-gold/60 hover:text-gold"
@@ -95,9 +107,17 @@ function Home() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { icon: Brush, t: "Arte autoral", d: "Cada carta desenhada e diagramada a mao." },
-            { icon: Package, t: "Impressao premium", d: "Papel de alta gramatura e acabamento fosco." },
+            {
+              icon: Package,
+              t: "Impressao premium",
+              d: "Papel de alta gramatura e acabamento fosco.",
+            },
             { icon: Star, t: "Opcao foil", d: "Acabamento holografico sob encomenda." },
-            { icon: Sparkles, t: "Decks tematicos", d: "Universos inteiros aplicados ao seu commander." },
+            {
+              icon: Sparkles,
+              t: "Decks tematicos",
+              d: "Universos inteiros aplicados ao seu commander.",
+            },
           ].map(({ icon: Icon, t, d }, i) => (
             <Reveal key={t} delay={i * 100}>
               <div className="surface-card p-6 h-full">
@@ -117,7 +137,10 @@ function Home() {
             <p className="text-xs uppercase tracking-[0.3em] text-gold">Colecoes</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">Universos em papel</h2>
           </div>
-          <Link to="/colecoes" className="text-sm text-muted-foreground transition-colors hover:text-gold">
+          <Link
+            to="/colecoes"
+            className="text-sm text-muted-foreground transition-colors hover:text-gold"
+          >
             Ver todas &rarr;
           </Link>
         </div>
@@ -142,25 +165,27 @@ function Home() {
 
       {/* CTA Final */}
       <Reveal>
-      <section className="mx-auto max-w-7xl px-5 pb-8">
-        <div className="surface-card flex flex-wrap items-center justify-between gap-6 p-10">
-          <div className="min-w-0">
-            <h2 className="text-2xl sm:text-3xl">Quer encomendar um deck?</h2>
-            <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-              Fale diretamente com a gente pelo WhatsApp. Atendemos pedidos personalizados,
-              decks completos e artes exclusivas.
-            </p>
+        <section className="mx-auto max-w-7xl px-5 pb-8">
+          <div className="surface-card flex flex-wrap items-center justify-between gap-6 p-10">
+            <div className="min-w-0">
+              <h2 className="text-2xl sm:text-3xl">Quer encomendar um deck?</h2>
+              <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+                Fale diretamente com a gente pelo WhatsApp. Atendemos pedidos personalizados, decks
+                completos e artes exclusivas.
+              </p>
+            </div>
+            <a
+              href={whatsappLink(
+                "Ola! Vim pelo site e quero encomendar um deck de proxies full art. Pode me ajudar?",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3.5 text-sm font-medium transition-colors hover:border-gold/60 hover:text-gold"
+            >
+              <WhatsAppIcon className="size-4 text-[#25D366]" /> WhatsApp
+            </a>
           </div>
-          <a
-            href={whatsappLink("Ola! Vim pelo site e quero encomendar um deck de proxies full art. Pode me ajudar?")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3.5 text-sm font-medium transition-colors hover:border-gold/60 hover:text-gold"
-          >
-            <WhatsAppIcon className="size-4 text-[#25D366]" /> WhatsApp
-          </a>
-        </div>
-      </section>
+        </section>
       </Reveal>
     </PageShell>
   );
@@ -191,13 +216,15 @@ function DeckListSection() {
           </div>
           <h2 className="mt-4 text-3xl sm:text-4xl">Cole a lista, nos imprimimos pra voce</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            Ja tem sua lista pronta? Cole aqui no formato padrao (1x Card Name) e envie
-            direto pelo WhatsApp. Nos cuidamos da arte e da impressao.
+            Ja tem sua lista pronta? Cole aqui no formato padrao (1x Card Name) e envie direto pelo
+            WhatsApp. Nos cuidamos da arte e da impressao.
           </p>
 
           <div className="mt-8 space-y-4">
             <div className="surface-card p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-gold">Como importar sua lista</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-gold">
+                Como importar sua lista
+              </p>
               <ol className="mt-3 space-y-2 text-sm text-muted-foreground">
                 <li className="flex gap-2">
                   <span className="font-display text-gold">1.</span>
@@ -288,11 +315,15 @@ function ThemeBuilderSection() {
             Voce escolhe o tema, nos fazemos acontecer
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            Quer um deck inteiro de Senhor dos Aneis? Ou um Commander de Zelda?
-            Conte pra gente qual e a vibe e nos criamos a arte completa.
+            Quer um deck inteiro de Senhor dos Aneis? Ou um Commander de Zelda? Conte pra gente qual
+            e a vibe e nos criamos a arte completa.
           </p>
           <div className="mt-6">
-            <img src="/images/logo-forja-serafim.jpg" alt="Forja Serafim" className="size-20 rounded-full object-cover opacity-30" />
+            <img
+              src="/images/logo-forja-serafim.jpg"
+              alt="Forja Serafim"
+              className="size-20 rounded-full object-cover opacity-30"
+            />
           </div>
         </div>
 
@@ -389,21 +420,19 @@ function TestimonialsSection() {
       <div className="mt-10 grid gap-6 sm:grid-cols-2">
         {testimonials.map((t, i) => (
           <Reveal key={i} direction={i % 2 === 0 ? "left" : "right"} delay={i * 100}>
-          <div className="surface-card p-7">
-            <Quote className="size-5 text-gold/40" />
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              "{t.text}"
-            </p>
-            <div className="mt-5 flex items-center gap-3 border-t border-border/50 pt-4">
-              <div className="flex size-9 items-center justify-center rounded-full bg-gold/10 font-display text-sm text-gold">
-                {t.name.charAt(0)}
-              </div>
-              <div>
-                <p className="text-sm font-medium">{t.name}</p>
-                <p className="text-xs text-muted-foreground">{t.deck}</p>
+            <div className="surface-card p-7">
+              <Quote className="size-5 text-gold/40" />
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">"{t.text}"</p>
+              <div className="mt-5 flex items-center gap-3 border-t border-border/50 pt-4">
+                <div className="flex size-9 items-center justify-center rounded-full bg-gold/10 font-display text-sm text-gold">
+                  {t.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="text-sm font-medium">{t.name}</p>
+                  <p className="text-xs text-muted-foreground">{t.deck}</p>
+                </div>
               </div>
             </div>
-          </div>
           </Reveal>
         ))}
       </div>

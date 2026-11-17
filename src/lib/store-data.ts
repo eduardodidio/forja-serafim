@@ -22,7 +22,7 @@ export type Testimonial = {
 };
 
 export const collections: Collection[] = collectionsData;
-export const visibleCollections: Collection[] = collectionsData.filter(c => !c.hidden);
+export const visibleCollections: Collection[] = collectionsData.filter((c) => !c.hidden);
 export const testimonials: Testimonial[] = testimonialsData as Testimonial[];
 export const WHATSAPP_URL: string = settingsData.whatsappUrl;
 

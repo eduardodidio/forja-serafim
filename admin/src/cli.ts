@@ -31,16 +31,36 @@ async function main() {
     });
 
     switch (action) {
-      case "list": await listCollections(); break;
-      case "add": await addCollection(); break;
-      case "edit": await editCollection(); break;
-      case "remove": await removeCollection(); break;
-      case "images": await processImages(); break;
-      case "cover": await setCover(); break;
-      case "url": await setUrl(); break;
-      case "manual": await uploadManual(); break;
-      case "testimonials": await manageTestimonials(); break;
-      case "exit": console.log("Ate mais!"); process.exit(0);
+      case "list":
+        await listCollections();
+        break;
+      case "add":
+        await addCollection();
+        break;
+      case "edit":
+        await editCollection();
+        break;
+      case "remove":
+        await removeCollection();
+        break;
+      case "images":
+        await processImages();
+        break;
+      case "cover":
+        await setCover();
+        break;
+      case "url":
+        await setUrl();
+        break;
+      case "manual":
+        await uploadManual();
+        break;
+      case "testimonials":
+        await manageTestimonials();
+        break;
+      case "exit":
+        console.log("Ate mais!");
+        process.exit(0);
     }
 
     console.log();

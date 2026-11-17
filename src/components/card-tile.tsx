@@ -5,9 +5,7 @@ import { Link } from "@tanstack/react-router";
 const FLIP_INTERVAL = 3500;
 
 export function CollectionCard({ collection }: { collection: Collection }) {
-  const images = collection.sampleImages.length > 0
-    ? collection.sampleImages
-    : [collection.image];
+  const images = collection.sampleImages.length > 0 ? collection.sampleImages : [collection.image];
 
   const [current, setCurrent] = useState(0);
   const [flipping, setFlipping] = useState(false);

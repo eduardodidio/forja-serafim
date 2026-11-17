@@ -20,9 +20,11 @@ Você é o QE rodando `/bmad-testarch-atdd $ARGUMENTS` no `claude-didio-config`.
    `usage: /bmad-testarch-atdd <FXX> (e.g. /bmad-testarch-atdd F27)`
 
 2. **Resolva o diretório da feature**:
+
    ```bash
    FEATURE_DIR=$(ls -d tasks/features/<FXX>-* 2>/dev/null | head -n1)
    ```
+
    Se vazio, abort: `feature directory not found for <FXX>`.
 
 3. **Calcule o slug.** Pegue o nome do diretório (`<FXX>-<slug>`), remova
@@ -45,12 +47,15 @@ Você é o QE rodando `/bmad-testarch-atdd $ARGUMENTS` no `claude-didio-config`.
    _Gerado em <YYYY-MM-DD> por /bmad-testarch-atdd._
 
    ## Acceptance criteria cobertos
+
    <lista de AC por task, copiados das task files>
 
    ## Cenários ATDD
+
    Para cada AC, no formato Given/When/Then:
 
    ### AC<N> — <descrição curta>
+
    - **Given** <pré-condição>
    - **When** <ação>
    - **Then** <resultado esperado>

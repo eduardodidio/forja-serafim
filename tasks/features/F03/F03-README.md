@@ -12,6 +12,7 @@ de padroes de mercado para lojas de nicho de trading cards.
 ## Scope
 
 ### Landing Page (site publico)
+
 - Lightbox/galeria com zoom nas amostras de cartas
 - Lazy loading otimizado com blur placeholder (LQIP)
 - SEO tecnico: meta tags OG/Twitter, structured data (JSON-LD), sitemap.xml
@@ -21,6 +22,7 @@ de padroes de mercado para lojas de nicho de trading cards.
 - Pagina 404 customizada com identidade visual
 
 ### Admin Panel
+
 - Tecla Escape fecha modais
 - Protecao contra double-click em botoes de acao (save, publish, delete)
 - Error handling no carregamento inicial (loadCollections, loadTestimonials, loadSettings)
@@ -29,6 +31,7 @@ de padroes de mercado para lojas de nicho de trading cards.
 - Ordenacao de colecoes via drag (nice-to-have)
 
 ### Infra / DX
+
 - Compressao de imagens automatica no build (sharp/vite plugin)
 - Cache headers otimizados no server do admin
 - Validacao de URLs nos campos DeckCheck/Moxfield (formato basico)

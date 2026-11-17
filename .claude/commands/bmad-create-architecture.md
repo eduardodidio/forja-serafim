@@ -1,6 +1,6 @@
 ---
 description: "[alias bmad] Plan a new feature (PLAN_ONLY) — delega a /plan-feature"
-argument-hint: "<FXX> \"<título>\""
+argument-hint: '<FXX> "<título>"'
 ---
 
 <!-- GENERATED FILE — DO NOT EDIT.

@@ -66,8 +66,10 @@ review file under a `## Retrospective Seeds` section. QA will use them
 to build `memory/agent-learnings/techlead.md` at the end of the feature.
 
 Format:
+
 ```markdown
 ## Retrospective Seeds
+
 - **Pattern:** <short description>
 - **Role(s) affected:** architect | developer | techlead | qa
 - **Lesson:** <what to do differently next time>
@@ -85,6 +87,7 @@ responsible for the retrospective ceremony**:
    (never overwrite existing content):
    ```markdown
    ## <context> — <YYYY-MM-DD>
+
    **What worked:** ...
    **What to avoid:** ...
    **Pattern to repeat:** ...
@@ -129,14 +132,17 @@ Format (10–20 lines):
 **Generated:** <UTC ISO timestamp>
 
 ## Files touched
+
 - `path/to/file1` (T01: <verb 1-line>)
 - `path/to/file2` (T02: <verb 1-line>)
 
 ## Decisions
+
 - <decision 1, 1 line — only if something changed direction>
 - _none_ (if the wave was purely mechanical)
 
 ## Notes for next Wave
+
 - <gotcha or contract that Wave N+1 needs to know, 1 line>
 ```
 

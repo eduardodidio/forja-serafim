@@ -19,7 +19,9 @@ export async function listCollections(): Promise<void> {
   }
 
   console.log();
-  console.log("  Slug                     | Nome                   | Cartas | DeckCheck | Moxfield | Manual");
+  console.log(
+    "  Slug                     | Nome                   | Cartas | DeckCheck | Moxfield | Manual",
+  );
   console.log("  " + "-".repeat(95));
 
   for (const c of collections) {

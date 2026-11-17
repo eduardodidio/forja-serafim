@@ -44,7 +44,7 @@ export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
   useEffect(() => {
     if (!isOpen) return;
     const preload = [index - 1, index + 1]
-      .map((i) => ((i + images.length) % images.length))
+      .map((i) => (i + images.length) % images.length)
       .filter((i) => i !== index);
     preload.forEach((i) => {
       const img = new Image();
@@ -69,7 +69,12 @@ export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
             aria-label="Fechar"
           >
             <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
 
@@ -81,12 +86,20 @@ export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
           {/* Previous */}
           {images.length > 1 && (
             <button
-              onClick={(e) => { e.stopPropagation(); prev(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                prev();
+              }}
               className="absolute left-4 z-10 flex size-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
               aria-label="Anterior"
             >
               <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
           )}
@@ -115,12 +128,20 @@ export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
           {/* Next */}
           {images.length > 1 && (
             <button
-              onClick={(e) => { e.stopPropagation(); next(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                next();
+              }}
               className="absolute right-4 z-10 flex size-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
               aria-label="Proximo"
             >
               <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           )}

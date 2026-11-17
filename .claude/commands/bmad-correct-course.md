@@ -1,6 +1,6 @@
 ---
 description: "[alias bmad] Registra um ajuste de rota (diff plano×realidade + ação corretiva)"
-argument-hint: "<FXX> \"<descrição do desvio>\""
+argument-hint: '<FXX> "<descrição do desvio>"'
 ---
 
 <!-- GENERATED FILE — DO NOT EDIT.
@@ -43,15 +43,19 @@ data de hoje. Estrutura sugerida:
 # Course Correction — <FXX> (<data>)
 
 ## Plano original
+
 <resumo do que o README/Waves previam>
 
 ## Realidade observada
+
 <o que de fato aconteceu / divergência>
 
 ## Diff (plano x realidade)
+
 <pontos de divergência específicos>
 
 ## Ação corretiva
+
 <o que muda a partir de agora: reordenar Waves, atualizar dependências,
 adicionar/remover tasks, etc.>
 ```

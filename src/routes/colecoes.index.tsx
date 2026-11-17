@@ -9,20 +9,28 @@ export const Route = createFileRoute("/colecoes/")({
   head: () => ({
     meta: [
       { title: `Colecoes | ${SITE.NAME}` },
-      { name: "description", content: "Catalogo completo de decks proxy full art tematicos. Cada colecao com identidade visual propria e acabamento premium." },
+      {
+        name: "description",
+        content:
+          "Catalogo completo de decks proxy full art tematicos. Cada colecao com identidade visual propria e acabamento premium.",
+      },
       { property: "og:title", content: "Colecoes" },
-      { property: "og:description", content: "Catalogo completo de decks proxy full art tematicos." },
+      {
+        property: "og:description",
+        content: "Catalogo completo de decks proxy full art tematicos.",
+      },
       { property: "og:image", content: SITE.IMAGE },
       { property: "og:url", content: `${SITE.URL}/colecoes` },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Colecoes" },
-      { name: "twitter:description", content: "Catalogo completo de decks proxy full art tematicos." },
+      {
+        name: "twitter:description",
+        content: "Catalogo completo de decks proxy full art tematicos.",
+      },
       { name: "twitter:image", content: SITE.IMAGE },
     ],
-    links: [
-      { rel: "canonical", href: `${SITE.URL}/colecoes` },
-    ],
+    links: [{ rel: "canonical", href: `${SITE.URL}/colecoes` }],
   }),
 });
 

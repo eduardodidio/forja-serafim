@@ -31,9 +31,12 @@ T800_ENABLED=$(python3 -c "import json; c=json.load(open('didio.config.json')); 
 If `T800_ENABLED` is `False` (default): **skip this step silently** and proceed to Step 1.
 
 If `True`:
+
 1. Write a decision request file to `logs/decisions/_requests/<FXX>-<timestamp>.md`:
+
    ```markdown
    # Decision Request: <FXX>
+
    **Type:** feature_start
    **Feature:** <description from $ARGUMENTS>
    **Requested at:** <ISO timestamp>
@@ -41,6 +44,7 @@ If `True`:
    ```
 
 2. Run:
+
    ```bash
    didio t800 <FXX> logs/decisions/_requests/<FXX>-<timestamp>.md
    ```
@@ -63,6 +67,7 @@ If `True`:
    > Run the recommended command or override with DIDIO_SKIP_T800=1.
 
 **Bypass:** if `DIDIO_SKIP_T800=1` is set, skip with a visible yellow warning:
+
 > Warning: Gandalf gate bypassed via DIDIO_SKIP_T800=1
 
 ## Step 1 — Architect (PLAN_ONLY)

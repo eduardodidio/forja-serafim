@@ -25,6 +25,7 @@ For each feature you execute EXACTLY this pipeline. Do not improvise.
 5. **QA** validates end-to-end and fills test gaps.
 
 Constraints:
+
 - Tasks must be **as small as possible** while still self-contained.
 - Waves are **independent** — tasks in the same Wave must not touch each
   other's files.
@@ -43,9 +44,12 @@ T800_ENABLED=$(python3 -c "import json; c=json.load(open('didio.config.json')); 
 If `T800_ENABLED` is `False` (default): **skip this step silently** and proceed to Step 1.
 
 If `True`:
+
 1. Write a decision request file to `logs/decisions/_requests/<FXX>-<timestamp>.md`:
+
    ```markdown
    # Decision Request: <FXX>
+
    **Type:** feature_start
    **Feature:** <description from $ARGUMENTS>
    **Requested at:** <ISO timestamp>
@@ -53,6 +57,7 @@ If `True`:
    ```
 
 2. Run:
+
    ```bash
    didio t800 <FXX> logs/decisions/_requests/<FXX>-<timestamp>.md
    ```
@@ -75,6 +80,7 @@ If `True`:
    > Run the recommended command or override with DIDIO_SKIP_T800=1.
 
 **Bypass:** if `DIDIO_SKIP_T800=1` is set, skip with a visible yellow warning:
+
 > Warning: Gandalf gate bypassed via DIDIO_SKIP_T800=1
 
 ## Step 1 — Architect
@@ -110,6 +116,7 @@ seguido de `grep -E '^\*\*Verdict:\*\* BLOCKED' tasks/features/<FXX>-*/readiness
 para detectar BLOCKED.)
 
 If the slash command exits 1 (verdict `BLOCKED`):
+
 - STOP the pipeline.
 - Print the path of `readiness-report.md` to the user.
 - Tell the user to fix the plan and re-run `/create-feature <FXX>`.
@@ -162,6 +169,7 @@ didio spawn-agent qa <FXX> tasks/features/<FXX>-*/<FXX>-README.md
 ## Step 5 — Final report
 
 Summarize to the user:
+
 - Number of Waves executed
 - Number of tasks completed
 - Tech Lead verdict

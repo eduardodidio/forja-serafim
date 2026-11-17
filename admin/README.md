@@ -43,10 +43,10 @@ Painel administrativo para gerenciar as colecoes, imagens e depoimentos do site.
 
 ## Onde ficam os dados
 
-| Pasta/Arquivo | Conteudo |
-|---------|----------|
-| `src/data/collections.json` | Lista de colecoes |
-| `src/data/testimonials.json` | Lista de depoimentos |
-| `public/images/covers/` | Capas das colecoes |
+| Pasta/Arquivo                 | Conteudo                 |
+| ----------------------------- | ------------------------ |
+| `src/data/collections.json`   | Lista de colecoes        |
+| `src/data/testimonials.json`  | Lista de depoimentos     |
+| `public/images/covers/`       | Capas das colecoes       |
 | `public/images/decks/{slug}/` | Imagens com marca d'agua |
-| `public/manuals/` | Manuais em PDF |
+| `public/manuals/`             | Manuais em PDF           |

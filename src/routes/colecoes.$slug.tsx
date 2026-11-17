@@ -16,7 +16,10 @@ export const Route = createFileRoute("/colecoes/$slug")({
     return {
       meta: [
         { title: `${c.name} — Deck Proxy Full Art | ${SITE.NAME}` },
-        { name: "description", content: `${c.description} ${c.cardCount} cartas com arte autoral premium.` },
+        {
+          name: "description",
+          content: `${c.description} ${c.cardCount} cartas com arte autoral premium.`,
+        },
         { property: "og:title", content: `${c.name} — Deck Proxy Full Art` },
         { property: "og:description", content: c.description },
         { property: "og:image", content: image },
@@ -27,9 +30,7 @@ export const Route = createFileRoute("/colecoes/$slug")({
         { name: "twitter:description", content: c.description },
         { name: "twitter:image", content: image },
       ],
-      links: [
-        { rel: "canonical", href: `${SITE.URL}/colecoes/${c.slug}` },
-      ],
+      links: [{ rel: "canonical", href: `${SITE.URL}/colecoes/${c.slug}` }],
     };
   },
 });
@@ -95,7 +96,10 @@ function CollectionPage() {
         {collection.sampleImages.length > 0 && (
           <div className="mb-12">
             <h2 className="mb-6 text-2xl">Amostra do deck</h2>
-            <Lightbox images={collection.sampleImages} alt={`Amostra da colecao ${collection.name}`}>
+            <Lightbox
+              images={collection.sampleImages}
+              alt={`Amostra da colecao ${collection.name}`}
+            >
               {(openLightbox) => (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {collection.sampleImages.map((img, i) => (
@@ -111,11 +115,13 @@ function CollectionPage() {
                           width={600}
                           height={840}
                           className="size-full object-cover"
-                          style={{
-                            userSelect: "none",
-                            WebkitUserDrag: "none",
-                            pointerEvents: "none",
-                          } as React.CSSProperties}
+                          style={
+                            {
+                              userSelect: "none",
+                              WebkitUserDrag: "none",
+                              pointerEvents: "none",
+                            } as React.CSSProperties
+                          }
                           draggable={false}
                         />
                       </div>
@@ -184,8 +190,8 @@ function CollectionPage() {
           <div className="min-w-0">
             <h2 className="text-2xl sm:text-3xl">Quer esse deck?</h2>
             <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-              Fale com a gente pelo WhatsApp para encomendar este deck completo
-              ou tirar qualquer duvida.
+              Fale com a gente pelo WhatsApp para encomendar este deck completo ou tirar qualquer
+              duvida.
             </p>
           </div>
           <a

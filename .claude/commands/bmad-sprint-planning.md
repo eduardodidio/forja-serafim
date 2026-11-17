@@ -56,13 +56,16 @@ data de hoje. Estrutura sugerida:
 ## Ordem de execução
 
 ### Wave 0
+
 - [ ] <FXX>-T01 — <título> (status: planned)
-...
+      ...
 
 ### Wave 1
+
 ...
 
 ## Próximo passo
+
 `didio run-wave <FXX> <N>` (Wave <N> é a próxima pendente)
 ```
 

@@ -46,7 +46,7 @@ listed in each task file.
      the summary.
    - QA still needs to visit **all task files** of the feature to map
      ACs → tests — this remains valid. The summary only replaces
-     re-reading historical *implementation* details, not AC mapping.
+     re-reading historical _implementation_ details, not AC mapping.
 
 3. **Memory access:**
    - When the memory source for this run is `true` and
@@ -114,19 +114,24 @@ Steps:
 
 2. **Write a feature-level summary** at
    `tasks/features/<FXX>-*/retrospective.md` with:
+
    ```markdown
    # Retrospective — <FXX>
 
    ## What worked
+
    - ...
 
    ## What to avoid
+
    - ...
 
    ## Patterns to repeat
+
    - ...
 
    ## Propagated to learnings
+
    - memory/agent-learnings/architect.md — <what was appended>
    - memory/agent-learnings/developer.md — <what was appended>
    - ...
@@ -137,6 +142,7 @@ Steps:
    new section:
    ```markdown
    ## <FXX> — <YYYY-MM-DD>
+
    **What worked:** ...
    **What to avoid:** ...
    **Pattern to repeat:** ...
@@ -144,9 +150,9 @@ Steps:
    If `memory/agent-learnings/` doesn't exist, create it.
 
 3b. **Also** mirror the same section to second-brain via
-    `mcp__second-brain__memory_add({ project: "claude-didio-config", category: "agent-learnings", content: "[ROLE:<role>] <FXX> — <YYYY-MM-DD>\n\n<same body as above>" })`.
-    If the tool is not available, skip (local append is enough). This keeps
-    the second-brain index growing as retrospectives accumulate.
+`mcp__second-brain__memory_add({ project: "claude-didio-config", category: "agent-learnings", content: "[ROLE:<role>] <FXX> — <YYYY-MM-DD>\n\n<same body as above>" })`.
+If the tool is not available, skip (local append is enough). This keeps
+the second-brain index growing as retrospectives accumulate.
 
 4. **Be conservative** — only propagate lessons that generalize. A
    one-off bug is not a lesson. A class of bug that could recur IS a
