@@ -2,9 +2,28 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Brush, HeartHandshake, Printer, ShieldCheck } from "lucide-react";
 import { PageShell } from "@/components/page-shell";
 import { DISCLAIMER } from "@/components/site-footer";
+import { SITE } from "@/lib/seo";
 
 export const Route = createFileRoute("/sobre")({
   component: Sobre,
+  head: () => ({
+    meta: [
+      { title: `Sobre | ${SITE.NAME}` },
+      { name: "description", content: "Conheca a historia da Forja Serafim. Proxies full art artesanais para Magic: The Gathering, feitas com paixao e identidade visual unica." },
+      { property: "og:title", content: "Sobre a Forja Serafim" },
+      { property: "og:description", content: "Conheca a historia da Forja Serafim. Proxies full art artesanais para MTG." },
+      { property: "og:image", content: SITE.IMAGE },
+      { property: "og:url", content: `${SITE.URL}/sobre` },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Sobre a Forja Serafim" },
+      { name: "twitter:description", content: "Conheca a historia da Forja Serafim. Proxies full art artesanais para MTG." },
+      { name: "twitter:image", content: SITE.IMAGE },
+    ],
+    links: [
+      { rel: "canonical", href: `${SITE.URL}/sobre` },
+    ],
+  }),
 });
 
 const values = [

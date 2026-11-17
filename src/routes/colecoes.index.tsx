@@ -2,9 +2,28 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/page-shell";
 import { CollectionCard } from "@/components/card-tile";
 import { visibleCollections } from "@/lib/store-data";
+import { SITE } from "@/lib/seo";
 
 export const Route = createFileRoute("/colecoes/")({
   component: Colecoes,
+  head: () => ({
+    meta: [
+      { title: `Colecoes | ${SITE.NAME}` },
+      { name: "description", content: "Catalogo completo de decks proxy full art tematicos. Cada colecao com identidade visual propria e acabamento premium." },
+      { property: "og:title", content: "Colecoes" },
+      { property: "og:description", content: "Catalogo completo de decks proxy full art tematicos." },
+      { property: "og:image", content: SITE.IMAGE },
+      { property: "og:url", content: `${SITE.URL}/colecoes` },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Colecoes" },
+      { name: "twitter:description", content: "Catalogo completo de decks proxy full art tematicos." },
+      { name: "twitter:image", content: SITE.IMAGE },
+    ],
+    links: [
+      { rel: "canonical", href: `${SITE.URL}/colecoes` },
+    ],
+  }),
 });
 
 function Colecoes() {

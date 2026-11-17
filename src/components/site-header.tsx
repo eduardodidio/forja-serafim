@@ -18,8 +18,10 @@ export function SiteHeader() {
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    setIsDark(stored !== "light");
+    try {
+      const stored = localStorage.getItem("theme");
+      setIsDark(stored !== "light");
+    } catch {}
   }, []);
 
   function toggleTheme() {
@@ -27,11 +29,10 @@ export function SiteHeader() {
     setIsDark(next);
     if (next) {
       document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
     }
+    try { localStorage.setItem("theme", next ? "dark" : "light"); } catch {}
   }
 
   return (

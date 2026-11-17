@@ -1,4 +1,4 @@
-import { collections } from "./store-data";
+import { collections, WHATSAPP_URL } from "./store-data";
 
 const SITE_URL = "https://forjaserafim.com.br";
 const SITE_NAME = "Forja Serafim";
@@ -64,7 +64,7 @@ export function getOrganizationJsonLd() {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "sales",
-      url: "https://wa.me/5551984315964",
+      url: WHATSAPP_URL,
       availableLanguage: "Portuguese",
     },
     sameAs: [],

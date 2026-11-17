@@ -2,7 +2,7 @@ services:
   - type: web
     runtime: node
     name: forja-serafim
-    buildCommand: curl -fsSL https://bun.sh/install | bash && export PATH="$HOME/.bun/bin:$PATH" && bun install && bun add sharp && bun run build
+    buildCommand: curl -fsSL https://bun.sh/install | bash && export PATH="$HOME/.bun/bin:$PATH" && bun install && cd admin && bun install && cd .. && bun run build
     startCommand: export PATH="$HOME/.bun/bin:$PATH" && bun admin/src/server.ts
     plan: free
     envVars:

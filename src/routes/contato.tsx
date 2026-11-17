@@ -3,9 +3,28 @@ import { Instagram } from "lucide-react";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
 import { whatsappLink } from "@/lib/store-data";
+import { SITE } from "@/lib/seo";
 
 export const Route = createFileRoute("/contato")({
   component: Contato,
+  head: () => ({
+    meta: [
+      { title: `Contato | ${SITE.NAME}` },
+      { name: "description", content: "Entre em contato com a Forja Serafim pelo WhatsApp ou Instagram. Respondemos em ate 24 horas." },
+      { property: "og:title", content: "Contato" },
+      { property: "og:description", content: "Entre em contato com a Forja Serafim pelo WhatsApp ou Instagram." },
+      { property: "og:image", content: SITE.IMAGE },
+      { property: "og:url", content: `${SITE.URL}/contato` },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Contato" },
+      { name: "twitter:description", content: "Entre em contato com a Forja Serafim pelo WhatsApp ou Instagram." },
+      { name: "twitter:image", content: SITE.IMAGE },
+    ],
+    links: [
+      { rel: "canonical", href: `${SITE.URL}/contato` },
+    ],
+  }),
 });
 
 function Contato() {
@@ -34,7 +53,9 @@ function Contato() {
             </div>
           </a>
           <a
-            href="#"
+            href="https://www.instagram.com/forjaserafim"
+            target="_blank"
+            rel="noopener noreferrer"
             className="surface-card p-6 transition-colors hover:border-gold/60"
           >
             <Instagram className="size-5 text-gold" />

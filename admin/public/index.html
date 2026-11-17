@@ -686,6 +686,7 @@ function updateCounters() {
 // --- Settings ---
 async function loadSettings() {
   const res = await fetch(`${API}/api/settings`);
+  if (!res.ok) { toast('Erro ao carregar configuracoes.', 'error'); return; }
   settings = await res.json();
   const input = document.getElementById('settings-whatsapp');
   input.value = settings.whatsappUrl || '';
@@ -722,6 +723,7 @@ async function saveSettings() {
 // --- Collections ---
 async function loadCollections() {
   const res = await fetch(`${API}/api/collections`);
+  if (!res.ok) { toast('Erro ao carregar colecoes.', 'error'); return; }
   collections = await res.json();
   renderCollections();
   updateCounters();
@@ -902,7 +904,7 @@ function openAddCollection() {
 
       <div class="flex flex-col sm:flex-row justify-end gap-3 pt-3 border-t border-gray-800/60">
         <button onclick="closeModal()" class="btn btn-outline">Cancelar</button>
-        <button onclick="addCollection()" class="btn btn-gold">
+        <button id="btn-add-collection" onclick="addCollection()" class="btn btn-gold">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           Adicionar
         </button>
@@ -995,6 +997,10 @@ async function addCollection() {
   if (!name || !description || !cardCount) { toast('Preencha nome, descricao e quantidade.', 'error'); return; }
   if (!coverFile) { toast('A imagem de capa e obrigatoria!', 'error'); return; }
 
+  const btn = document.getElementById('btn-add-collection');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Adicionando...'; }
+
+  try {
   const res = await fetch(`${API}/api/collections`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1008,7 +1014,8 @@ async function addCollection() {
   // Upload cover
   const fd = new FormData();
   fd.append('file', coverFile);
-  await fetch(`${API}/api/collections/${newCol.slug}/cover`, { method: 'POST', body: fd });
+  const coverRes = await fetch(`${API}/api/collections/${newCol.slug}/cover`, { method: 'POST', body: fd });
+  if (!coverRes.ok) { toast('Erro ao enviar capa.', 'error'); }
 
   // Upload sample images if any
   if (createSampleFiles.length > 0) {
@@ -1031,6 +1038,9 @@ async function addCollection() {
   closeModal();
   toast(`Colecao "${name}" adicionada com capa!`);
   await loadCollections();
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Adicionar'; }
+  }
 }
 
 function openEditCollection(slug) {
@@ -1081,14 +1091,14 @@ function openEditCollection(slug) {
           <span class="text-xs text-gray-400">Imagem de capa</span>
           <label class="text-xs text-gold cursor-pointer hover:underline" id="upload-cover-${c.slug}">
             Trocar capa
-            <input type="file" accept="image/*" class="hidden" onchange="uploadCover('${slug}', this)" />
+            <input type="file" accept="image/*" class="hidden" onchange="uploadCover('${esc(slug)}', this)" />
           </label>
         </div>
         <div class="flex items-center justify-between">
           <span class="text-xs text-gray-400">Manual PDF</span>
           <label class="text-xs cursor-pointer hover:underline ${c.manualUrl ? 'text-gold' : 'text-gray-500'}" id="upload-manual-${c.slug}">
             ${c.manualUrl ? 'Substituir PDF' : 'Enviar PDF'}
-            <input type="file" accept=".pdf" class="hidden" onchange="uploadManual('${slug}', this)" />
+            <input type="file" accept=".pdf" class="hidden" onchange="uploadManual('${esc(slug)}', this)" />
           </label>
         </div>
       </div>
@@ -1116,13 +1126,13 @@ function openEditCollection(slug) {
               <span class="absolute top-1.5 left-1.5 z-10 bg-black/70 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${i + 1}</span>
               <img src="${img}" class="w-full object-cover" style="aspect-ratio: 2/3;" onerror="this.style.display='none'" />
               <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onclick="removeImage('${slug}', '${img.split('/').pop()}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+                <button onclick="removeImage('${esc(slug)}', '${esc(img.split('/').pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
-                ${i > 0 ? `<button onclick="moveImage('${slug}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
+                ${i > 0 ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
                 </button>` : ''}
-                ${i < c.sampleImages.length - 1 ? `<button onclick="moveImage('${slug}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
+                ${i < c.sampleImages.length - 1 ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>` : ''}
               </div>
@@ -1135,7 +1145,7 @@ function openEditCollection(slug) {
         <label class="upload-zone block cursor-pointer text-center ${c.sampleImages.length >= 6 ? 'opacity-50 pointer-events-none' : ''}" onclick="document.getElementById('f-edit-samples').click()">
           <svg class="w-6 h-6 mx-auto text-gray-600 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
           <p class="text-xs text-gray-500">Adicionar imagens (max ${6 - c.sampleImages.length})</p>
-          <input id="f-edit-samples" type="file" accept="image/*" multiple class="hidden" onchange="uploadEditSamples('${slug}', this)" />
+          <input id="f-edit-samples" type="file" accept="image/*" multiple class="hidden" onchange="uploadEditSamples('${esc(slug)}', this)" />
         </label>
       ` : ''}
 
@@ -1144,7 +1154,7 @@ function openEditCollection(slug) {
       </div>
       <div class="rounded-xl border border-red-900/40 bg-red-950/20 p-4">
         <p class="text-xs text-red-400/80 mb-3">Acoes irreversiveis para esta colecao.</p>
-        <button onclick="closeModal(); confirmDeleteCollection('${slug}')" class="btn btn-danger text-xs">
+        <button onclick="closeModal(); confirmDeleteCollection('${esc(slug)}')" class="btn btn-danger text-xs">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
           Excluir colecao permanentemente
         </button>
@@ -1152,7 +1162,7 @@ function openEditCollection(slug) {
 
       <div class="flex flex-col sm:flex-row justify-end gap-3 pt-3 border-t border-gray-800/60">
         <button onclick="closeModal()" class="btn btn-outline">Cancelar</button>
-        <button onclick="saveCollection('${slug}')" class="btn btn-gold">
+        <button id="btn-save-collection" onclick="saveCollection('${esc(slug)}')" class="btn btn-gold">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
           Salvar
         </button>
@@ -1240,31 +1250,37 @@ async function uploadEditSamples(slug, input) {
     return;
   }
 
+  input.disabled = true;
   toast(`Processando ${files.length} imagens...`);
 
-  const fd = new FormData();
-  for (const f of files) fd.append('files', f);
+  try {
+    const fd = new FormData();
+    for (const f of files) fd.append('files', f);
 
-  const res = await fetch(`${API}/api/collections/${slug}/images`, { method: 'POST', body: fd });
+    const res = await fetch(`${API}/api/collections/${slug}/images`, { method: 'POST', body: fd });
 
-  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+    if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
 
-  const { processed } = await res.json();
+    const { processed } = await res.json();
 
-  // Add processed images as samples
-  if (c) {
-    const allSamples = [...new Set([...c.sampleImages, ...processed])];
-    await fetch(`${API}/api/collections/${slug}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sampleImages: allSamples }),
-    });
+    // Add processed images as samples
+    if (c) {
+      const allSamples = [...new Set([...c.sampleImages, ...processed])];
+      const updateRes = await fetch(`${API}/api/collections/${slug}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sampleImages: allSamples }),
+      });
+      if (!updateRes.ok) { toast('Erro ao atualizar imagens da colecao.', 'error'); }
+    }
+
+    toast(`${processed.length} imagens adicionadas!`);
+    input.value = '';
+    await loadCollections();
+    updateEditSamplesGrid(slug);
+  } finally {
+    input.disabled = false;
   }
-
-  toast(`${processed.length} imagens adicionadas!`);
-  input.value = '';
-  await loadCollections();
-  updateEditSamplesGrid(slug);
 }
 
 function updateEditSamplesGrid(slug) {
@@ -1282,13 +1298,13 @@ function updateEditSamplesGrid(slug) {
         <span class="absolute top-1.5 left-1.5 z-10 bg-black/70 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${i + 1}</span>
         <img src="${img}" class="w-full object-cover" style="aspect-ratio: 2/3;" onerror="this.style.display='none'" />
         <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button onclick="removeImage('${slug}', '${img.split('/').pop()}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+          <button onclick="removeImage('${esc(slug)}', '${esc(img.split('/').pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
-          ${i > 0 ? `<button onclick="moveImage('${slug}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
+          ${i > 0 ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
           </button>` : ''}
-          ${i < c.sampleImages.length - 1 ? `<button onclick="moveImage('${slug}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
+          ${i < c.sampleImages.length - 1 ? `<button onclick="moveImage('${esc(slug)}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>` : ''}
         </div>
@@ -1316,17 +1332,24 @@ async function saveCollection(slug) {
   const deckcheckUrl = document.getElementById('f-deckcheck').value.trim();
   const moxfieldUrl = document.getElementById('f-moxfield').value.trim();
 
-  const res = await fetch(`${API}/api/collections/${slug}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
-  });
+  const btn = document.getElementById('btn-save-collection');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Salvando...'; }
 
-  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+  try {
+    const res = await fetch(`${API}/api/collections/${slug}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
+    });
 
-  closeModal();
-  toast('Colecao atualizada!');
-  await loadCollections();
+    if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+
+    closeModal();
+    toast('Colecao atualizada!');
+    await loadCollections();
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Salvar'; }
+  }
 }
 
 async function toggleCollectionVisibility(slug) {
@@ -1377,7 +1400,8 @@ function confirmDeleteCollection(slug) {
 }
 
 async function deleteCollection(slug) {
-  await fetch(`${API}/api/collections/${slug}`, { method: 'DELETE' });
+  const res = await fetch(`${API}/api/collections/${slug}`, { method: 'DELETE' });
+  if (!res.ok) { toast('Erro ao excluir colecao.', 'error'); return; }
   toast('Colecao removida.');
   await loadCollections();
 }
@@ -1386,43 +1410,54 @@ async function uploadCover(slug, input) {
   const file = input.files[0];
   if (!file) return;
 
+  input.disabled = true;
   toast('Enviando capa...');
 
-  const fd = new FormData();
-  fd.append('file', file);
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
 
-  const res = await fetch(`${API}/api/collections/${slug}/cover`, { method: 'POST', body: fd });
+    const res = await fetch(`${API}/api/collections/${slug}/cover`, { method: 'POST', body: fd });
 
-  if (!res.ok) { toast('Erro ao enviar capa.', 'error'); return; }
+    if (!res.ok) { toast('Erro ao enviar capa.', 'error'); return; }
 
-  toast('Capa atualizada!');
-  input.value = '';
-  await loadCollections();
-  refreshEditModal(slug);
+    toast('Capa atualizada!');
+    input.value = '';
+    await loadCollections();
+    refreshEditModal(slug);
+  } finally {
+    input.disabled = false;
+  }
 }
 
 async function uploadManual(slug, input) {
   const file = input.files[0];
   if (!file) return;
 
+  input.disabled = true;
   toast('Enviando PDF...');
 
-  const fd = new FormData();
-  fd.append('file', file);
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
 
-  const res = await fetch(`${API}/api/collections/${slug}/manual`, { method: 'POST', body: fd });
+    const res = await fetch(`${API}/api/collections/${slug}/manual`, { method: 'POST', body: fd });
 
-  if (!res.ok) { toast('Erro ao enviar manual.', 'error'); return; }
+    if (!res.ok) { toast('Erro ao enviar manual.', 'error'); return; }
 
-  toast('Manual enviado!');
-  input.value = '';
-  await loadCollections();
-  refreshEditModal(slug);
+    toast('Manual enviado!');
+    input.value = '';
+    await loadCollections();
+    refreshEditModal(slug);
+  } finally {
+    input.disabled = false;
+  }
 }
 
 // --- Testimonials ---
 async function loadTestimonials() {
   const res = await fetch(`${API}/api/testimonials`);
+  if (!res.ok) { toast('Erro ao carregar depoimentos.', 'error'); return; }
   testimonials = await res.json();
   renderTestimonials();
   updateCounters();
@@ -1599,7 +1634,8 @@ function confirmDeleteTestimonial(idx) {
 }
 
 async function deleteTestimonial(idx) {
-  await fetch(`${API}/api/testimonials/${idx}`, { method: 'DELETE' });
+  const res = await fetch(`${API}/api/testimonials/${idx}`, { method: 'DELETE' });
+  if (!res.ok) { toast('Erro ao remover depoimento.', 'error'); return; }
   toast('Depoimento removido.');
   await loadTestimonials();
 }
@@ -1746,19 +1782,6 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
-
-// --- Double-click protection helper ---
-function withGuard(btn, asyncFn) {
-  return async function(...args) {
-    if (btn.disabled) return;
-    btn.disabled = true;
-    try {
-      await asyncFn(...args);
-    } finally {
-      btn.disabled = false;
-    }
-  };
-}
 
 // --- Drag-and-drop for upload zones ---
 document.addEventListener('dragover', (e) => {

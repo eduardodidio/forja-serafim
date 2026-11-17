@@ -78,13 +78,10 @@ export function CollectionCard({ collection }: { collection: Collection }) {
           <div className="absolute bottom-2 right-4 flex gap-1.5 pointer-events-none">
             {images.map((_, i) => (
               <span
-                key={i}
-                className="block size-1.5 rounded-full transition-colors duration-300"
-                style={{
-                  backgroundColor: i === current
-                    ? "oklch(0.75 0.09 82)"
-                    : "oklch(0.75 0.09 82 / 0.3)",
-                }}
+                key={`${collection.slug}-dot-${i}`}
+                className={`block size-1.5 rounded-full transition-colors duration-300 ${
+                  i === current ? "bg-gold" : "bg-gold/30"
+                }`}
               />
             ))}
           </div>

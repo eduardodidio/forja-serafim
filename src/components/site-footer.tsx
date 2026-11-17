@@ -27,7 +27,9 @@ export function SiteFooter() {
               <WhatsAppIcon className="size-4 text-[#25D366]" /> WhatsApp
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/forjaserafim"
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="Instagram"
               className="inline-flex size-10 items-center justify-center rounded-full border border-border transition-colors hover:border-gold/60 hover:text-gold"
             >

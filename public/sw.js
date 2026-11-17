@@ -1,5 +1,5 @@
-const CACHE_NAME = "serafim-v1";
-const STATIC_ASSETS = ["/", "/favicon.svg", "/favicon.png"];
+const CACHE_NAME = "serafim-v2";
+const STATIC_ASSETS = ["/", "/favicon.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
