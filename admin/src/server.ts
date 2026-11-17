@@ -596,10 +596,35 @@ async function handleRequest(req: Request): Promise<Response> {
         steps.push("Dados ja estavam salvos.");
       }
 
-      // 4. Push (always push, in case there are unpushed commits)
-      const ahead = execSync("git rev-list --count @{u}..HEAD", { ...opts, stdio: "pipe" }).trim();
-      if (ahead !== "0") {
-        // Push using token at runtime (never persist in git config)
+      // 4. Push to GitHub
+      // Ensure we're on main branch (Render clones may be in detached HEAD)
+      try {
+        const branch = execSync("git rev-parse --abbrev-ref HEAD", {
+          ...opts,
+          stdio: "pipe",
+        }).trim();
+        if (branch === "HEAD") {
+          execSync("git checkout main", { ...opts, stdio: "pipe" });
+          steps.push("Checkout main (estava em detached HEAD).");
+        }
+      } catch {
+        /* ignore — already on a branch */
+      }
+
+      // Check if there are commits to push (handle missing upstream gracefully)
+      let shouldPush = false;
+      try {
+        const ahead = execSync("git rev-list --count @{u}..HEAD", {
+          ...opts,
+          stdio: "pipe",
+        }).trim();
+        shouldPush = ahead !== "0";
+      } catch {
+        // No upstream tracking — always push
+        shouldPush = true;
+      }
+
+      if (shouldPush) {
         if (process.env.GITHUB_TOKEN) {
           const remoteUrl = execSync("git remote get-url origin", {
             ...opts,
