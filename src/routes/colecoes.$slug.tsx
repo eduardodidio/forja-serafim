@@ -99,7 +99,7 @@ function CollectionPage() {
               {(openLightbox) => (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {collection.sampleImages.map((img, i) => (
-                    <Card3DTilt key={i} foil gold className="cursor-pointer overflow-hidden bg-card">
+                    <Card3DTilt key={i} className="cursor-pointer overflow-hidden bg-card">
                       <div
                         onClick={() => openLightbox(i)}
                         onContextMenu={(e) => e.preventDefault()}

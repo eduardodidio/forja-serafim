@@ -98,7 +98,7 @@ export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
             onContextMenu={(e) => e.preventDefault()}
             style={{ animation: "fade-in 0.2s ease-out" }}
           >
-            <Card3DTilt foil glowBorder tiltMaxAngle={18} scale={1.08} className="inline-block">
+            <Card3DTilt tiltMaxAngle={18} scale={1.08} className="inline-block">
               <img
                 src={images[index]}
                 alt={`${alt} ${index + 1}`}
