@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, mkdirSync, copyFileSync } from "fs";
+import { readFileSync, existsSync, mkdirSync, copyFileSync, statSync } from "fs";
 import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
@@ -168,7 +168,7 @@ async function handleRequest(req: Request): Promise<Response> {
   }
 
   // Serve admin UI
-  if (path === "/" || path === "/admin") {
+  if (path === "/admin") {
     return new Response(null, { status: 302, headers: { Location: "/admin/" } });
   }
 
@@ -452,8 +452,12 @@ async function handleRequest(req: Request): Promise<Response> {
     }
   }
 
-  // --- Serve static files from project public/ ---
+  // --- Serve static files ---
   const MIME_TYPES: Record<string, string> = {
+    ".html": "text/html",
+    ".css": "text/css",
+    ".js": "application/javascript",
+    ".json": "application/json",
     ".jpg": "image/jpeg",
     ".jpeg": "image/jpeg",
     ".png": "image/png",
@@ -462,14 +466,33 @@ async function handleRequest(req: Request): Promise<Response> {
     ".svg": "image/svg+xml",
     ".pdf": "application/pdf",
     ".ico": "image/x-icon",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
+    ".xml": "application/xml",
+    ".txt": "text/plain",
   };
 
-  const staticFile = join(PROJECT_ROOT, "public", path.slice(1));
-  if (existsSync(staticFile)) {
-    const ext = extname(staticFile).toLowerCase();
-    const mime = MIME_TYPES[ext] ?? "application/octet-stream";
-    const file = readFileSync(staticFile);
-    return new Response(file, { headers: { "Content-Type": mime } });
+  // Try dist/ first (built site), then public/ (raw assets)
+  const DIST_DIR = join(PROJECT_ROOT, "dist");
+  for (const baseDir of [DIST_DIR, join(PROJECT_ROOT, "public")]) {
+    const filePath = join(baseDir, path.slice(1));
+    if (existsSync(filePath) && !filePath.includes("..") && statSync(filePath).isFile()) {
+      const ext = extname(filePath).toLowerCase();
+      const mime = MIME_TYPES[ext] ?? "application/octet-stream";
+      const file = readFileSync(filePath);
+      const headers: Record<string, string> = { "Content-Type": mime };
+      if ([".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".woff", ".woff2"].includes(ext)) {
+        headers["Cache-Control"] = "public, max-age=31536000, immutable";
+      }
+      return new Response(file, { headers });
+    }
+  }
+
+  // SPA fallback — serve index.html for non-API/non-admin routes
+  const indexHtml = join(DIST_DIR, "index.html");
+  if (!path.startsWith("/api/") && !path.startsWith("/admin") && existsSync(indexHtml)) {
+    const file = readFileSync(indexHtml);
+    return new Response(file, { headers: { "Content-Type": "text/html" } });
   }
 
   return new Response("Not found", { status: 404 });
