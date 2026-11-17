@@ -1,6 +1,6 @@
 # Feature F05 — Site Visual Polish
 
-**Status:** planned
+**Status:** done
 **Owner:** @eduardodidio
 **PRD:** (inline — small feature)
 

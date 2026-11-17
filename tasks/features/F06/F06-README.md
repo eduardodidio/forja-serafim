@@ -1,6 +1,6 @@
 # Feature F06 — Admin UX Enhancements
 
-**Status:** planned
+**Status:** done
 **Owner:** @eduardodidio
 
 ## Goal

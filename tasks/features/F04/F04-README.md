@@ -1,6 +1,6 @@
 # Feature F04 — Rebrand & Migration to Forja Serafim
 
-**Status:** planned
+**Status:** done
 **Owner:** @eduardodidio
 
 ## Goal

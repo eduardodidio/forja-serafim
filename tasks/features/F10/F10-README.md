@@ -1,6 +1,6 @@
 # Feature F10 — Re-watermark imagens com "Forja Serafim"
 
-**Status:** planned
+**Status:** done
 **Owner:** @eduardodidio
 
 ## Goal

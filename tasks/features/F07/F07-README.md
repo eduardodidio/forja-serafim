@@ -1,6 +1,6 @@
 # Feature F07 — Admin: Gestao completa de sample cards
 
-**Status:** planned
+**Status:** done
 **Owner:** @eduardodidio
 
 ## Goal

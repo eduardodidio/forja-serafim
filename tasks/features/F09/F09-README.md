@@ -1,6 +1,6 @@
 # Feature F09 — Light/Dark theme toggle
 
-**Status:** planned
+**Status:** done
 **Owner:** @eduardodidio
 
 ## Goal

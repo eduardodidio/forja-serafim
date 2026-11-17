@@ -1,6 +1,6 @@
 # Feature F08 — Admin: UX premium nos formularios
 
-**Status:** planned
+**Status:** done
 **Owner:** @eduardodidio
 
 ## Goal

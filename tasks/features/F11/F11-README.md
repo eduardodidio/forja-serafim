@@ -1,6 +1,6 @@
 # Feature F11 — Animacao 3D holografica nas cartas de amostra
 
-**Status:** planned
+**Status:** done
 **Owner:** @eduardodidio
 
 ## Goal
