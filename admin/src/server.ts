@@ -498,14 +498,21 @@ async function handleRequest(req: Request): Promise<Response> {
       // 5. Trigger Render deploy
       const deployHook = process.env.RENDER_DEPLOY_HOOK;
       if (deployHook) {
-        const hookRes = await fetch(deployHook, { method: "POST" });
-        if (hookRes.ok) {
-          steps.push("Deploy disparado no Render! O site sera atualizado em alguns minutos.");
-        } else {
-          steps.push("Aviso: nao foi possivel disparar o deploy no Render.");
+        try {
+          const hookRes = await fetch(deployHook, { method: "POST" });
+          if (hookRes.ok) {
+            steps.push("Deploy disparado no Render! O site sera atualizado em alguns minutos.");
+          } else {
+            const hookBody = await hookRes.text().catch(() => "");
+            console.error(`Render deploy hook failed: ${hookRes.status} ${hookRes.statusText} — ${hookBody}`);
+            steps.push(`Aviso: deploy hook retornou status ${hookRes.status}. Verifique se o RENDER_DEPLOY_HOOK esta correto.`);
+          }
+        } catch (hookErr) {
+          console.error("Render deploy hook error:", hookErr);
+          steps.push("Aviso: erro de rede ao disparar deploy. Verifique o RENDER_DEPLOY_HOOK.");
         }
       } else {
-        steps.push("Aviso: RENDER_DEPLOY_HOOK nao configurado. Deploy manual necessario.");
+        steps.push("Aviso: RENDER_DEPLOY_HOOK nao configurado. Configure no Render para deploys automaticos.");
       }
 
       return json({ success: true, steps });
