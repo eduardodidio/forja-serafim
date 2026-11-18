@@ -700,31 +700,7 @@ async function handleRequest(req: Request): Promise<Response> {
         steps.push("Codigo ja estava no GitHub.");
       }
 
-      // 5. Trigger Render deploy
-      const deployHook = process.env.RENDER_DEPLOY_HOOK;
-      if (deployHook) {
-        try {
-          const hookRes = await fetch(deployHook, { method: "POST" });
-          if (hookRes.ok) {
-            steps.push("Deploy disparado no Render! O site sera atualizado em alguns minutos.");
-          } else {
-            const hookBody = await hookRes.text().catch(() => "");
-            console.error(
-              `Render deploy hook failed: ${hookRes.status} ${hookRes.statusText} — ${hookBody}`,
-            );
-            steps.push(
-              `Aviso: deploy hook retornou status ${hookRes.status}. Verifique se o RENDER_DEPLOY_HOOK esta correto.`,
-            );
-          }
-        } catch (hookErr) {
-          console.error("Render deploy hook error:", hookErr);
-          steps.push("Aviso: erro de rede ao disparar deploy. Verifique o RENDER_DEPLOY_HOOK.");
-        }
-      } else {
-        steps.push(
-          "Aviso: RENDER_DEPLOY_HOOK nao configurado. Configure no Render para deploys automaticos.",
-        );
-      }
+      // Deploy is handled automatically by Render's auto-deploy on push
 
       return json({ success: true, steps }, 200, req);
     } catch (err: unknown) {
@@ -759,9 +735,13 @@ async function handleRequest(req: Request): Promise<Response> {
     ".txt": "text/plain",
   };
 
-  // Try dist/ first (built site), then public/ (raw assets)
+  // Try public/ first for mutable assets (covers, decks, manuals),
+  // then dist/ for built site, then public/ for remaining static assets
   const DIST_DIR = join(PROJECT_ROOT, "dist");
-  for (const baseDir of [DIST_DIR, join(PROJECT_ROOT, "public")]) {
+  const PUBLIC_DIR = join(PROJECT_ROOT, "public");
+  const isMutableAsset = path.startsWith("/images/covers/") || path.startsWith("/images/decks/") || path.startsWith("/manuals/");
+  const searchDirs = isMutableAsset ? [PUBLIC_DIR, DIST_DIR] : [DIST_DIR, PUBLIC_DIR];
+  for (const baseDir of searchDirs) {
     const filePath = join(baseDir, path.slice(1));
     if (existsSync(filePath) && !filePath.includes("..") && statSync(filePath).isFile()) {
       const ext = extname(filePath).toLowerCase();
@@ -769,7 +749,9 @@ async function handleRequest(req: Request): Promise<Response> {
       const file = readFileSync(filePath);
       const headers: Record<string, string> = { "Content-Type": mime };
       if ([".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".woff", ".woff2"].includes(ext)) {
-        headers["Cache-Control"] = "public, max-age=31536000, immutable";
+        headers["Cache-Control"] = isMutableAsset
+          ? "public, max-age=0, must-revalidate"
+          : "public, max-age=31536000, immutable";
       }
       return new Response(file, { headers });
     }
