@@ -65,7 +65,14 @@
     "image": "/images/covers/batman.jpg",
     "description": "Deck temático Batman",
     "cardCount": 100,
-    "sampleImages": [],
+    "sampleImages": [
+      "/images/decks/batman/a2-batman-vigia-de-gotham-comandante.jpg",
+      "/images/decks/batman/armadura-justice-buster.jpg",
+      "/images/decks/batman/asa-noturna-lider-da-batfamilia-ilustracao.jpg",
+      "/images/decks/batman/batarangue-sombrio-na-forja-gotica.jpg",
+      "/images/decks/batman/batwoman-em-acao-sobre-gotham.jpg",
+      "/images/decks/batman/holofote-do-bat-sinal-em-gotham.jpg"
+    ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/bHOv7T7mTYZf",
     "manualUrl": "",
