@@ -1457,7 +1457,7 @@
             </label>
           </div>
           <div class="rounded-lg overflow-hidden border border-gray-700/50 h-32 bg-deeper img-thumb" id="cover-preview-${c.slug}">
-            <img src="${c.image}${c.image.includes('?') ? '' : '?t=' + Date.now()}" alt="Capa" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+            <img src="${c.image}" alt="Capa" class="w-full h-full object-cover" onerror="this.style.display='none'" />
           </div>
         </div>
         <div class="flex items-center justify-between">
@@ -1859,20 +1859,15 @@
 
           toast("Capa atualizada!");
           input.value = "";
-          const cacheBust = `?t=${Date.now()}`;
           await loadCollections();
-          // Cache-bust: force browser to fetch the new image
+          // Refresh the cover preview inside the edit modal
           const col = collections.find((c) => c.slug === slug);
           if (col) {
-            const base = col.image.split("?")[0];
-            col.image = `${base}${cacheBust}`;
-            renderCollections();
-          }
-          // Update preview inside the edit modal directly
-          const preview = document.getElementById(`cover-preview-${slug}`);
-          if (preview) {
-            const img = preview.querySelector("img");
-            if (img) img.src = `/images/covers/${slug}.jpg${cacheBust}`;
+            const preview = document.getElementById(`cover-preview-${col.slug}`);
+            if (preview) {
+              const img = preview.querySelector("img");
+              if (img) { img.style.display = ""; img.src = col.image; }
+            }
           }
         } finally {
           input.disabled = false;

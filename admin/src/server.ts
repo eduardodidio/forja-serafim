@@ -365,7 +365,16 @@ async function handleRequest(req: Request): Promise<Response> {
     const dest = join(COVERS_DIR, `${slug}.jpg`);
     const buffer = Buffer.from(await file.arrayBuffer());
     await Bun.write(dest, buffer);
-    return json({ path: `/images/covers/${slug}.jpg` }, 200, req);
+
+    // Update collections.json with cache-bust so every load gets the new image
+    const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+    const col = collections.find((c) => c.slug === slug);
+    if (col) {
+      col.image = `/images/covers/${slug}.jpg?v=${Date.now()}`;
+      writeJson(COLLECTIONS_JSON, collections);
+    }
+
+    return json({ path: col?.image ?? `/images/covers/${slug}.jpg` }, 200, req);
   }
 
   // Upload manual PDF
