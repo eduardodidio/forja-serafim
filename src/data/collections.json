@@ -2,7 +2,7 @@
   {
     "slug": "castlevania",
     "name": "Castlevania",
-    "image": "/images/covers/castlevania.jpg?v=1795007903169",
+    "image": "/images/covers/castlevania.jpg",
     "description": "Castelo eterno, cacadores e a noite sem fim sob a lua de sangue.",
     "cardCount": 119,
     "sampleImages": [
@@ -21,7 +21,7 @@
   {
     "slug": "cavaleiros-do-zodiaco",
     "name": "Cavaleiros do Zodiaco",
-    "image": "/images/covers/cavaleiros-do-zodiaco.jpg?v=1795008004938",
+    "image": "/images/covers/cavaleiros-do-zodiaco.jpg",
     "description": "Armaduras douradas, cosmo ardente e as doze casas em ouro puro.",
     "cardCount": 147,
     "sampleImages": [
