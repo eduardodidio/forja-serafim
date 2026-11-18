@@ -118,5 +118,18 @@
     "manualUrl": "",
     "videoUrl": "",
     "hidden": false
+  },
+  {
+    "slug": "paraiso-celestial-mas-com-mais-cores",
+    "name": "Paraíso Celestial, mas com mais cores",
+    "image": "/images/covers/paraiso-celestial-mas-com-mais-cores.jpg",
+    "description": "Deck temático de Anjos das 5 cores no tema de Diablo",
+    "cardCount": 100,
+    "sampleImages": [],
+    "moxfieldUrl": "",
+    "deckcheckUrl": "https://deckcheck.co/app/builder/7yEOcNIf5dVT",
+    "manualUrl": "",
+    "videoUrl": "",
+    "hidden": false
   }
 ]
