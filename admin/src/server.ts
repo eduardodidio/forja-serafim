@@ -13,7 +13,7 @@ import {
   PROJECT_ROOT,
 } from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
-import { processImage } from "./lib/image-processor.js";
+import { processImage, processCoverImage } from "./lib/image-processor.js";
 import { gitPersist, getPersistState, getLastError } from "./lib/git-persist.js";
 import crypto from "crypto";
 
@@ -21,6 +21,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ADMIN_HTML = join(__dirname, "..", "public", "index.html");
 const LOGIN_HTML = join(__dirname, "..", "public", "login.html");
 const PORT = parseInt(process.env.PORT || "3001", 10);
+const PUBLIC_DIR = join(PROJECT_ROOT, "public");
 
 const ALLOWED_ORIGINS = new Set([
   "http://localhost:3001",
@@ -260,7 +261,23 @@ async function handleRequest(req: Request): Promise<Response> {
   // --- Collections API ---
 
   if (path === "/api/collections" && method === "GET") {
-    return json(readJson<Collection[]>(COLLECTIONS_JSON), 200, req);
+    const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+    for (const col of collections) {
+      const coverPath = join(PUBLIC_DIR, col.image.replace(/^\//, ""));
+      if (existsSync(coverPath)) {
+        const mtime = statSync(coverPath).mtimeMs;
+        col.image = `${col.image.split("?")[0]}?v=${Math.floor(mtime)}`;
+      }
+      col.sampleImages = col.sampleImages.map((img) => {
+        const imgPath = join(PUBLIC_DIR, img.replace(/^\//, ""));
+        if (existsSync(imgPath)) {
+          const mtime = statSync(imgPath).mtimeMs;
+          return `${img.split("?")[0]}?v=${Math.floor(mtime)}`;
+        }
+        return img;
+      });
+    }
+    return json(collections, 200, req);
   }
 
   if (path === "/api/collections" && method === "POST") {
@@ -371,20 +388,37 @@ async function handleRequest(req: Request): Promise<Response> {
     }
 
     if (!existsSync(COVERS_DIR)) mkdirSync(COVERS_DIR, { recursive: true });
-    const dest = join(COVERS_DIR, `${slug}.jpg`);
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await Bun.write(dest, buffer);
 
-    // Update collections.json with cache-bust so every load gets the new image
+    // Write to temp file first, then process through sharp
+    const tmpDir = join(COVERS_DIR, ".tmp-upload");
+    if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
+    const tmpPath = join(tmpDir, `${slug}-tmp${extname(file.name) || '.jpg'}`);
+    const buffer = Buffer.from(await file.arrayBuffer());
+    await Bun.write(tmpPath, buffer);
+
+    const dest = join(COVERS_DIR, `${slug}.jpg`);
+    try {
+      await processCoverImage(tmpPath, dest);
+    } finally {
+      try { unlinkSync(tmpPath); } catch {}
+      try {
+        const { rmdirSync } = await import("fs");
+        rmdirSync(tmpDir);
+      } catch {}
+    }
+
+    // Update collections.json with CLEAN path (no cache-bust in persisted data)
     const collections = readJson<Collection[]>(COLLECTIONS_JSON);
     const col = collections.find((c) => c.slug === slug);
     if (col) {
-      col.image = `/images/covers/${slug}.jpg?v=${Date.now()}`;
+      col.image = `/images/covers/${slug}.jpg`;
       writeJson(COLLECTIONS_JSON, collections);
     }
 
     gitPersist(`Atualizar capa: ${slug}`);
-    return json({ path: col?.image ?? `/images/covers/${slug}.jpg` }, 200, req);
+    // Response includes cache-bust for immediate UI use
+    const mtime = statSync(dest).mtimeMs;
+    return json({ path: `/images/covers/${slug}.jpg?v=${Math.floor(mtime)}` }, 200, req);
   }
 
   // Upload manual PDF
@@ -708,7 +742,6 @@ async function handleRequest(req: Request): Promise<Response> {
   // Try public/ first for mutable assets (covers, decks, manuals),
   // then dist/ for built site, then public/ for remaining static assets
   const DIST_DIR = join(PROJECT_ROOT, "dist");
-  const PUBLIC_DIR = join(PROJECT_ROOT, "public");
   const isMutableAsset = path.startsWith("/images/covers/") || path.startsWith("/images/decks/") || path.startsWith("/manuals/");
   const searchDirs = isMutableAsset ? [PUBLIC_DIR, DIST_DIR] : [DIST_DIR, PUBLIC_DIR];
   for (const baseDir of searchDirs) {
@@ -747,6 +780,25 @@ try {
   }
 } catch {
   /* git config optional */
+}
+
+// One-time cleanup: strip query strings from persisted image paths
+{
+  const cols = readJson<Collection[]>(COLLECTIONS_JSON);
+  let dirty = false;
+  for (const col of cols) {
+    const cleanImage = col.image.split("?")[0];
+    if (cleanImage !== col.image) { col.image = cleanImage; dirty = true; }
+    const cleanSamples = col.sampleImages.map((s) => s.split("?")[0]);
+    if (JSON.stringify(cleanSamples) !== JSON.stringify(col.sampleImages)) {
+      col.sampleImages = cleanSamples;
+      dirty = true;
+    }
+  }
+  if (dirty) {
+    writeJson(COLLECTIONS_JSON, cols);
+    console.log("[startup] Sanitised query strings from collections.json");
+  }
 }
 
 console.log(`\n  Forja Serafim — Admin Web`);

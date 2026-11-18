@@ -376,6 +376,32 @@
         border-radius: 50%;
         animation: spin 0.6s linear infinite;
       }
+      .cover-loading {
+        position: relative;
+      }
+      .cover-loading::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+      }
+      .cover-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2rem;
+        height: 2rem;
+        border: 3px solid rgba(212, 175, 55, 0.3);
+        border-top-color: #d4af37;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        z-index: 10;
+      }
       @keyframes spin {
         to {
           transform: rotate(360deg);
@@ -1860,6 +1886,17 @@
         if (!file) return;
 
         input.disabled = true;
+
+        // Show loading spinner on cover preview
+        const preview = document.getElementById(`cover-preview-${slug}`);
+        let spinner = null;
+        if (preview) {
+          preview.classList.add("cover-loading");
+          spinner = document.createElement("div");
+          spinner.className = "cover-spinner";
+          preview.appendChild(spinner);
+        }
+
         toast("Enviando capa...");
 
         try {
@@ -1882,13 +1919,18 @@
           // Refresh the cover preview inside the edit modal
           const col = collections.find((c) => c.slug === slug);
           if (col) {
-            const preview = document.getElementById(`cover-preview-${col.slug}`);
-            if (preview) {
-              const img = preview.querySelector("img");
+            const updatedPreview = document.getElementById(`cover-preview-${col.slug}`);
+            if (updatedPreview) {
+              const img = updatedPreview.querySelector("img");
               if (img) { img.style.display = ""; img.src = col.image; }
             }
           }
         } finally {
+          // Remove loading state
+          if (preview) {
+            preview.classList.remove("cover-loading");
+            if (spinner && spinner.parentNode) spinner.parentNode.removeChild(spinner);
+          }
           input.disabled = false;
         }
       }

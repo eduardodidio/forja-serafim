@@ -23,3 +23,11 @@
 - **Check both source AND built output** -- For HTML-level changes (like manifest links), always verify the change survives the build process by checking `dist/` output, not just the source file.
 - **Validate regex against existing data** -- When a new validation regex is introduced (like slug validation), mentally check it against all existing data to ensure no regression. The slug regex correctly matches all three existing collection slugs.
 - **Count route handlers vs validation calls** -- When a validation helper is introduced (like `isValidSlug`), count the number of route handlers that extract the parameter and verify each one calls the helper. In F12, 7 slug-extracting routes all call `isValidSlug`.
+
+## F14 -- 2026-11-18
+
+**What worked:** Code review was sufficient to validate all 30 test scenarios for this bugfix feature. Grepping for `?v=` in collections.json and verifying the serve-time injection loop in server.ts covered the core bug.
+
+**What to avoid:** Do not assume that a `finally` block after sharp processing is sufficient error handling. If sharp throws and subsequent code (e.g., `statSync` on the expected output file) also throws, the endpoint returns an opaque 500. Always verify that image upload endpoints have explicit try/catch with JSON error responses.
+
+**Pattern to repeat:** For cache-bust bugs, verify BOTH sides: (1) persisted data has no query strings (grep the JSON file), and (2) API responses inject query strings at serve-time (read the GET handler code). These are complementary checks that catch the full class of bug.
