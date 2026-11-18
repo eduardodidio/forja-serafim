@@ -6,10 +6,10 @@
     "description": "Castelo eterno, cacadores e a noite sem fim sob a lua de sangue.",
     "cardCount": 119,
     "sampleImages": [
-      "/images/decks/castlevania/a-dracula-senhor-das-trevas-comandante.jpg?v=1795043042000",
-      "/images/decks/castlevania/alucard-herdeiro-da-noite-sem-escudo.jpg?v=1795043042000",
-      "/images/decks/castlevania/castelo-de-dracula-sob-a-lua-cheia.jpg?v=1795043042000",
-      "/images/decks/castlevania/sypha-e-o-manuscrito-dos-oradores.jpg?v=1795043042000",
+      "/images/decks/castlevania/a-dracula-senhor-das-trevas-comandante.jpg",
+      "/images/decks/castlevania/alucard-herdeiro-da-noite-sem-escudo.jpg",
+      "/images/decks/castlevania/castelo-de-dracula-sob-a-lua-cheia.jpg",
+      "/images/decks/castlevania/sypha-e-o-manuscrito-dos-oradores.jpg",
       "/images/decks/castlevania/a-morte-faminta-entre-ruinas-goticas.jpg",
       "/images/decks/castlevania/walter-bernhard-com-moldura-dourada.jpg"
     ],
@@ -26,7 +26,6 @@
     "description": "Armaduras douradas, cosmo ardente e as doze casas em ouro puro.",
     "cardCount": 147,
     "sampleImages": [
-      "/images/decks/cavaleiros-do-zodiaco/ikki-de-fenix-01.jpg",
       "/images/decks/cavaleiros-do-zodiaco/swords-to-plowshares.jpg",
       "/images/decks/cavaleiros-do-zodiaco/the-immortal-sun.jpg",
       "/images/decks/cavaleiros-do-zodiaco/aioros-de-sagitario-comandante.jpg"
