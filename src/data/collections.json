@@ -46,11 +46,11 @@
     "description": "Cristais, invocacoes lendarias e herois de um mundo em colapso.",
     "cardCount": 112,
     "sampleImages": [
-      "/images/decks/final-fantasy-vii/cloud-e-a-lamina-em-midgar.jpg?v=1795043511000",
-      "/images/decks/final-fantasy-vii/genesis-rhapsodos-versos-escarlates.jpg?v=1795043511000",
-      "/images/decks/final-fantasy-vii/kadaj-e-a-lamina-souba.jpg?v=1795043511000",
-      "/images/decks/final-fantasy-vii/tseng-vestindo-o-traje-dos-turks.jpg?v=1795043511000",
-      "/images/decks/final-fantasy-vii/1-zack-fair-legado-de-soldier-comandante.jpg?v=1795043511000",
+      "/images/decks/final-fantasy-vii/cloud-e-a-lamina-em-midgar.jpg",
+      "/images/decks/final-fantasy-vii/genesis-rhapsodos-versos-escarlates.jpg",
+      "/images/decks/final-fantasy-vii/kadaj-e-a-lamina-souba.jpg",
+      "/images/decks/final-fantasy-vii/tseng-vestindo-o-traje-dos-turks.jpg",
+      "/images/decks/final-fantasy-vii/1-zack-fair-legado-de-soldier-comandante.jpg",
       "/images/decks/final-fantasy-vii/sephiroth-anjo-de-uma-asa.jpg"
     ],
     "moxfieldUrl": "",
@@ -75,6 +75,19 @@
     ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/bHOv7T7mTYZf",
+    "manualUrl": "",
+    "videoUrl": "",
+    "hidden": false
+  },
+  {
+    "slug": "paraiso-celestial",
+    "name": "Paraíso Celestial",
+    "image": "/images/covers/paraiso-celestial.jpg",
+    "description": "Deck temático Anjos do universo de Diablo",
+    "cardCount": 100,
+    "sampleImages": [],
+    "moxfieldUrl": "",
+    "deckcheckUrl": "https://deckcheck.co/app/builder/AN3_1VNP0dQa",
     "manualUrl": "",
     "videoUrl": "",
     "hidden": false
