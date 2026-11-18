@@ -85,7 +85,14 @@
     "image": "/images/covers/paraiso-celestial.jpg",
     "description": "Deck temático Anjos do universo de Diablo",
     "cardCount": 100,
-    "sampleImages": [],
+    "sampleImages": [
+      "/images/decks/paraiso-celestial/auriel-archangel-of-hope.jpg",
+      "/images/decks/paraiso-celestial/inarius-advisor-to-the-angiris-council.jpg",
+      "/images/decks/paraiso-celestial/itherael-archangel-of-fate.jpg",
+      "/images/decks/paraiso-celestial/malthael-archangel-of-wisdom.jpg",
+      "/images/decks/paraiso-celestial/tyrael-archangel-of-justice.jpg",
+      "/images/decks/paraiso-celestial/imperius-o-aspecto-da-coragem-02.jpg"
+    ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/AN3_1VNP0dQa",
     "manualUrl": "",
