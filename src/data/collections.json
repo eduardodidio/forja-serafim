@@ -55,20 +55,5 @@
     "deckcheckUrl": "https://deckcheck.co/app/builder/T7W3nZ6zFfUJ",
     "manualUrl": "/manuals/final-fantasy-vii.pdf",
     "hidden": false
-  },
-  {
-    "slug": "batman",
-    "name": "batman",
-    "image": "/images/covers/batman.jpg",
-    "description": "Batman",
-    "cardCount": 100,
-    "sampleImages": [
-      "/images/decks/batman/alfred-guardiao-do-arsenal-moldura-gotica.jpg",
-      "/images/decks/batman/d1-batman-rumo-a-apokolips-moldura-gotica-comandante.jpg"
-    ],
-    "moxfieldUrl": "",
-    "deckcheckUrl": "",
-    "manualUrl": "",
-    "hidden": false
   }
 ]
