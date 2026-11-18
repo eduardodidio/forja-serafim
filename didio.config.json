@@ -35,7 +35,7 @@
   },
   "tea": { "enabled": true },
   "meta_agents": {
-    "t800": { "enabled": false },
+    "t800": { "enabled": true },
     "t1000": { "enabled": false }
   },
   "graphify": { "enabled": false },
