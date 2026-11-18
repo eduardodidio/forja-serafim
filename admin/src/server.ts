@@ -55,39 +55,37 @@ const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
   .split(",")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
-const _SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
+// Stable secret — derives from GITHUB_TOKEN so sessions survive redeploys.
+// Falls back to SESSION_SECRET env var, then random (dev only).
+const SESSION_SECRET = process.env.SESSION_SECRET
+  || (process.env.GITHUB_TOKEN
+    ? crypto.createHash("sha256").update(process.env.GITHUB_TOKEN).digest("hex")
+    : crypto.randomBytes(32).toString("hex"));
 
-// In-memory session store (resets on deploy — user just logs in again)
-const sessions = new Map<string, { email: string; expires: number }>();
+const SESSION_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-// Clean up expired sessions every hour
-setInterval(
-  () => {
-    const now = Date.now();
-    for (const [token, session] of sessions) {
-      if (session.expires < now) sessions.delete(token);
-    }
-  },
-  60 * 60 * 1000,
-);
+function signToken(payload: string): string {
+  return crypto.createHmac("sha256", SESSION_SECRET).update(payload).digest("hex");
+}
 
 function createSession(email: string): string {
-  const token = crypto.randomBytes(32).toString("hex");
-  sessions.set(token, { email, expires: Date.now() + 7 * 24 * 60 * 60 * 1000 }); // 7 days
-  return token;
+  const expires = Date.now() + SESSION_MAX_AGE;
+  const payload = `${email}:${expires}`;
+  return `${payload}:${signToken(payload)}`;
 }
 
 function getSession(req: Request): string | null {
   const cookie = req.headers.get("Cookie") || "";
-  const match = cookie.match(/serafim_session=([a-f0-9]+)/);
+  const match = cookie.match(/serafim_session=([^;]+)/);
   if (!match) return null;
-  const token = match[1];
-  const session = sessions.get(token);
-  if (!session || session.expires < Date.now()) {
-    sessions.delete(token);
-    return null;
-  }
-  return session.email;
+  const parts = decodeURIComponent(match[1]).split(":");
+  if (parts.length !== 3) return null;
+  const [email, expiresStr, sig] = parts;
+  const expires = parseInt(expiresStr, 10);
+  if (isNaN(expires) || expires < Date.now()) return null;
+  const payload = `${email}:${expiresStr}`;
+  if (signToken(payload) !== sig) return null;
+  return email;
 }
 
 function isAuthEnabled(): boolean {
@@ -203,16 +201,13 @@ async function handleRequest(req: Request): Promise<Response> {
       status: 200,
       headers: {
         "Content-Type": "application/json",
-        "Set-Cookie": `serafim_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${7 * 24 * 60 * 60}${url.protocol === "https:" ? "; Secure" : ""}`,
+        "Set-Cookie": `serafim_session=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${7 * 24 * 60 * 60}${url.protocol === "https:" ? "; Secure" : ""}`,
       },
     });
   }
 
   // Logout
   if (path === "/auth/logout") {
-    const cookie = req.headers.get("Cookie") || "";
-    const match = cookie.match(/serafim_session=([a-f0-9]+)/);
-    if (match) sessions.delete(match[1]);
     return new Response(null, {
       status: 302,
       headers: {
