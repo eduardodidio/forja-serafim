@@ -1,0 +1,24 @@
+graph LR
+    subgraph Admin_Flow["Admin: Gerenciar Video"]
+        A1["Abrir editor<br/>de colecao"] --> A2{"Colecao tem<br/>video?"}
+        A2 -->|Nao| A3["Selecionar MP4<br/>(max 50MB)"]
+        A3 --> A4["Click Enviar"]
+        A4 --> A5{"Validacao OK?"}
+        A5 -->|Sim| A6["Upload + gitPersist"]
+        A5 -->|Nao| A7["Alerta de erro"]
+        A7 --> A3
+        A6 --> A8["Preview do video"]
+        A2 -->|Sim| A8
+        A8 --> A9["Click Remover?"]
+        A9 -->|Sim + confirma| A10["Delete + gitPersist"]
+        A10 --> A2
+    end
+
+    subgraph Visitor_Flow["Visitante: Ver Video"]
+        V1["Abrir pagina<br/>da colecao"] --> V2{"videoUrl<br/>preenchido?"}
+        V2 -->|Sim| V3["Secao 'Veja o deck<br/>em acao' visivel"]
+        V3 --> V4["Click Play"]
+        V4 --> V5["Assiste video"]
+        V5 --> V6["CTA WhatsApp"]
+        V2 -->|Nao| V6
+    end
