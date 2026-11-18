@@ -829,6 +829,17 @@
     <script>
       const API = "";
 
+      // --- Auth-aware fetch: redirect to login on 401 ---
+      async function apiFetch(url, opts) {
+        const res = await fetch(url, opts);
+        if (res.status === 401) {
+          toast("Sessao expirada. Redirecionando para login...", "error");
+          setTimeout(() => { window.location.href = "/login"; }, 1500);
+          throw new Error("Sessao expirada");
+        }
+        return res;
+      }
+
       // --- State ---
       let collections = [];
       let testimonials = [];
@@ -972,7 +983,7 @@
 
       // --- Settings ---
       async function loadSettings() {
-        const res = await fetch(`${API}/api/settings`);
+        const res = await apiFetch(`${API}/api/settings`);
         if (!res.ok) {
           toast("Erro ao carregar configuracoes.", "error");
           return;
@@ -995,7 +1006,7 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Salvando...';
 
-        const res = await fetch(`${API}/api/settings`, {
+        const res = await apiFetch(`${API}/api/settings`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ whatsappUrl }),
@@ -1017,7 +1028,7 @@
 
       // --- Collections ---
       async function loadCollections() {
-        const res = await fetch(`${API}/api/collections`);
+        const res = await apiFetch(`${API}/api/collections`);
         if (!res.ok) {
           toast("Erro ao carregar colecoes.", "error");
           return;
@@ -1333,7 +1344,7 @@
         }
 
         try {
-          const res = await fetch(`${API}/api/collections`, {
+          const res = await apiFetch(`${API}/api/collections`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
@@ -1350,7 +1361,7 @@
           // Upload cover
           const fd = new FormData();
           fd.append("file", coverFile);
-          const coverRes = await fetch(`${API}/api/collections/${newCol.slug}/cover`, {
+          const coverRes = await apiFetch(`${API}/api/collections/${newCol.slug}/cover`, {
             method: "POST",
             body: fd,
           });
@@ -1362,14 +1373,14 @@
           if (createSampleFiles.length > 0) {
             const sfd = new FormData();
             for (const f of createSampleFiles) sfd.append("files", f);
-            const imgRes = await fetch(`${API}/api/collections/${newCol.slug}/images`, {
+            const imgRes = await apiFetch(`${API}/api/collections/${newCol.slug}/images`, {
               method: "POST",
               body: sfd,
             });
             if (imgRes.ok) {
               const { processed } = await imgRes.json();
               if (processed.length > 0) {
-                await fetch(`${API}/api/collections/${newCol.slug}`, {
+                await apiFetch(`${API}/api/collections/${newCol.slug}`, {
                   method: "PUT",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ sampleImages: processed }),
@@ -1560,7 +1571,7 @@
         updateEditSamplesGrid(slug);
 
         // Call API
-        const res = await fetch(`${API}/api/collections/${slug}/images/${filename}`, {
+        const res = await apiFetch(`${API}/api/collections/${slug}/images/${filename}`, {
           method: "DELETE",
         });
         if (!res.ok) {
@@ -1593,7 +1604,7 @@
         c.sampleImages.splice(toIdx, 0, moved);
         updateEditSamplesGrid(slug);
 
-        const res = await fetch(`${API}/api/collections/${slug}/images/reorder`, {
+        const res = await apiFetch(`${API}/api/collections/${slug}/images/reorder`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sampleImages: c.sampleImages }),
@@ -1633,7 +1644,7 @@
           const fd = new FormData();
           for (const f of files) fd.append("files", f);
 
-          const res = await fetch(`${API}/api/collections/${slug}/images`, {
+          const res = await apiFetch(`${API}/api/collections/${slug}/images`, {
             method: "POST",
             body: fd,
           });
@@ -1649,7 +1660,7 @@
           // Add processed images as samples
           if (c) {
             const allSamples = [...new Set([...c.sampleImages, ...processed])];
-            const updateRes = await fetch(`${API}/api/collections/${slug}`, {
+            const updateRes = await apiFetch(`${API}/api/collections/${slug}`, {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ sampleImages: allSamples }),
@@ -1739,7 +1750,7 @@
         }
 
         try {
-          const res = await fetch(`${API}/api/collections/${slug}`, {
+          const res = await apiFetch(`${API}/api/collections/${slug}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, description, cardCount, deckcheckUrl, moxfieldUrl }),
@@ -1779,7 +1790,7 @@
             c.hidden = newHidden;
             renderCollections();
 
-            const res = await fetch(`${API}/api/collections/${slug}`, {
+            const res = await apiFetch(`${API}/api/collections/${slug}`, {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ hidden: newHidden }),
@@ -1811,7 +1822,7 @@
       }
 
       async function deleteCollection(slug) {
-        const res = await fetch(`${API}/api/collections/${slug}`, { method: "DELETE" });
+        const res = await apiFetch(`${API}/api/collections/${slug}`, { method: "DELETE" });
         if (!res.ok) {
           toast("Erro ao excluir colecao.", "error");
           return;
@@ -1831,7 +1842,7 @@
           const fd = new FormData();
           fd.append("file", file);
 
-          const res = await fetch(`${API}/api/collections/${slug}/cover`, {
+          const res = await apiFetch(`${API}/api/collections/${slug}/cover`, {
             method: "POST",
             body: fd,
           });
@@ -1844,6 +1855,13 @@
           toast("Capa atualizada!");
           input.value = "";
           await loadCollections();
+          // Cache-bust: append timestamp so browser fetches the new image
+          const col = collections.find((c) => c.slug === slug);
+          if (col) {
+            const base = col.image.split("?")[0];
+            col.image = `${base}?t=${Date.now()}`;
+            renderCollections();
+          }
           refreshEditModal(slug);
         } finally {
           input.disabled = false;
@@ -1861,7 +1879,7 @@
           const fd = new FormData();
           fd.append("file", file);
 
-          const res = await fetch(`${API}/api/collections/${slug}/manual`, {
+          const res = await apiFetch(`${API}/api/collections/${slug}/manual`, {
             method: "POST",
             body: fd,
           });
@@ -1882,7 +1900,7 @@
 
       // --- Testimonials ---
       async function loadTestimonials() {
-        const res = await fetch(`${API}/api/testimonials`);
+        const res = await apiFetch(`${API}/api/testimonials`);
         if (!res.ok) {
           toast("Erro ao carregar depoimentos.", "error");
           return;
@@ -1997,7 +2015,7 @@
           return;
         }
 
-        const res = await fetch(`${API}/api/testimonials`, {
+        const res = await apiFetch(`${API}/api/testimonials`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, text, deck }),
@@ -2061,7 +2079,7 @@
         const text = document.getElementById("f-ttext").value.trim();
         const deck = document.getElementById("f-tdeck").value;
 
-        const res = await fetch(`${API}/api/testimonials/${idx}`, {
+        const res = await apiFetch(`${API}/api/testimonials/${idx}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, text, deck }),
@@ -2089,7 +2107,7 @@
       }
 
       async function deleteTestimonial(idx) {
-        const res = await fetch(`${API}/api/testimonials/${idx}`, { method: "DELETE" });
+        const res = await apiFetch(`${API}/api/testimonials/${idx}`, { method: "DELETE" });
         if (!res.ok) {
           toast("Erro ao remover depoimento.", "error");
           return;
@@ -2157,7 +2175,7 @@
         );
 
         try {
-          const res = await fetch(`${API}/api/publish`, { method: "POST" });
+          const res = await apiFetch(`${API}/api/publish`, { method: "POST" });
           const data = await res.json();
 
           if (data.success) {
