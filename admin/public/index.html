@@ -604,8 +604,20 @@
       </div>
     </header>
 
+    <!-- Persist status banner -->
+    <div id="persist-banner" class="hidden border-b px-4 py-2 text-xs font-medium flex items-center justify-between sticky top-[65px] z-25 transition-all duration-300">
+      <div class="flex items-center gap-2">
+        <span id="persist-icon"></span>
+        <span id="persist-text"></span>
+      </div>
+      <button id="persist-retry" class="hidden text-xs py-1 px-3 rounded border border-red-700/60 text-red-300 hover:bg-red-900/40 transition-colors cursor-pointer" onclick="retryPersist()">
+        Tentar novamente
+      </button>
+    </div>
+
     <!-- Tabs -->
     <nav
+      id="tab-bar"
       class="border-b bg-surface/60 backdrop-blur-sm sticky top-[65px] z-20"
       style="border-color: var(--admin-border)"
     >
@@ -830,12 +842,19 @@
       const API = "";
 
       // --- Auth-aware fetch: redirect to login on 401 ---
+      // Mutation methods that trigger git persist check
+      const MUTATION_METHODS = ["POST", "PUT", "PATCH", "DELETE"];
       async function apiFetch(url, opts) {
         const res = await fetch(url, opts);
         if (res.status === 401) {
           toast("Sessao expirada. Redirecionando para login...", "error");
           setTimeout(() => { window.location.href = "/login"; }, 1500);
           throw new Error("Sessao expirada");
+        }
+        // After a successful mutation, check persist status with a short delay
+        const method = (opts && opts.method || "GET").toUpperCase();
+        if (MUTATION_METHODS.includes(method) && res.ok) {
+          setTimeout(() => checkPersistStatus(), 500);
         }
         return res;
       }
@@ -2363,6 +2382,93 @@
           toast("Erro ao carregar configuracoes", "error");
         }
       }
+      // ================================================================
+      // Git Persist Banner
+      // ================================================================
+      let persistState = "clean";
+      let persistPollTimer = null;
+
+      async function checkPersistStatus() {
+        try {
+          const res = await fetch(`${API}/api/persist-status`);
+          if (!res.ok) return;
+          const { state, error } = await res.json();
+          updatePersistBanner(state, error);
+        } catch { /* ignore network errors */ }
+      }
+
+      function updatePersistBanner(state, error) {
+        persistState = state;
+        const banner = document.getElementById("persist-banner");
+        const icon = document.getElementById("persist-icon");
+        const text = document.getElementById("persist-text");
+        const retry = document.getElementById("persist-retry");
+        const tabBar = document.getElementById("tab-bar");
+
+        // Reset classes
+        banner.className = "border-b px-4 py-2 text-xs font-medium flex items-center justify-between sticky top-[65px] z-25 transition-all duration-300";
+
+        if (state === "clean") {
+          banner.classList.add("hidden");
+          if (tabBar) tabBar.style.top = "65px";
+          schedulePersistPoll(15000);
+          return;
+        }
+
+        banner.classList.remove("hidden");
+        if (tabBar) tabBar.style.top = "97px";
+
+        const spinnerSvg = '<svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>';
+        const errorSvg = '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4m0 4h.01" stroke-linecap="round"></path></svg>';
+
+        if (state === "dirty") {
+          banner.classList.add("bg-yellow-900/30", "border-yellow-700/40", "text-yellow-300");
+          icon.innerHTML = spinnerSvg;
+          text.textContent = "Salvando alteracoes...";
+          retry.classList.add("hidden");
+          schedulePersistPoll(3000);
+        } else if (state === "pushing") {
+          banner.classList.add("bg-blue-900/30", "border-blue-700/40", "text-blue-300");
+          icon.innerHTML = spinnerSvg;
+          text.textContent = "Enviando para o GitHub...";
+          retry.classList.add("hidden");
+          schedulePersistPoll(3000);
+        } else if (state === "error") {
+          banner.classList.add("bg-red-900/30", "border-red-700/40", "text-red-300");
+          icon.innerHTML = errorSvg;
+          text.textContent = "Erro ao salvar no GitHub. Alteracoes podem ser perdidas.";
+          retry.classList.remove("hidden");
+          schedulePersistPoll(3000);
+        }
+      }
+
+      async function retryPersist() {
+        const retry = document.getElementById("persist-retry");
+        if (retry) retry.disabled = true;
+        try {
+          await fetch(`${API}/api/persist-retry`, { method: "POST" });
+          await checkPersistStatus();
+        } finally {
+          if (retry) retry.disabled = false;
+        }
+      }
+
+      function schedulePersistPoll(interval) {
+        if (persistPollTimer) clearInterval(persistPollTimer);
+        persistPollTimer = setInterval(() => {
+          if (!document.hidden) checkPersistStatus();
+        }, interval);
+      }
+
+      // Pause polling when page is hidden, resume when visible
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) checkPersistStatus();
+      });
+
+      // Initial check + start polling
+      checkPersistStatus();
+      schedulePersistPoll(15000);
+
       init();
     </script>
   </body>

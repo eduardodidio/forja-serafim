@@ -14,6 +14,7 @@ import {
 } from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
 import { processImage } from "./lib/image-processor.js";
+import { gitPersist, getPersistState, getLastError } from "./lib/git-persist.js";
 import crypto from "crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -305,6 +306,7 @@ async function handleRequest(req: Request): Promise<Response> {
 
     collections.push(newCol);
     writeJson(COLLECTIONS_JSON, collections);
+    gitPersist(`Criar colecao: ${newCol.name}`);
     return json(newCol, 201, req);
   }
 
@@ -342,12 +344,14 @@ async function handleRequest(req: Request): Promise<Response> {
       if (body.hidden !== undefined) col.hidden = body.hidden;
       if (body.sampleImages !== undefined) col.sampleImages = body.sampleImages;
       writeJson(COLLECTIONS_JSON, collections);
+      gitPersist(`Editar colecao: ${slug}`);
       return json(col, 200, req);
     }
 
     if (method === "DELETE") {
       const removed = collections.splice(idx, 1)[0]!;
       writeJson(COLLECTIONS_JSON, collections);
+      gitPersist(`Remover colecao: ${slug}`);
       return json(removed, 200, req);
     }
   }
@@ -379,6 +383,7 @@ async function handleRequest(req: Request): Promise<Response> {
       writeJson(COLLECTIONS_JSON, collections);
     }
 
+    gitPersist(`Atualizar capa: ${slug}`);
     return json({ path: col?.image ?? `/images/covers/${slug}.jpg` }, 200, req);
   }
 
@@ -407,6 +412,7 @@ async function handleRequest(req: Request): Promise<Response> {
       writeJson(COLLECTIONS_JSON, collections);
     }
 
+    gitPersist(`Upload manual: ${slug}`);
     return json({ path: `/manuals/${slug}.pdf` }, 200, req);
   }
 
@@ -434,6 +440,7 @@ async function handleRequest(req: Request): Promise<Response> {
 
     col.sampleImages = body.sampleImages;
     writeJson(COLLECTIONS_JSON, collections);
+    gitPersist(`Reordenar imagens: ${slug}`);
     return json(col, 200, req);
   }
 
@@ -467,6 +474,7 @@ async function handleRequest(req: Request): Promise<Response> {
       console.error(`Failed to delete file ${physicalPath}:`, err);
     }
 
+    gitPersist(`Remover imagem: ${slug}/${filename}`);
     return json(col, 200, req);
   }
 
@@ -542,6 +550,7 @@ async function handleRequest(req: Request): Promise<Response> {
       console.warn("[Upload] Failed to cleanup tmp dir:", err);
     }
 
+    gitPersist(`Upload amostras: ${slug}`);
     return json({ processed, failed }, 200, req);
   }
 
@@ -566,6 +575,7 @@ async function handleRequest(req: Request): Promise<Response> {
     const t: Testimonial = { name: body.name, text: body.text, deck: body.deck ?? "" };
     testimonials.push(t);
     writeJson(TESTIMONIALS_JSON, testimonials);
+    gitPersist("Adicionar depoimento");
     return json(t, 201, req);
   }
 
@@ -589,12 +599,14 @@ async function handleRequest(req: Request): Promise<Response> {
       if (body.text !== undefined) t.text = body.text;
       if (body.deck !== undefined) t.deck = body.deck;
       writeJson(TESTIMONIALS_JSON, testimonials);
+      gitPersist("Editar depoimento");
       return json(t, 200, req);
     }
 
     if (method === "DELETE") {
       const removed = testimonials.splice(idx, 1)[0]!;
       writeJson(TESTIMONIALS_JSON, testimonials);
+      gitPersist("Remover depoimento");
       return json(removed, 200, req);
     }
   }
@@ -610,7 +622,19 @@ async function handleRequest(req: Request): Promise<Response> {
     const settings = readJson<Settings>(SETTINGS_JSON);
     if (body.whatsappUrl !== undefined) settings.whatsappUrl = body.whatsappUrl;
     writeJson(SETTINGS_JSON, settings);
+    gitPersist("Atualizar configuracoes");
     return json(settings, 200, req);
+  }
+
+  // --- Persist status ---
+
+  if (path === "/api/persist-status" && method === "GET") {
+    return json({ state: getPersistState(), error: getLastError() }, 200, req);
+  }
+
+  if (path === "/api/persist-retry" && method === "POST") {
+    gitPersist("Retry: re-push pending changes");
+    return json({ state: getPersistState() }, 200, req);
   }
 
   // --- Publish (build + commit + push) ---
@@ -627,95 +651,27 @@ async function handleRequest(req: Request): Promise<Response> {
       steps.push("Build concluido.");
       console.log("[publish] Build done.");
 
-      // 2. Stage data files, covers, decks, manuals
-      const filesToAdd = [
-        "src/data/collections.json",
-        "src/data/testimonials.json",
-        "src/data/settings.json",
-        "public/images/covers/",
-        "public/images/decks/",
-        "public/manuals/",
-      ];
-      for (const f of filesToAdd) {
-        try {
-          execSync(`git add "${f}"`, { ...opts, stdio: "pipe" });
-        } catch {
-          /* file may not exist */
-        }
-      }
+      // 2. Persist to git (reuse gitPersist — AWAIT here, unlike mutation endpoints)
+      steps.push("Salvando no git...");
+      console.log("[publish] Persisting...");
+      const result = await gitPersist("Publicar site");
 
-      // 3. Check if there are staged changes to commit
-      console.log("[publish] Checking staged changes...");
-      const diff = execSync("git diff --cached --name-only", { ...opts, stdio: "pipe" }).trim();
-      if (diff) {
-        const now = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
-        execSync(`git commit -m "Atualizar site via admin (${now})"`, { ...opts, stdio: "pipe" });
-        steps.push("Alteracoes salvas: " + diff.split("\n").join(", "));
+      if (result.committed) {
+        steps.push("Alteracoes salvas no git.");
       } else {
         steps.push("Dados ja estavam salvos.");
       }
 
-      // 4. Push to GitHub
-      console.log("[publish] Preparing push...");
-      // Ensure we're on main branch (Render clones may be in detached HEAD)
-      try {
-        const branch = execSync("git rev-parse --abbrev-ref HEAD", {
-          ...opts,
-          stdio: "pipe",
-        }).trim();
-        if (branch === "HEAD") {
-          execSync("git checkout main", { ...opts, stdio: "pipe" });
-          steps.push("Checkout main (estava em detached HEAD).");
-        }
-      } catch {
-        /* ignore — already on a branch */
-      }
-
-      // Check if there are commits to push (handle missing upstream gracefully)
-      let shouldPush = false;
-      try {
-        const ahead = execSync("git rev-list --count @{u}..HEAD", {
-          ...opts,
-          stdio: "pipe",
-        }).trim();
-        shouldPush = ahead !== "0";
-      } catch {
-        // No upstream tracking — always push
-        shouldPush = true;
-      }
-
-      if (shouldPush) {
-        if (process.env.GITHUB_TOKEN) {
-          // Ensure origin remote exists (Render may strip it)
-          let remoteUrl = "";
-          try {
-            remoteUrl = execSync("git remote get-url origin", {
-              ...opts,
-              stdio: "pipe",
-            }).trim();
-          } catch {
-            // No origin remote — add it from GITHUB_REPO or hardcoded
-            const repo =
-              process.env.GITHUB_REPO || "https://github.com/eduardodidio/forja-serafim.git";
-            execSync(`git remote add origin "${repo}"`, { ...opts, stdio: "pipe" });
-            remoteUrl = repo;
-            steps.push("Remote origin adicionado.");
-          }
-          const authedUrl =
-            remoteUrl.startsWith("https://") && !remoteUrl.includes("@")
-              ? remoteUrl.replace("https://", `https://x-access-token:${process.env.GITHUB_TOKEN}@`)
-              : remoteUrl;
-          execSync(`git push "${authedUrl}" main`, { ...opts, stdio: "pipe" });
-        } else {
-          execSync("git push origin main", { ...opts, stdio: "pipe" });
-        }
+      if (result.pushed) {
         steps.push("Enviado para o GitHub.");
+      } else if (result.error) {
+        steps.push(`Erro ao enviar: ${result.error}`);
+        return json({ success: false, steps }, 500, req);
       } else {
         steps.push("Codigo ja estava no GitHub.");
       }
 
-      // Deploy is handled automatically by Render's auto-deploy on push
-
+      console.log("[publish] Done:", steps);
       return json({ success: true, steps }, 200, req);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
