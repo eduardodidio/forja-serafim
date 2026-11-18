@@ -138,5 +138,18 @@
     "manualUrl": "",
     "videoUrl": "",
     "hidden": false
+  },
+  {
+    "slug": "arahbo-roar-of-the-world-premium",
+    "name": "Arahbo, Roar of the World Premium",
+    "image": "/images/covers/arahbo-roar-of-the-world-premium.jpg",
+    "description": "Deck de Arahbo com artes premium",
+    "cardCount": 100,
+    "sampleImages": [],
+    "moxfieldUrl": "",
+    "deckcheckUrl": "https://deckcheck.co/app/builder/LBKRQXuvGkZ3",
+    "manualUrl": "",
+    "videoUrl": "",
+    "hidden": false
   }
 ]
