@@ -22,29 +22,27 @@ function createWatermarkSvg(width: number, height: number): Buffer {
   return Buffer.from(svg);
 }
 
-export async function processImage(inputPath: string, outputPath: string): Promise<void> {
-  const image = sharp(inputPath);
-  const metadata = await image.metadata();
+export async function processImage(input: string | Buffer, outputPath: string): Promise<void> {
+  const metadata = await sharp(input).metadata();
 
   const resizeWidth = Math.min(MAX_WIDTH, metadata.width ?? MAX_WIDTH);
-  const resized = image.resize({ width: resizeWidth, withoutEnlargement: true });
 
   const ratio = resizeWidth / (metadata.width ?? resizeWidth);
   const newHeight = Math.round((metadata.height ?? 840) * ratio);
 
   const watermark = createWatermarkSvg(resizeWidth, newHeight);
 
-  await resized
+  await sharp(input)
+    .resize({ width: resizeWidth, withoutEnlargement: true })
     .composite([{ input: watermark, gravity: "center" }])
     .jpeg({ quality: QUALITY })
     .toFile(outputPath);
 }
 
-export async function processCoverImage(inputPath: string, outputPath: string): Promise<void> {
-  const image = sharp(inputPath);
-  const metadata = await image.metadata();
+export async function processCoverImage(input: string | Buffer, outputPath: string): Promise<void> {
+  const metadata = await sharp(input).metadata();
   const resizeWidth = Math.min(COVER_MAX_WIDTH, metadata.width ?? COVER_MAX_WIDTH);
-  await image
+  await sharp(input)
     .resize({ width: resizeWidth, withoutEnlargement: true })
     .jpeg({ quality: COVER_QUALITY })
     .toFile(outputPath);

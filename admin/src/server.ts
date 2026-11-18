@@ -389,23 +389,9 @@ async function handleRequest(req: Request): Promise<Response> {
 
     if (!existsSync(COVERS_DIR)) mkdirSync(COVERS_DIR, { recursive: true });
 
-    // Write to temp file first, then process through sharp
-    const tmpDir = join(COVERS_DIR, ".tmp-upload");
-    if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
-    const tmpPath = join(tmpDir, `${slug}-tmp${extname(file.name) || '.jpg'}`);
     const buffer = Buffer.from(await file.arrayBuffer());
-    await Bun.write(tmpPath, buffer);
-
     const dest = join(COVERS_DIR, `${slug}.jpg`);
-    try {
-      await processCoverImage(tmpPath, dest);
-    } finally {
-      try { unlinkSync(tmpPath); } catch {}
-      try {
-        const { rmdirSync } = await import("fs");
-        rmdirSync(tmpDir);
-      } catch {}
-    }
+    await processCoverImage(buffer, dest);
 
     // Update collections.json with CLEAN path (no cache-bust in persisted data)
     const collections = readJson<Collection[]>(COLLECTIONS_JSON);
@@ -546,8 +532,6 @@ async function handleRequest(req: Request): Promise<Response> {
 
     const processed: string[] = [];
     const failed: Array<{ file: string; error: string }> = [];
-    const tmpDir = join(destDir, ".tmp-upload");
-    if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
 
     for (const file of files) {
       const ext = extname(file.name).toLowerCase();
@@ -562,26 +546,15 @@ async function handleRequest(req: Request): Promise<Response> {
         .replace(/^-|-$/g, "")
         .toLowerCase();
 
-      const tmpPath = join(tmpDir, file.name);
       const buffer = Buffer.from(await file.arrayBuffer());
-      await Bun.write(tmpPath, buffer);
-
       const outputPath = join(destDir, `${safeName}.jpg`);
       try {
-        await processImage(tmpPath, outputPath);
+        await processImage(buffer, outputPath);
         processed.push(`/images/decks/${slug}/${safeName}.jpg`);
       } catch (err) {
         console.error(`Failed to process ${file.name}:`, err);
         failed.push({ file: file.name, error: String(err) });
       }
-    }
-
-    // Clean up tmp
-    try {
-      const { rmSync } = await import("fs");
-      rmSync(tmpDir, { recursive: true, force: true });
-    } catch (err) {
-      console.warn("[Upload] Failed to cleanup tmp dir:", err);
     }
 
     gitPersist(`Upload amostras: ${slug}`);
