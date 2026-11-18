@@ -6,6 +6,7 @@ import { Card3DTilt } from "@/components/card-3d-tilt";
 import { Lightbox } from "@/components/lightbox";
 import { getCollection, whatsappLink } from "@/lib/store-data";
 import { getProductJsonLd, getBreadcrumbJsonLd, SITE } from "@/lib/seo";
+import { cacheBust } from "@/lib/cache-bust";
 
 export const Route = createFileRoute("/colecoes/$slug")({
   component: CollectionPage,
@@ -56,6 +57,8 @@ function CollectionPage() {
     { name: collection.name, url: `${SITE.URL}/colecoes/${slug}` },
   ]);
 
+  const bustedSampleImages = collection.sampleImages.map(cacheBust);
+
   return (
     <PageShell>
       {productJsonLd && (
@@ -71,7 +74,7 @@ function CollectionPage() {
 
       <section className="relative overflow-hidden border-b border-border/70">
         <img
-          src={collection.image}
+          src={cacheBust(collection.image)}
           alt={`Colecao ${collection.name}`}
           width={900}
           height={1200}
@@ -96,13 +99,10 @@ function CollectionPage() {
         {collection.sampleImages.length > 0 && (
           <div className="mb-12">
             <h2 className="mb-6 text-2xl">Amostra do deck</h2>
-            <Lightbox
-              images={collection.sampleImages}
-              alt={`Amostra da colecao ${collection.name}`}
-            >
+            <Lightbox images={bustedSampleImages} alt={`Amostra da colecao ${collection.name}`}>
               {(openLightbox) => (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {collection.sampleImages.map((img, i) => (
+                  {bustedSampleImages.map((img, i) => (
                     <Card3DTilt key={i} className="cursor-pointer overflow-hidden bg-card">
                       <div
                         onClick={() => openLightbox(i)}

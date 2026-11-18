@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Collection } from "@/lib/store-data";
 import { Link } from "@tanstack/react-router";
+import { cacheBust } from "@/lib/cache-bust";
 
 const FLIP_INTERVAL = 3500;
 
@@ -48,7 +49,7 @@ export function CollectionCard({ collection }: { collection: Collection }) {
           }}
         >
           <img
-            src={images[displayIdx]}
+            src={cacheBust(images[displayIdx])}
             alt={`Amostra da colecao ${collection.name}`}
             loading="lazy"
             width={600}

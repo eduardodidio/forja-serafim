@@ -31,3 +31,13 @@
 **What to avoid:** Do not assume that a `finally` block after sharp processing is sufficient error handling. If sharp throws and subsequent code (e.g., `statSync` on the expected output file) also throws, the endpoint returns an opaque 500. Always verify that image upload endpoints have explicit try/catch with JSON error responses.
 
 **Pattern to repeat:** For cache-bust bugs, verify BOTH sides: (1) persisted data has no query strings (grep the JSON file), and (2) API responses inject query strings at serve-time (read the GET handler code). These are complementary checks that catch the full class of bug.
+
+## F16 -- 2026-11-18
+
+**What worked:** Bundle inspection was the most reliable validation technique. Grepping the minified JS for the baked timestamp (`1795024976537`) and finding the minified `cacheBust` function alongside it proved the mechanism works end-to-end. Combining this with a grep for all `src=` attributes in `*.tsx` confirmed full coverage of mutable image paths.
+
+**Pattern to repeat:** When validating cache-bust in a Vite bundle, search for the raw timestamp value (13-digit `Date.now()`) rather than the function name (which gets minified). Then expand context around the match to see the surrounding logic.
+
+**Coverage gap to track:** The `cacheBust` utility has no unit tests. For a 7-line pure function this is low risk, but if it grows (e.g., handling relative URLs, protocol-relative URLs, or data URIs), unit tests should be added.
+
+**Efficiency note:** Scoping lint to only changed files avoids noise from pre-existing issues in other directories (e.g., CRLF formatting in `admin/`). Use `npx eslint <file1> <file2>` instead of `bun run lint` which lints everything.
