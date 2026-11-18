@@ -750,6 +750,23 @@ try {
   /* git config optional */
 }
 
+// Ensure we are on main branch at startup (Render deploys in detached HEAD)
+try {
+  const branch = execSync("git rev-parse --abbrev-ref HEAD", { cwd: PROJECT_ROOT, encoding: "utf-8", stdio: "pipe" }).trim();
+  if (branch === "HEAD") {
+    console.log("[startup] Detached HEAD detected — switching to main branch");
+    try { execSync("git fetch origin main", { cwd: PROJECT_ROOT, stdio: "pipe" }); } catch { /* offline */ }
+    try {
+      execSync("git checkout -B main origin/main", { cwd: PROJECT_ROOT, stdio: "pipe" });
+    } catch {
+      execSync("git checkout -B main", { cwd: PROJECT_ROOT, stdio: "pipe" });
+    }
+    console.log("[startup] Now on main branch");
+  }
+} catch {
+  /* git checkout optional */
+}
+
 // One-time cleanup: strip query strings from persisted image paths
 {
   const cols = readJson<Collection[]>(COLLECTIONS_JSON);
