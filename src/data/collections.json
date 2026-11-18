@@ -125,7 +125,14 @@
     "image": "/images/covers/paraiso-celestial-mas-com-mais-cores.jpg",
     "description": "Deck temático de Anjos das 5 cores no tema de Diablo",
     "cardCount": 100,
-    "sampleImages": [],
+    "sampleImages": [
+      "/images/decks/paraiso-celestial-mas-com-mais-cores/arauto-da-servidao-eterna-no-abismo.jpg",
+      "/images/decks/paraiso-celestial-mas-com-mais-cores/guardiao-do-veu-eterno.jpg",
+      "/images/decks/paraiso-celestial-mas-com-mais-cores/guardioes-da-chama-viva.jpg",
+      "/images/decks/paraiso-celestial-mas-com-mais-cores/imperius-arcanjo-do-valor.jpg",
+      "/images/decks/paraiso-celestial-mas-com-mais-cores/serafim-do-pacto-esquecido.jpg",
+      "/images/decks/paraiso-celestial-mas-com-mais-cores/tyrael-e-malthael-nos-altos-ceus.jpg"
+    ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/7yEOcNIf5dVT",
     "manualUrl": "",
