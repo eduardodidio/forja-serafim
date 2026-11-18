@@ -165,7 +165,14 @@
     "image": "/images/covers/dragon-ball.jpg",
     "description": "Deck temático de Dragon Ball",
     "cardCount": 100,
-    "sampleImages": [],
+    "sampleImages": [
+      "/images/decks/dragon-ball/gohan-beast-em-aura-suprema.jpg",
+      "/images/decks/dragon-ball/goku-black-rosa-da-ruina.jpg",
+      "/images/decks/dragon-ball/goku-ssj4-guardiao-da-terra.jpg",
+      "/images/decks/dragon-ball/nail-guardiao-de-namekusei-em-arte-epica.jpg",
+      "/images/decks/dragon-ball/potara-verdes-elo-da-fusao.jpg",
+      "/images/decks/dragon-ball/vegeta-orgulho-da-destruicao.jpg"
+    ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/lJEX3ifTyXxV",
     "manualUrl": "",
