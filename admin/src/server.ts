@@ -161,6 +161,11 @@ async function handleRequest(req: Request): Promise<Response> {
 
   if (method === "OPTIONS") return cors(req);
 
+  // --- Health check (no auth, minimal response for keep-alive pings) ---
+  if (path === "/health") {
+    return new Response("ok", { headers: { "Content-Type": "text/plain" } });
+  }
+
   // --- Auth routes (always accessible) ---
 
   // Login page
