@@ -2432,7 +2432,7 @@
 
       async function checkPersistStatus() {
         try {
-          const res = await fetch(`${API}/api/persist-status`);
+          const res = await apiFetch(`${API}/api/persist-status`);
           if (!res.ok) return;
           const { state, error } = await res.json();
           updatePersistBanner(state, error);
@@ -2488,7 +2488,7 @@
         const retry = document.getElementById("persist-retry");
         if (retry) retry.disabled = true;
         try {
-          await fetch(`${API}/api/persist-retry`, { method: "POST" });
+          await apiFetch(`${API}/api/persist-retry`, { method: "POST" });
           await checkPersistStatus();
         } finally {
           if (retry) retry.disabled = false;

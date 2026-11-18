@@ -70,6 +70,18 @@ const FILES_TO_ADD = [
 ];
 
 async function doGitPersist(description: string): Promise<PersistResult> {
+  // --- Ensure we are on main BEFORE staging (handle detached HEAD on Render) ---
+  try {
+    const branch = git("rev-parse", "--abbrev-ref", "HEAD");
+    if (branch === "HEAD") {
+      // Create/move main to current HEAD so commits land on a real branch
+      // and checkout doesn't revert the working directory
+      git("checkout", "-B", "main");
+    }
+  } catch {
+    /* ignore — already on a branch */
+  }
+
   // --- Stage ---
   state = "dirty";
   lastError = null;
@@ -91,16 +103,6 @@ async function doGitPersist(description: string): Promise<PersistResult> {
 
   // --- Commit ---
   git("commit", "-m", `Auto-save: ${safeDesc(description)}`);
-
-  // --- Ensure we are on main (handle detached HEAD on Render) ---
-  try {
-    const branch = git("rev-parse", "--abbrev-ref", "HEAD");
-    if (branch === "HEAD") {
-      git("checkout", "main");
-    }
-  } catch {
-    /* ignore — already on a branch */
-  }
 
   // --- Push ---
   state = "pushing";
