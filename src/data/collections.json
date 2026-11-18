@@ -16,6 +16,7 @@
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/9g2_y6GTfdaf",
     "manualUrl": "",
+    "videoUrl": "",
     "hidden": false
   },
   {
@@ -35,6 +36,7 @@
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/T7W3nZ6zFfUJ",
     "manualUrl": "",
+    "videoUrl": "",
     "hidden": false
   },
   {
@@ -54,6 +56,7 @@
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/T7W3nZ6zFfUJ",
     "manualUrl": "/manuals/final-fantasy-vii.pdf",
+    "videoUrl": "",
     "hidden": false
   }
 ]

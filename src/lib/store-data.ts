@@ -12,6 +12,7 @@ export type Collection = {
   moxfieldUrl: string;
   deckcheckUrl: string;
   manualUrl: string;
+  videoUrl: string;
   hidden: boolean;
 };
 

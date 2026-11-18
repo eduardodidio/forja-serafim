@@ -186,6 +186,28 @@ function CollectionPage() {
           </div>
         )}
 
+        {collection.videoUrl && (
+          <div className="mb-12">
+            <h2 className="mb-6 text-2xl">Veja o deck em acao</h2>
+            <div className="overflow-hidden rounded-lg border border-border/50">
+              <video
+                src={collection.videoUrl}
+                controls
+                preload="metadata"
+                controlsList="nodownload"
+                onContextMenu={(e) => e.preventDefault()}
+                className="w-full"
+                playsInline
+              >
+                Seu navegador nao suporta o elemento de video.
+              </video>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground/60">
+              Video demonstrativo — qualidade real das cartas pode variar.
+            </p>
+          </div>
+        )}
+
         <div className="surface-card flex flex-wrap items-center justify-between gap-6 p-10">
           <div className="min-w-0">
             <h2 className="text-2xl sm:text-3xl">Quer esse deck?</h2>

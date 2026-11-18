@@ -10,6 +10,7 @@ import {
   COVERS_DIR,
   DECKS_DIR,
   MANUALS_DIR,
+  VIDEOS_DIR,
   PROJECT_ROOT,
 } from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
@@ -115,6 +116,7 @@ type Collection = {
   moxfieldUrl: string;
   deckcheckUrl: string;
   manualUrl: string;
+  videoUrl: string;
   hidden: boolean;
 };
 
@@ -313,6 +315,7 @@ async function handleRequest(req: Request): Promise<Response> {
       moxfieldUrl: body.moxfieldUrl ?? "",
       deckcheckUrl: body.deckcheckUrl ?? "",
       manualUrl: "",
+      videoUrl: "",
       hidden: body.hidden ?? false,
     };
 
@@ -429,6 +432,60 @@ async function handleRequest(req: Request): Promise<Response> {
 
     gitPersist(`Upload manual: ${slug}`);
     return json({ path: `/manuals/${slug}.pdf` }, 200, req);
+  }
+
+  // Upload / delete demo video
+  const videoMatch = path.match(/^\/api\/collections\/([^/]+)\/video$/);
+  if (videoMatch) {
+    const slug = videoMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
+
+    if (method === "POST") {
+      const formData = await req.formData();
+      const file = formData.get("file") as File | null;
+      if (!file) return json({ error: "Nenhum arquivo enviado." }, 400, req);
+      if (file.type !== "video/mp4") {
+        return json({ error: "Apenas arquivos MP4 sao aceitos." }, 400, req);
+      }
+      const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50 MB
+      if (file.size > MAX_VIDEO_SIZE) {
+        return json({ error: "Video deve ter no maximo 50 MB." }, 400, req);
+      }
+
+      if (!existsSync(VIDEOS_DIR)) mkdirSync(VIDEOS_DIR, { recursive: true });
+      const dest = join(VIDEOS_DIR, `${slug}.mp4`);
+      const buffer = Buffer.from(await file.arrayBuffer());
+      await Bun.write(dest, buffer);
+
+      const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+      const col = collections.find((c) => c.slug === slug);
+      if (col) {
+        col.videoUrl = `/videos/decks/${slug}.mp4`;
+        writeJson(COLLECTIONS_JSON, collections);
+      }
+
+      gitPersist(`Upload video: ${slug}`);
+      return json({ path: `/videos/decks/${slug}.mp4` }, 200, req);
+    }
+
+    if (method === "DELETE") {
+      const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+      const col = collections.find((c) => c.slug === slug);
+      if (!col) return json({ error: "Colecao nao encontrada." }, 404, req);
+      if (!col.videoUrl) return json({ error: "Colecao nao possui video." }, 404, req);
+
+      const videoPath = join(VIDEOS_DIR, `${slug}.mp4`);
+      try {
+        if (existsSync(videoPath)) unlinkSync(videoPath);
+      } catch (err) {
+        console.error(`Failed to delete video ${videoPath}:`, err);
+      }
+
+      col.videoUrl = "";
+      writeJson(COLLECTIONS_JSON, collections);
+      gitPersist(`Remover video: ${slug}`);
+      return json(col, 200, req);
+    }
   }
 
   // Reorder sample images
@@ -700,6 +757,7 @@ async function handleRequest(req: Request): Promise<Response> {
     ".gif": "image/gif",
     ".svg": "image/svg+xml",
     ".pdf": "application/pdf",
+    ".mp4": "video/mp4",
     ".ico": "image/x-icon",
     ".woff": "font/woff",
     ".woff2": "font/woff2",
@@ -710,7 +768,7 @@ async function handleRequest(req: Request): Promise<Response> {
   // Try public/ first for mutable assets (covers, decks, manuals),
   // then dist/ for built site, then public/ for remaining static assets
   const DIST_DIR = join(PROJECT_ROOT, "dist");
-  const isMutableAsset = path.startsWith("/images/covers/") || path.startsWith("/images/decks/") || path.startsWith("/manuals/");
+  const isMutableAsset = path.startsWith("/images/covers/") || path.startsWith("/images/decks/") || path.startsWith("/manuals/") || path.startsWith("/videos/decks/");
   const searchDirs = isMutableAsset ? [PUBLIC_DIR, DIST_DIR] : [DIST_DIR, PUBLIC_DIR];
   for (const baseDir of searchDirs) {
     const filePath = join(baseDir, path.slice(1));
