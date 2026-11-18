@@ -158,5 +158,18 @@
     "manualUrl": "",
     "videoUrl": "",
     "hidden": false
+  },
+  {
+    "slug": "dragon-ball",
+    "name": "Dragon Ball",
+    "image": "/images/covers/dragon-ball.jpg",
+    "description": "Deck temático de Dragon Ball",
+    "cardCount": 100,
+    "sampleImages": [],
+    "moxfieldUrl": "",
+    "deckcheckUrl": "https://deckcheck.co/app/builder/lJEX3ifTyXxV",
+    "manualUrl": "",
+    "videoUrl": "",
+    "hidden": false
   }
 ]
