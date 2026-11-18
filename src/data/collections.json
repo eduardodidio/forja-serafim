@@ -55,5 +55,17 @@
     "deckcheckUrl": "https://deckcheck.co/app/builder/T7W3nZ6zFfUJ",
     "manualUrl": "/manuals/final-fantasy-vii.pdf",
     "hidden": false
+  },
+  {
+    "slug": "batman",
+    "name": "batman",
+    "image": "/images/covers/batman.jpg",
+    "description": "Batman",
+    "cardCount": 100,
+    "sampleImages": [],
+    "moxfieldUrl": "",
+    "deckcheckUrl": "",
+    "manualUrl": "",
+    "hidden": false
   }
 ]
