@@ -62,7 +62,9 @@
     "image": "/images/covers/batman.jpg",
     "description": "batman",
     "cardCount": 100,
-    "sampleImages": [],
+    "sampleImages": [
+      "/images/decks/batman/d1-batman-rumo-a-apokolips-moldura-gotica-comandante.jpg"
+    ],
     "moxfieldUrl": "",
     "deckcheckUrl": "",
     "manualUrl": "",
