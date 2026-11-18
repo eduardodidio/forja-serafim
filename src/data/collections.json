@@ -145,7 +145,14 @@
     "image": "/images/covers/arahbo-roar-of-the-world-premium.jpg",
     "description": "Deck de Arahbo com artes premium",
     "cardCount": 100,
-    "sampleImages": [],
+    "sampleImages": [
+      "/images/decks/arahbo-roar-of-the-world-premium/adorned-pouncer.jpg",
+      "/images/decks/arahbo-roar-of-the-world-premium/arahbo-rugido-do-mundo.jpg",
+      "/images/decks/arahbo-roar-of-the-world-premium/herald-s-horn.jpg",
+      "/images/decks/arahbo-roar-of-the-world-premium/kaheera-the-orphanguard.jpg",
+      "/images/decks/arahbo-roar-of-the-world-premium/skyhunter-skirmisher.jpg",
+      "/images/decks/arahbo-roar-of-the-world-premium/teferi-s-protection.jpg"
+    ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/LBKRQXuvGkZ3",
     "manualUrl": "",
