@@ -105,7 +105,14 @@
     "image": "/images/covers/conflito-eterno.jpg",
     "description": "Deck temático Anjos e Demônios do universo de Diablo",
     "cardCount": 100,
-    "sampleImages": [],
+    "sampleImages": [
+      "/images/decks/conflito-eterno/a-uniao-proibida-02.jpg",
+      "/images/decks/conflito-eterno/baal-senhor-da-destruicao.jpg",
+      "/images/decks/conflito-eterno/diablo-senhor-do-terror-01.jpg",
+      "/images/decks/conflito-eterno/lilith-mae-do-santuario.jpg",
+      "/images/decks/conflito-eterno/mephisto-senhor-do-medo.jpg",
+      "/images/decks/conflito-eterno/tyrael.jpg"
+    ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/LQDFHkdLEesL",
     "manualUrl": "",
