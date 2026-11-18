@@ -26,11 +26,11 @@
     "description": "Armaduras douradas, cosmo ardente e as doze casas em ouro puro.",
     "cardCount": 147,
     "sampleImages": [
-      "/images/decks/cavaleiros-do-zodiaco/akroma-s-will.jpg?v=1795028263000",
-      "/images/decks/cavaleiros-do-zodiaco/flare-of-fortitude.jpg?v=1795028263000",
-      "/images/decks/cavaleiros-do-zodiaco/ikki-de-fenix-01.jpg?v=1795028263000",
-      "/images/decks/cavaleiros-do-zodiaco/swords-to-plowshares.jpg?v=1795028263000",
-      "/images/decks/cavaleiros-do-zodiaco/the-immortal-sun.jpg?v=1795028263000",
+      "/images/decks/cavaleiros-do-zodiaco/akroma-s-will.jpg",
+      "/images/decks/cavaleiros-do-zodiaco/flare-of-fortitude.jpg",
+      "/images/decks/cavaleiros-do-zodiaco/ikki-de-fenix-01.jpg",
+      "/images/decks/cavaleiros-do-zodiaco/swords-to-plowshares.jpg",
+      "/images/decks/cavaleiros-do-zodiaco/the-immortal-sun.jpg",
       "/images/decks/cavaleiros-do-zodiaco/aioros-de-sagitario-comandante.jpg"
     ],
     "moxfieldUrl": "",
@@ -46,16 +46,29 @@
     "description": "Cristais, invocacoes lendarias e herois de um mundo em colapso.",
     "cardCount": 112,
     "sampleImages": [
-      "/images/decks/final-fantasy-vii/cloud-e-a-lamina-em-midgar.jpg?v=1795042401000",
-      "/images/decks/final-fantasy-vii/genesis-rhapsodos-versos-escarlates.jpg?v=1795042401000",
-      "/images/decks/final-fantasy-vii/angeal-hewley-honra-de-soldier.jpg?v=1795042401000",
-      "/images/decks/final-fantasy-vii/kadaj-e-a-lamina-souba.jpg?v=1795042401000",
-      "/images/decks/final-fantasy-vii/tseng-vestindo-o-traje-dos-turks.jpg?v=1795042401000",
+      "/images/decks/final-fantasy-vii/cloud-e-a-lamina-em-midgar.jpg",
+      "/images/decks/final-fantasy-vii/genesis-rhapsodos-versos-escarlates.jpg",
+      "/images/decks/final-fantasy-vii/angeal-hewley-honra-de-soldier.jpg",
+      "/images/decks/final-fantasy-vii/kadaj-e-a-lamina-souba.jpg",
+      "/images/decks/final-fantasy-vii/tseng-vestindo-o-traje-dos-turks.jpg",
       "/images/decks/final-fantasy-vii/1-zack-fair-legado-de-soldier-comandante.jpg"
     ],
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/T7W3nZ6zFfUJ",
     "manualUrl": "/manuals/final-fantasy-vii.pdf",
+    "videoUrl": "",
+    "hidden": false
+  },
+  {
+    "slug": "batman",
+    "name": "Batman",
+    "image": "/images/covers/batman.jpg",
+    "description": "Deck temático Batman",
+    "cardCount": 100,
+    "sampleImages": [],
+    "moxfieldUrl": "",
+    "deckcheckUrl": "https://deckcheck.co/app/builder/bHOv7T7mTYZf",
+    "manualUrl": "",
     "videoUrl": "",
     "hidden": false
   }
