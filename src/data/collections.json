@@ -98,5 +98,18 @@
     "manualUrl": "",
     "videoUrl": "",
     "hidden": false
+  },
+  {
+    "slug": "conflito-eterno",
+    "name": "Conflito Eterno",
+    "image": "/images/covers/conflito-eterno.jpg",
+    "description": "Deck temático Anjos e Demônios do universo de Diablo",
+    "cardCount": 100,
+    "sampleImages": [],
+    "moxfieldUrl": "",
+    "deckcheckUrl": "https://deckcheck.co/app/builder/LQDFHkdLEesL",
+    "manualUrl": "",
+    "videoUrl": "",
+    "hidden": false
   }
 ]
