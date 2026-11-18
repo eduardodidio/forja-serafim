@@ -1,13 +1,6 @@
 # Architecture — Forja Serafim
 
-```mermaid
-flowchart LR
-    User[User]
-    FE[Frontend]
-    BE[Backend]
-    DB[(Database)]
-    User --> FE --> BE --> DB
-```
+> **NOTA:** Este arquivo foi substituido pelos diagramas Mermaid detalhados.
+> Veja [`architecture-overview.mmd`](./architecture-overview.mmd) para a arquitetura completa.
 
-_Last updated: 2026-11-16_
-_Status: initial_
+_Atualizado: 2026-11-18_

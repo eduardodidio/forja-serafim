@@ -1,0 +1,66 @@
+%%{ init: { "theme": "dark" } }%%
+flowchart TD
+    ADMIN((Admin<br/>Anderson))
+
+    ADMIN --> LOGIN["GET /login"]
+    LOGIN --> GOOGLE["Google OAuth2<br/>Sign-In"]
+    GOOGLE --> VERIFY["POST /auth/google<br/>Verifica token"]
+    VERIFY -->|Email na whitelist| SESSION["Set cookie<br/>serafim_session"]
+    VERIFY -->|Email nao autorizado| DENIED["403 Forbidden"]
+
+    SESSION --> PANEL["GET /admin/<br/>Painel Web"]
+
+    PANEL --> COL_CRUD["CRUD Colecoes"]
+    PANEL --> TEST_CRUD["CRUD Depoimentos"]
+    PANEL --> SETTINGS["Config WhatsApp URL"]
+    PANEL --> PUBLISH["Publicar Site"]
+
+    subgraph ColOps["Operacoes de Colecao"]
+        COL_CREATE["POST /api/collections<br/>Criar"]
+        COL_EDIT["PUT /api/collections/:slug<br/>Editar"]
+        COL_DELETE["DELETE /api/collections/:slug<br/>Remover"]
+        COL_COVER["POST .../cover<br/>Upload capa"]
+        COL_IMAGES["POST .../images<br/>Upload amostras"]
+        COL_REORDER["PUT .../images/reorder<br/>Reordenar"]
+        COL_IMG_DEL["DELETE .../images/:file<br/>Remover imagem"]
+        COL_MANUAL["POST .../manual<br/>Upload PDF"]
+        COL_VIDEO["POST|DELETE .../video<br/>Video demo"]
+    end
+
+    COL_CRUD --> ColOps
+
+    subgraph ImagePipeline["Pipeline de Imagens"]
+        RECEIVE["Recebe upload<br/>(JPEG/PNG/WebP)"]
+        VALIDATE["Valida tipo + tamanho"]
+        RESIZE["sharp resize<br/>(max 600px amostras<br/>max 1200px covers)"]
+        WATERMARK["Watermark SVG<br/>5 linhas diagonais"]
+        SAVE["Salva .jpg em<br/>public/images/"]
+    end
+
+    COL_IMAGES & COL_COVER --> ImagePipeline
+
+    subgraph GitPersist["Git Persist (serial queue)"]
+        STAGE["git add<br/>(arquivos especificos)"]
+        DIFF["git diff --cached"]
+        DIFF -->|Sem mudancas| CLEAN["Estado: clean"]
+        DIFF -->|Com mudancas| COMMIT["git commit<br/>Auto-save: desc"]
+        COMMIT --> FETCH["git fetch origin main"]
+        FETCH --> REBASE{"Behind origin?"}
+        REBASE -->|Sim| MERGE["rebase ou merge"]
+        REBASE -->|Nao| PUSH
+        MERGE --> PUSH["git push<br/>(token auth)"]
+        PUSH -->|Sucesso| CLEAN
+        PUSH -->|Falha| ERROR["Estado: error<br/>lastError salvo"]
+    end
+
+    ColOps --> GitPersist
+    TEST_CRUD --> GitPersist
+    SETTINGS --> GitPersist
+
+    PUBLISH --> BUILD["bun run build"]
+    BUILD --> GitPersist
+
+    style ADMIN fill:#d4a853,color:#000
+    style DENIED fill:#c0392b,color:#fff
+    style ERROR fill:#c0392b,color:#fff
+    style CLEAN fill:#27ae60,color:#fff

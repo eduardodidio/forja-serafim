@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { ExternalLink, FileText } from "lucide-react";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
@@ -41,8 +42,13 @@ function CollectionPage() {
   const collection = getCollection(slug);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!collection) {
+      navigate({ to: "/colecoes" });
+    }
+  }, [collection, navigate]);
+
   if (!collection) {
-    navigate({ to: "/colecoes" });
     return null;
   }
 

@@ -1,0 +1,82 @@
+%%{ init: { "theme": "dark" } }%%
+flowchart TB
+    subgraph Client["Browser (SPA)"]
+        direction TB
+        VITE["Vite 8 + React 19"]
+        TSR["TanStack Router<br/>(file-based)"]
+        TW["Tailwind CSS v4"]
+        SW["Service Worker<br/>(sw.js)"]
+        VITE --> TSR
+        VITE --> TW
+        VITE --> SW
+    end
+
+    subgraph Routes["Pages (src/routes/)"]
+        HOME["/ (Home)"]
+        COL_IDX["/colecoes"]
+        COL_SLUG["/colecoes/$slug"]
+        SOBRE["/sobre"]
+        CONTATO["/contato"]
+        ROOT["__root.tsx<br/>(layout + 404)"]
+    end
+
+    subgraph Components["Shared Components"]
+        PS["PageShell"]
+        SH["SiteHeader"]
+        SF["SiteFooter"]
+        CT["CollectionCard"]
+        C3D["Card3DTilt"]
+        LB["Lightbox"]
+        WA["WhatsAppIcon"]
+    end
+
+    subgraph DataLayer["Data Layer (src/)"]
+        SD["store-data.ts"]
+        SEO["seo.ts"]
+        CB["cache-bust.ts"]
+        UR["useReveal.ts"]
+        JSON_C["collections.json"]
+        JSON_T["testimonials.json"]
+        JSON_S["settings.json"]
+    end
+
+    subgraph Admin["Admin Server (admin/)"]
+        SRV["server.ts<br/>(Bun.serve)"]
+        AUTH["Google OAuth"]
+        API["REST API<br/>/api/*"]
+        GP["git-persist.ts<br/>(serial queue)"]
+        IMG["image-processor.ts<br/>(sharp + watermark)"]
+        CLI["cli.ts<br/>(inquirer)"]
+    end
+
+    subgraph External["External Services"]
+        GH["GitHub<br/>(repo origin)"]
+        RENDER["Render<br/>(hosting)"]
+        GOOGLE["Google OAuth2"]
+        WHATSAPP["WhatsApp API"]
+    end
+
+    subgraph Static["Static Assets (public/)"]
+        COVERS["images/covers/"]
+        DECKS["images/decks/"]
+        MANUALS["manuals/"]
+        VIDEOS["videos/decks/"]
+        FAVICON["favicon + PWA"]
+    end
+
+    Client --> Routes
+    Routes --> Components
+    Components --> DataLayer
+    SD --> JSON_C & JSON_T & JSON_S
+    TSR --> ROOT --> Routes
+
+    SRV --> AUTH --> GOOGLE
+    SRV --> API
+    API --> GP --> GH
+    API --> IMG
+    API --> JSON_C & JSON_T & JSON_S
+    API --> Static
+
+    RENDER --> SRV
+    CONTATO --> WHATSAPP
+    COL_SLUG --> LB --> C3D

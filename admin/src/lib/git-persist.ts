@@ -25,12 +25,14 @@ let queue: Promise<PersistResult> = Promise.resolve({ committed: false, pushed: 
  * Calls are serialised — no two git operations run concurrently.
  */
 export function gitPersist(description: string): Promise<PersistResult> {
-  queue = queue.then(() => doGitPersist(description)).catch((err: unknown) => {
-    const msg = err instanceof Error ? err.message : String(err);
-    state = "error";
-    lastError = msg;
-    return { committed: false, pushed: false, error: msg };
-  });
+  queue = queue
+    .then(() => doGitPersist(description))
+    .catch((err: unknown) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      state = "error";
+      lastError = msg;
+      return { committed: false, pushed: false, error: msg };
+    });
   return queue;
 }
 
@@ -67,6 +69,7 @@ const FILES_TO_ADD = [
   "public/images/covers/",
   "public/images/decks/",
   "public/manuals/",
+  "public/videos/decks/",
 ];
 
 async function doGitPersist(description: string): Promise<PersistResult> {
@@ -108,7 +111,11 @@ async function doGitPersist(description: string): Promise<PersistResult> {
           git("rebase", "origin/main");
         } catch {
           // Rebase conflict — abort and try merge
-          try { git("rebase", "--abort"); } catch { /* ignore */ }
+          try {
+            git("rebase", "--abort");
+          } catch {
+            /* ignore */
+          }
           git("pull", "--no-rebase", "origin", "main");
         }
       }
@@ -129,9 +136,7 @@ async function doGitPersist(description: string): Promise<PersistResult> {
         : "";
     // Scrub GITHUB_TOKEN from error messages
     const raw = stderr ? `${msg} — ${stderr}` : msg;
-    const detail = process.env.GITHUB_TOKEN
-      ? raw.replaceAll(process.env.GITHUB_TOKEN, "***")
-      : raw;
+    const detail = process.env.GITHUB_TOKEN ? raw.replaceAll(process.env.GITHUB_TOKEN, "***") : raw;
     state = "error";
     lastError = detail;
     return { committed: true, pushed: false, error: detail };
@@ -149,7 +154,11 @@ function ensureOnMain(): void {
     if (branch !== "HEAD") return; // already on a branch
 
     // Fetch latest origin/main so we don't reset main to an old commit
-    try { git("fetch", "origin", "main"); } catch { /* offline */ }
+    try {
+      git("fetch", "origin", "main");
+    } catch {
+      /* offline */
+    }
 
     // If origin/main exists, start main there and merge local changes
     try {
@@ -172,8 +181,7 @@ function getAuthedRemoteUrl(): string {
   try {
     remoteUrl = git("remote", "get-url", "origin");
   } catch {
-    const repo =
-      process.env.GITHUB_REPO || "https://github.com/eduardodidio/forja-serafim.git";
+    const repo = process.env.GITHUB_REPO || "https://github.com/eduardodidio/forja-serafim.git";
     git("remote", "add", "origin", repo);
     remoteUrl = repo;
   }

@@ -1,5 +1,5 @@
 import { readFileSync, existsSync, mkdirSync, statSync, unlinkSync } from "fs";
-import { join, dirname, extname } from "path";
+import { join, dirname, extname, resolve } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
 import { readJson, writeJson } from "./lib/data-io.js";
@@ -58,8 +58,9 @@ const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
   .filter(Boolean);
 // Stable secret — derives from GITHUB_TOKEN so sessions survive redeploys.
 // Falls back to SESSION_SECRET env var, then random (dev only).
-const SESSION_SECRET = process.env.SESSION_SECRET
-  || (process.env.GITHUB_TOKEN
+const SESSION_SECRET =
+  process.env.SESSION_SECRET ||
+  (process.env.GITHUB_TOKEN
     ? crypto.createHash("sha256").update(process.env.GITHUB_TOKEN).digest("hex")
     : crypto.randomBytes(32).toString("hex"));
 
@@ -768,11 +769,17 @@ async function handleRequest(req: Request): Promise<Response> {
   // Try public/ first for mutable assets (covers, decks, manuals),
   // then dist/ for built site, then public/ for remaining static assets
   const DIST_DIR = join(PROJECT_ROOT, "dist");
-  const isMutableAsset = path.startsWith("/images/covers/") || path.startsWith("/images/decks/") || path.startsWith("/manuals/") || path.startsWith("/videos/decks/");
+  const isMutableAsset =
+    path.startsWith("/images/covers/") ||
+    path.startsWith("/images/decks/") ||
+    path.startsWith("/manuals/") ||
+    path.startsWith("/videos/decks/");
   const searchDirs = isMutableAsset ? [PUBLIC_DIR, DIST_DIR] : [DIST_DIR, PUBLIC_DIR];
   for (const baseDir of searchDirs) {
     const filePath = join(baseDir, path.slice(1));
-    if (existsSync(filePath) && !filePath.includes("..") && statSync(filePath).isFile()) {
+    const resolved = resolve(filePath);
+    if (!resolved.startsWith(baseDir)) continue; // path traversal blocked
+    if (existsSync(filePath) && statSync(filePath).isFile()) {
       const ext = extname(filePath).toLowerCase();
       const mime = MIME_TYPES[ext] ?? "application/octet-stream";
       const file = readFileSync(filePath);
@@ -810,10 +817,18 @@ try {
 
 // Ensure we are on main branch at startup (Render deploys in detached HEAD)
 try {
-  const branch = execSync("git rev-parse --abbrev-ref HEAD", { cwd: PROJECT_ROOT, encoding: "utf-8", stdio: "pipe" }).trim();
+  const branch = execSync("git rev-parse --abbrev-ref HEAD", {
+    cwd: PROJECT_ROOT,
+    encoding: "utf-8",
+    stdio: "pipe",
+  }).trim();
   if (branch === "HEAD") {
     console.log("[startup] Detached HEAD detected — switching to main branch");
-    try { execSync("git fetch origin main", { cwd: PROJECT_ROOT, stdio: "pipe" }); } catch { /* offline */ }
+    try {
+      execSync("git fetch origin main", { cwd: PROJECT_ROOT, stdio: "pipe" });
+    } catch {
+      /* offline */
+    }
     try {
       execSync("git checkout -B main origin/main", { cwd: PROJECT_ROOT, stdio: "pipe" });
     } catch {
@@ -831,7 +846,10 @@ try {
   let dirty = false;
   for (const col of cols) {
     const cleanImage = col.image.split("?")[0];
-    if (cleanImage !== col.image) { col.image = cleanImage; dirty = true; }
+    if (cleanImage !== col.image) {
+      col.image = cleanImage;
+      dirty = true;
+    }
     const cleanSamples = col.sampleImages.map((s) => s.split("?")[0]);
     if (JSON.stringify(cleanSamples) !== JSON.stringify(col.sampleImages)) {
       col.sampleImages = cleanSamples;

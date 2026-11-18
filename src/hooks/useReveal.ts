@@ -41,7 +41,7 @@ export function useReveal(direction: RevealDirection = "up", delay = 0) {
   const style: React.CSSProperties = {
     opacity: revealed ? 1 : 0,
     transform: revealed ? "none" : transforms[direction],
-    transition: `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms`,
+    transition: `opacity 0.6s ease-out, transform 0.6s ease-out`,
   };
 
   return { ref, style, revealed };

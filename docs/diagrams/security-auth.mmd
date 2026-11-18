@@ -1,0 +1,54 @@
+%%{ init: { "theme": "dark" } }%%
+sequenceDiagram
+    participant U as Admin User
+    participant B as Browser
+    participant S as Server (Bun)
+    participant G as Google OAuth2
+
+    Note over B,S: Login Flow
+    U->>B: Acessa /login
+    B->>S: GET /login
+    S->>B: login.html (com GOOGLE_CLIENT_ID)
+    U->>B: Clica "Sign in with Google"
+    B->>G: Google Sign-In popup
+    G->>B: credential (JWT id_token)
+    B->>S: POST /auth/google {credential}
+    S->>G: GET /tokeninfo?id_token=...
+    G->>S: {email, aud, email_verified}
+
+    alt Email na whitelist
+        S->>S: createSession(email)<br/>HMAC-SHA256(email:expires, SECRET)
+        S->>B: 200 + Set-Cookie: serafim_session
+        B->>S: GET /admin/ (com cookie)
+        S->>S: getSession() verifica HMAC + expiry
+        S->>B: admin panel HTML
+    else Email nao autorizado
+        S->>B: 403 "Email nao autorizado"
+    end
+
+    Note over B,S: Session Validation (every request)
+    B->>S: Request /api/* ou /admin/*
+    S->>S: Parse cookie serafim_session
+    S->>S: Split email:expires:signature
+    S->>S: Verify HMAC(email:expires) == signature
+    S->>S: Check expires > Date.now()
+
+    alt Sessao valida
+        S->>S: Processa request
+    else Sessao invalida/expirada
+        S->>B: 302 Redirect /login (HTML)<br/>ou 401 (API)
+    end
+
+    Note over B,S: CSRF Protection
+    B->>S: POST /api/* (state-changing)
+    S->>S: Check Origin header
+    alt Origin em ALLOWED_ORIGINS ou ausente
+        S->>S: Processa request
+    else Origin nao permitido
+        S->>B: 403 "Origem nao permitida"
+    end
+
+    Note over B,S: Logout
+    U->>B: Clica Logout
+    B->>S: GET /auth/logout
+    S->>B: Set-Cookie: serafim_session=; Max-Age=0<br/>302 Redirect /login

@@ -1,0 +1,66 @@
+%%{ init: { "theme": "dark" } }%%
+flowchart LR
+    subgraph Sources["Data Sources"]
+        CJ["collections.json"]
+        TJ["testimonials.json"]
+        SJ["settings.json"]
+    end
+
+    subgraph Frontend["Frontend (build-time import)"]
+        SD["store-data.ts"]
+        SEO["seo.ts"]
+        CB["cache-bust.ts"]
+    end
+
+    subgraph Pages["Pages"]
+        HOME["Home"]
+        COLECOES["Colecoes Index"]
+        SLUG["Colecoes/$slug"]
+        SOBRE["Sobre"]
+        CONTATO["Contato"]
+    end
+
+    subgraph Admin["Admin Server"]
+        API_GET["GET /api/collections"]
+        API_POST["POST /api/collections"]
+        API_PUT["PUT /api/collections/:slug"]
+        API_DEL["DELETE /api/collections/:slug"]
+        API_COVER["POST /api/.../cover"]
+        API_IMG["POST /api/.../images"]
+        API_VID["POST|DELETE /api/.../video"]
+        API_MAN["POST /api/.../manual"]
+        API_TEST["CRUD /api/testimonials"]
+        API_SET["GET|PUT /api/settings"]
+        API_PUB["POST /api/publish"]
+    end
+
+    subgraph Persist["Git Persist Pipeline"]
+        STAGE["git add<br/>(specific files)"]
+        COMMIT["git commit<br/>(auto-save msg)"]
+        FETCH["git fetch +<br/>rebase/merge"]
+        PUSH["git push<br/>(authed URL)"]
+    end
+
+    subgraph Assets["Image Pipeline"]
+        UPLOAD["File Upload"]
+        SHARP["sharp resize"]
+        WM["Watermark SVG<br/>(Forja Serafim)"]
+        JPEG["Output JPEG"]
+    end
+
+    CJ & TJ & SJ --> SD
+    SD --> SEO
+    SD --> HOME & COLECOES & SLUG
+    SEO --> HOME & SLUG
+    CB --> SLUG
+    SJ --> CONTATO
+
+    API_POST & API_PUT & API_DEL --> CJ
+    API_COVER & API_IMG --> Assets
+    UPLOAD --> SHARP --> WM --> JPEG
+    API_TEST --> TJ
+    API_SET --> SJ
+
+    CJ & TJ & SJ --> STAGE --> COMMIT --> FETCH --> PUSH
+
+    API_PUB -->|"bun run build"| STAGE

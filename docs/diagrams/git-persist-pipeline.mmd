@@ -1,0 +1,40 @@
+%%{ init: { "theme": "dark" } }%%
+stateDiagram-v2
+    [*] --> clean
+
+    clean --> dirty: Mutation request<br/>(create/edit/delete)
+
+    dirty --> dirty: git add<br/>(specific files)
+    dirty --> clean: No staged changes
+
+    dirty --> pushing: git commit<br/>"Auto-save: description"
+
+    pushing --> clean: git push success
+    pushing --> error: git push failed
+
+    error --> dirty: Retry triggered<br/>(POST /api/persist-retry)
+
+    note right of dirty
+        Files staged:
+        - src/data/collections.json
+        - src/data/testimonials.json
+        - src/data/settings.json
+        - public/images/covers/
+        - public/images/decks/
+        - public/manuals/
+        (missing: public/videos/decks/)
+    end note
+
+    note right of pushing
+        Before push:
+        1. git fetch origin main
+        2. Check if behind
+        3. Rebase (or merge on conflict)
+        4. Push with GITHUB_TOKEN auth
+    end note
+
+    note left of error
+        Token scrubbed from error msg.
+        State visible at:
+        GET /api/persist-status
+    end note

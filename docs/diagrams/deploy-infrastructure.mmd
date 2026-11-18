@@ -1,0 +1,45 @@
+%%{ init: { "theme": "dark" } }%%
+flowchart LR
+    subgraph Dev["Desenvolvimento Local"]
+        CODE["Codigo fonte"]
+        BUN_DEV["bun run dev<br/>localhost:8080"]
+        ADMIN_LOCAL["bun admin/src/server.ts<br/>localhost:3001"]
+        CLI["bun admin:cli<br/>(CLI interativo)"]
+    end
+
+    subgraph GitHub["GitHub"]
+        REPO["eduardodidio/<br/>forja-serafim"]
+        MAIN["branch: main"]
+    end
+
+    subgraph Render["Render.com"]
+        SERVICE["Web Service<br/>forja-serafim"]
+        BUILD_CMD["Build:<br/>bun install +<br/>bun run build"]
+        START_CMD["Start:<br/>bun admin/src/server.ts"]
+        ENV["Env Vars:<br/>GOOGLE_CLIENT_ID<br/>ALLOWED_EMAILS<br/>GITHUB_TOKEN<br/>RENDER_DEPLOY_HOOK"]
+    end
+
+    subgraph ServerRouting["Server Routing (Bun.serve)"]
+        HEALTH["/health"]
+        LOGIN_R["/login → Google OAuth"]
+        ADMIN_R["/admin/ → Panel HTML"]
+        API_R["/api/* → REST API"]
+        STATIC_R["Static files:<br/>1. public/ (mutable)<br/>2. dist/ (built)"]
+        SPA_R["SPA fallback:<br/>dist/index.html"]
+    end
+
+    subgraph DNS["DNS"]
+        DOMAIN["forjaserafim.com.br"]
+    end
+
+    CODE -->|git push| REPO
+    REPO -->|auto deploy| SERVICE
+    SERVICE --> BUILD_CMD --> START_CMD
+    START_CMD --> ServerRouting
+    DOMAIN --> SERVICE
+
+    ADMIN_R -->|git-persist| REPO
+
+    style SERVICE fill:#27ae60,color:#fff
+    style REPO fill:#333,color:#fff
+    style DOMAIN fill:#d4a853,color:#000

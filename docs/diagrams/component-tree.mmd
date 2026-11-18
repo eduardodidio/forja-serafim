@@ -1,0 +1,75 @@
+%%{ init: { "theme": "dark" } }%%
+flowchart TD
+    APP["App<br/>(StrictMode + RouterProvider)"]
+    ROOT["__root.tsx<br/>RootComponent"]
+    APP --> ROOT
+
+    ROOT --> ANTI_FOUC["script: Anti-FOUC<br/>(dark class)"]
+    ROOT --> JSON_LD["script: Organization<br/>JSON-LD"]
+    ROOT --> OUTLET["Outlet"]
+
+    OUTLET --> HOME["/ Home"]
+    OUTLET --> COL_IDX["/colecoes Index"]
+    OUTLET --> COL_SLUG["/colecoes/$slug"]
+    OUTLET --> SOBRE["/sobre"]
+    OUTLET --> CONTATO["/contato"]
+    OUTLET --> NOT_FOUND["NotFoundComponent<br/>(404 tematico)"]
+
+    subgraph PageShell["PageShell wrapper"]
+        HEADER["SiteHeader"]
+        MAIN["main (children)"]
+        FOOTER["SiteFooter"]
+    end
+
+    HOME & COL_IDX & COL_SLUG & SOBRE & CONTATO --> PageShell
+
+    HEADER --> LOGO["Logo + Nome"]
+    HEADER --> NAV["Nav links"]
+    HEADER --> THEME_BTN["Theme toggle<br/>(Moon/Sun)"]
+    HEADER --> WA_BTN["WhatsApp button"]
+    HEADER --> MENU_BTN["Mobile menu"]
+
+    subgraph HomeContent["Home Content"]
+        HERO["Hero section"]
+        FEATURES["Features grid<br/>(4 cards)"]
+        COLLECTIONS["Collections grid"]
+        DECKLIST["DeckListSection<br/>(textarea + WA)"]
+        THEMEBUILDER["ThemeBuilderSection<br/>(form + WA)"]
+        TESTIMONIALS["TestimonialsSection"]
+        CTA["CTA Final"]
+    end
+
+    HOME --> HomeContent
+    COLLECTIONS --> CC["CollectionCard"]
+    CC --> CACHE_BUST["cacheBust()"]
+    CC --> FLIP_ANIM["Flip animation<br/>(3.5s interval)"]
+
+    subgraph SlugContent["Collection Detail"]
+        SLUG_HERO["Hero com cover"]
+        SAMPLES["Sample images grid"]
+        DECK_REF["DeckCheck/Moxfield links"]
+        MANUAL_DL["Manual PDF download"]
+        VIDEO_PLAYER["Video player"]
+        ORDER_CTA["Order CTA"]
+    end
+
+    COL_SLUG --> SlugContent
+    SAMPLES --> LIGHTBOX["Lightbox"]
+    LIGHTBOX --> CARD3D["Card3DTilt<br/>(react-parallax-tilt)"]
+    SAMPLES --> CARD3D
+
+    subgraph Reveal["Reveal animation"]
+        USE_REVEAL["useReveal hook"]
+        IO["IntersectionObserver"]
+        MOTION["prefers-reduced-motion<br/>check"]
+    end
+
+    FEATURES & COLLECTIONS & TESTIMONIALS & CTA --> Reveal
+
+    FOOTER --> FOOTER_NAV["Nav links"]
+    FOOTER --> FOOTER_SOCIAL["WhatsApp + Instagram"]
+    FOOTER --> DISCLAIMER["Disclaimer WotC"]
+    FOOTER --> COPYRIGHT["Copyright"]
+
+    style APP fill:#d4a853,color:#000
+    style PageShell fill:#22263590,stroke:#d4a853

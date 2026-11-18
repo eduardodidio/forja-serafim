@@ -1,0 +1,45 @@
+%%{ init: { "theme": "dark" } }%%
+flowchart TD
+    START((Visitante))
+
+    START --> LANDING["Home Page"]
+    LANDING --> HERO["Ve hero + features"]
+    HERO --> CTA_COL["Clica 'Ver Colecoes'"]
+    HERO --> CTA_WA["Clica 'WhatsApp'"]
+    HERO --> SCROLL["Scroll down"]
+
+    CTA_COL --> COLECOES["Pagina Colecoes"]
+    COLECOES --> CARD["Clica em uma colecao"]
+    CARD --> DETAIL["Pagina da Colecao"]
+
+    DETAIL --> SAMPLE["Ve amostras com<br/>marca d'agua"]
+    SAMPLE --> LIGHTBOX["Abre lightbox<br/>(3D tilt + zoom)"]
+    DETAIL --> DECK_REF["Confere deck no<br/>DeckCheck/Moxfield"]
+    DETAIL --> MANUAL["Baixa manual PDF"]
+    DETAIL --> VIDEO["Assiste video demo"]
+    DETAIL --> ORDER_WA["Clica 'Encomendar<br/>via WhatsApp'"]
+
+    SCROLL --> DECKLIST["Secao 'Cole sua lista'"]
+    DECKLIST --> PASTE["Cola lista de cartas"]
+    PASTE --> SEND_LIST["Envia via WhatsApp"]
+
+    SCROLL --> THEME["Secao 'Escolha o tema'"]
+    THEME --> FILL_FORM["Preenche comandante<br/>+ tema + arquetipo"]
+    FILL_FORM --> SEND_THEME["Solicita orcamento<br/>via WhatsApp"]
+
+    SCROLL --> TESTIMONIALS["Secao Depoimentos"]
+    SCROLL --> CTA_FINAL["CTA Final"]
+    CTA_FINAL --> FINAL_WA["WhatsApp"]
+
+    CTA_WA & ORDER_WA & SEND_LIST & SEND_THEME & FINAL_WA --> WHATSAPP((WhatsApp<br/>Anderson))
+
+    LANDING --> NAV["Navegacao"]
+    NAV --> SOBRE["Sobre"]
+    NAV --> CONTATO["Contato"]
+    CONTATO --> CONTACT_WA["WhatsApp"]
+    CONTATO --> INSTAGRAM["Instagram"]
+
+    NAV --> THEME_TOGGLE["Toggle Dark/Light"]
+
+    style WHATSAPP fill:#25D366,color:#fff
+    style START fill:#d4a853,color:#000
