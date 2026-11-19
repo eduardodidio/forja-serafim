@@ -10,4 +10,5 @@ export const COVERS_DIR = resolve(PROJECT_ROOT, "public/images/covers");
 export const DECKS_DIR = resolve(PROJECT_ROOT, "public/images/decks");
 export const MANUALS_DIR = resolve(PROJECT_ROOT, "public/manuals");
 export const VIDEOS_DIR = resolve(PROJECT_ROOT, "public/videos/decks");
+export const TOKENS_DIR = resolve(PROJECT_ROOT, "public/images/tokens");
 export const SETTINGS_JSON = resolve(PROJECT_ROOT, "src/data/settings.json");

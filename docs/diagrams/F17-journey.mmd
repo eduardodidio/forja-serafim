@@ -1,0 +1,58 @@
+graph TD
+    subgraph "Admin: Upload Tokens"
+        A1["Admin opens Create/Edit modal"]
+        A2["Clicks token upload zone"]
+        A3["Selects image files"]
+        A4["Fills name + quantity per token"]
+        A5["Submits form"]
+        A6["POST /api/collections/:slug/tokens"]
+        A7["Server: validate types, qty > 0"]
+        A8["Server: processImage (watermark)"]
+        A9["Server: save to public/images/tokens/"]
+        A10["Server: update collections.json"]
+        A11["Server: gitPersist"]
+        A12["Admin sees tokens in grid"]
+    end
+
+    A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7
+    A7 -->|valid| A8 --> A9 --> A10 --> A11 --> A12
+    A7 -->|invalid| A7E["400 error toast"]
+
+    subgraph "Admin: Manage Tokens"
+        B1["Admin opens Edit modal"]
+        B2{"Action?"}
+        B3["Delete token"]
+        B4["Reorder (move up/down)"]
+        B5["Edit quantity"]
+        B6["DELETE /api/:slug/tokens/:file"]
+        B7["PUT /api/:slug/tokens/reorder"]
+        B8["PUT /api/collections/:slug"]
+        B9["Server removes file + JSON entry"]
+        B10["Server reorders array"]
+        B11["Server updates tokens field"]
+        B12["gitPersist"]
+    end
+
+    B1 --> B2
+    B2 --> B3 --> B6 --> B9 --> B12
+    B2 --> B4 --> B7 --> B10 --> B12
+    B2 --> B5 --> B8 --> B11 --> B12
+
+    subgraph "Customer: View Tokens"
+        C1["Customer visits /colecoes/:slug"]
+        C2{"Collection has tokens?"}
+        C3["'Ver Tokens (N)' button shown"]
+        C4["Button hidden"]
+        C5["Customer clicks button"]
+        C6["TokensModal opens"]
+        C7["Sees token cards with Card3DTilt"]
+        C8["Sees quantity badges (xN)"]
+        C9["Right-click blocked on images"]
+        C10["Closes via Escape / X / click outside"]
+    end
+
+    C1 --> C2
+    C2 -->|yes| C3 --> C5 --> C6 --> C7 --> C8
+    C6 --> C9
+    C6 --> C10
+    C2 -->|no| C4

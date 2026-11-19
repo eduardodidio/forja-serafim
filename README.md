@@ -166,6 +166,7 @@ forja-serafim/
 ├── public/               # Static assets
 │   ├── images/covers/    # Capas das colecoes
 │   ├── images/decks/     # Amostras com watermark
+│   ├── images/tokens/    # Tokens com watermark
 │   ├── manuals/          # PDFs dos manuais
 │   ├── videos/decks/     # Videos demo
 │   ├── sw.js             # Service worker
@@ -174,7 +175,7 @@ forja-serafim/
 │   ├── diagrams/         # Diagramas Mermaid
 │   ├── adr/              # Architecture Decision Records
 │   └── prd/              # Product Requirements
-├── tasks/features/       # Task manifests (F01-F15)
+├── tasks/features/       # Task manifests (F01-F17)
 ├── CLAUDE.md             # Agent instructions
 ├── render.yaml           # Render blueprint
 └── package.json
@@ -184,6 +185,7 @@ forja-serafim/
 
 | Feature | Descricao |
 |---------|-----------|
+| **F17** | Tokens: upload com watermark, gestao no admin (CRUD + reorder), modal na landing page (Card3DTilt + qty badge) |
 | **F15** | Video demonstrativo por colecao (upload, player, admin UI) |
 | **F14** | - |
 | **F13** | Auto-persist admin changes to git (serial queue + dirty-state banner) |

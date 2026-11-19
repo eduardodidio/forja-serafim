@@ -1,0 +1,56 @@
+graph TD
+    subgraph "Data Layer"
+        JSON["collections.json<br/>tokens: Token[]"]
+        FS["public/images/tokens/{slug}/"]
+    end
+
+    subgraph "Admin Server (admin/src/server.ts)"
+        POST_T["POST /api/collections/:slug/tokens<br/>Upload + watermark"]
+        DEL_T["DELETE /api/collections/:slug/tokens/:filename<br/>Remove token + file"]
+        PUT_R["PUT /api/collections/:slug/tokens/reorder<br/>Reorder array"]
+        PUT_C["PUT /api/collections/:slug<br/>Update tokens (quantity edit)"]
+        GP["gitPersist()"]
+    end
+
+    subgraph "Image Processing"
+        PI["processImage()<br/>sharp: resize 600px + watermark"]
+    end
+
+    subgraph "Admin UI (admin/public/index.html)"
+        CREATE["Create Modal<br/>Token upload zone + name + qty"]
+        EDIT["Edit Modal<br/>Token grid: upload, delete,<br/>reorder, edit qty"]
+    end
+
+    subgraph "Landing Page (React SPA)"
+        BTN["Token Button<br/>Coins icon + count<br/>colecoes.$slug.tsx"]
+        MODAL["TokensModal<br/>Card3DTilt + qty badge<br/>tokens-modal.tsx"]
+    end
+
+    subgraph "Shared Types"
+        TYPE["Token { image, name, quantity }<br/>store-data.ts + server.ts"]
+    end
+
+    CREATE -->|FormData| POST_T
+    EDIT -->|fetch| DEL_T
+    EDIT -->|fetch| PUT_R
+    EDIT -->|fetch JSON| PUT_C
+
+    POST_T --> PI
+    PI --> FS
+    POST_T --> JSON
+    DEL_T --> JSON
+    DEL_T --> FS
+    PUT_R --> JSON
+    PUT_C --> JSON
+
+    POST_T --> GP
+    DEL_T --> GP
+    PUT_R --> GP
+
+    JSON -->|build time| BTN
+    BTN --> MODAL
+    FS -->|static serve| MODAL
+
+    TYPE -.->|consistent| JSON
+    TYPE -.->|consistent| POST_T
+    TYPE -.->|consistent| MODAL

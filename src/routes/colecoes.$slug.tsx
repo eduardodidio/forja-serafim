@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
-import { ExternalLink, FileText } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ExternalLink, FileText, Coins } from "lucide-react";
+import { TokensModal } from "@/components/tokens-modal";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { PageShell } from "@/components/page-shell";
 import { Card3DTilt } from "@/components/card-3d-tilt";
@@ -41,6 +42,7 @@ function CollectionPage() {
   const { slug } = Route.useParams();
   const collection = getCollection(slug);
   const navigate = useNavigate();
+  const [tokensOpen, setTokensOpen] = useState(false);
 
   useEffect(() => {
     if (!collection) {
@@ -141,6 +143,26 @@ function CollectionPage() {
             </p>
           </div>
         )}
+
+        {collection.tokens && collection.tokens.length > 0 && (
+          <section className="mb-12 text-center">
+            <button
+              onClick={() => setTokensOpen(true)}
+              className="inline-flex items-center gap-3 rounded-2xl border border-[oklch(0.75_0.09_82)]/30 bg-[oklch(0.75_0.09_82)]/5 px-6 py-3 transition-all duration-300 hover:border-[oklch(0.75_0.09_82)]/60 hover:bg-[oklch(0.75_0.09_82)]/10 group"
+            >
+              <Coins className="size-6 text-[oklch(0.75_0.09_82)] transition-transform group-hover:scale-110" />
+              <span className="font-display text-lg text-[oklch(0.75_0.09_82)]">
+                Ver Tokens ({collection.tokens.length})
+              </span>
+            </button>
+          </section>
+        )}
+
+        <TokensModal
+          tokens={collection.tokens ?? []}
+          isOpen={tokensOpen}
+          onClose={() => setTokensOpen(false)}
+        />
 
         {/* Deck reference link + manual */}
         {(collection.deckcheckUrl || collection.moxfieldUrl || collection.manualUrl) && (

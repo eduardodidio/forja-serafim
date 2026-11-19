@@ -68,6 +68,7 @@ const FILES_TO_ADD = [
   "src/data/settings.json",
   "public/images/covers/",
   "public/images/decks/",
+  "public/images/tokens/",
   "public/manuals/",
   "public/videos/decks/",
 ];

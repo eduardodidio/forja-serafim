@@ -2,6 +2,12 @@ import collectionsData from "@/data/collections.json";
 import testimonialsData from "@/data/testimonials.json";
 import settingsData from "@/data/settings.json";
 
+export type Token = {
+  image: string;
+  name: string;
+  quantity: number;
+};
+
 export type Collection = {
   slug: string;
   name: string;
@@ -9,6 +15,7 @@ export type Collection = {
   description: string;
   cardCount: number;
   sampleImages: string[];
+  tokens: Token[];
   moxfieldUrl: string;
   deckcheckUrl: string;
   manualUrl: string;

@@ -5,6 +5,7 @@
     "image": "/images/covers/castlevania.jpg",
     "description": "Castelo eterno, cacadores e a noite sem fim sob a lua de sangue.",
     "cardCount": 119,
+    "tokens": [],
     "sampleImages": [
       "/images/decks/castlevania/a-dracula-senhor-das-trevas-comandante.jpg",
       "/images/decks/castlevania/alucard-herdeiro-da-noite-sem-escudo.jpg",
@@ -25,6 +26,7 @@
     "image": "/images/covers/cavaleiros-do-zodiaco.jpg",
     "description": "Armaduras douradas, cosmo ardente e as doze casas em ouro puro.",
     "cardCount": 147,
+    "tokens": [],
     "sampleImages": [
       "/images/decks/cavaleiros-do-zodiaco/aioros-de-sagitario-comandante.jpg",
       "/images/decks/cavaleiros-do-zodiaco/albafica-de-peixes.jpg",
@@ -45,6 +47,7 @@
     "image": "/images/covers/final-fantasy-vii.jpg",
     "description": "Cristais, invocacoes lendarias e herois de um mundo em colapso.",
     "cardCount": 112,
+    "tokens": [],
     "sampleImages": [
       "/images/decks/final-fantasy-vii/cloud-e-a-lamina-em-midgar.jpg",
       "/images/decks/final-fantasy-vii/genesis-rhapsodos-versos-escarlates.jpg",

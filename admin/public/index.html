@@ -1190,6 +1190,10 @@
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
           ${c.sampleImages.length} amostras
         </span>
+        <span class="text-xs text-gray-500 flex items-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+          ${(c.tokens || []).length} tokens
+        </span>
       </div>
 
       <!-- Sample images gallery -->
@@ -1219,6 +1223,7 @@
 
       function openAddCollection() {
         createSampleFiles = [];
+        createTokenFiles = [];
         openModal(
           "Nova colecao",
           `
@@ -1299,6 +1304,22 @@
         <input id="f-samples" type="file" accept="image/*" multiple class="hidden" onchange="previewSamples(this)" />
       </div>
 
+      <div class="section-divider">
+        <span class="text-xs font-semibold text-gold uppercase tracking-wider font-display">Tokens</span>
+      </div>
+
+      <div class="flex items-center justify-between mb-3">
+        <span id="f-tokens-counter" class="text-xs font-medium text-emerald-400">0 tokens selecionados</span>
+      </div>
+
+      <div id="f-tokens-preview" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3 hidden"></div>
+
+      <div id="f-tokens-zone" class="upload-zone text-center cursor-pointer" onclick="document.getElementById('f-tokens').click()">
+        <svg class="w-6 h-6 mx-auto text-gray-600 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        <p class="text-xs text-gray-500">Arraste tokens ou clique para selecionar</p>
+        <input id="f-tokens" type="file" accept="image/*" multiple class="hidden" onchange="previewCreateTokens(this)" />
+      </div>
+
       <div class="flex flex-col sm:flex-row justify-end gap-3 pt-3 border-t border-gray-800/60">
         <button onclick="closeModal()" class="btn btn-outline">Cancelar</button>
         <button id="btn-add-collection" onclick="addCollection()" class="btn btn-gold">
@@ -1312,6 +1333,7 @@
       }
 
       let createSampleFiles = [];
+      let createTokenFiles = []; // Array of { file, name, quantity }
 
       function previewSamples(input) {
         const files = Array.from(input.files);
@@ -1386,6 +1408,72 @@
         reader.readAsDataURL(file);
       }
 
+      function previewCreateTokens(input) {
+        const files = Array.from(input.files);
+        for (const file of files) {
+          const baseName = file.name.replace(/\.[^.]+$/, '');
+          createTokenFiles.push({ file, name: baseName, quantity: 1 });
+        }
+        renderCreateTokenPreviews();
+        input.value = "";
+      }
+
+      function removeCreateToken(idx) {
+        createTokenFiles.splice(idx, 1);
+        renderCreateTokenPreviews();
+      }
+
+      function updateCreateTokenName(idx, val) {
+        if (createTokenFiles[idx]) createTokenFiles[idx].name = val;
+      }
+
+      function updateCreateTokenQty(idx, val) {
+        const qty = parseInt(val);
+        if (createTokenFiles[idx] && qty >= 1) createTokenFiles[idx].quantity = qty;
+      }
+
+      function renderCreateTokenPreviews() {
+        const grid = document.getElementById("f-tokens-preview");
+        const counter = document.getElementById("f-tokens-counter");
+        const count = createTokenFiles.length;
+
+        counter.textContent = count + " tokens selecionados";
+
+        if (count === 0) {
+          grid.classList.add("hidden");
+          grid.innerHTML = "";
+          return;
+        }
+
+        grid.classList.remove("hidden");
+        grid.innerHTML = "";
+
+        createTokenFiles.forEach((item, i) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const div = document.createElement("div");
+            div.className =
+              "relative group rounded-xl overflow-hidden border border-gray-700/60 hover:border-gold/30 transition-all duration-200";
+            div.innerHTML = `
+              <span class="absolute top-1.5 left-1.5 z-10 bg-black/70 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${i + 1}</span>
+              <img src="${e.target.result}" class="w-full object-cover" style="aspect-ratio: 1/1;" />
+              <div class="p-2 bg-gray-900/80 space-y-1">
+                <input type="text" value="${esc(item.name)}" onchange="updateCreateTokenName(${i}, this.value)" class="input text-xs w-full" placeholder="Nome do token" />
+                <div class="flex items-center gap-1.5">
+                  <label class="text-[10px] text-gray-400">Qtd:</label>
+                  <input type="number" value="${item.quantity}" min="1" onchange="updateCreateTokenQty(${i}, this.value)" class="input text-xs w-16 text-center" />
+                </div>
+              </div>
+              <button onclick="removeCreateToken(${i})" class="absolute top-1.5 right-1.5 z-10 w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity" title="Remover">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            `;
+            grid.appendChild(div);
+          };
+          reader.readAsDataURL(item.file);
+        });
+      }
+
       async function addCollection() {
         const name = document.getElementById("f-name").value.trim();
         const description = document.getElementById("f-desc").value.trim();
@@ -1455,7 +1543,34 @@
             }
           }
 
+          // Upload tokens if any
+          if (createTokenFiles.length > 0) {
+            const tfd = new FormData();
+            const tokenNames = [];
+            const tokenQuantities = [];
+            for (const t of createTokenFiles) {
+              tfd.append("files", t.file);
+              tokenNames.push(t.name);
+              tokenQuantities.push(t.quantity);
+            }
+            tfd.append("names", JSON.stringify(tokenNames));
+            tfd.append("quantities", JSON.stringify(tokenQuantities));
+            const tokenRes = await apiFetch(`${API}/api/collections/${newCol.slug}/tokens`, {
+              method: "POST",
+              body: tfd,
+            });
+            if (!tokenRes.ok) {
+              toast("Erro ao enviar tokens.", "error");
+            } else {
+              const { processed: tokenProcessed, failed: tokenFailed } = await tokenRes.json();
+              if (tokenFailed && tokenFailed.length > 0) {
+                toast(`${tokenFailed.length} tokens falharam ao processar.`, "error");
+              }
+            }
+          }
+
           createSampleFiles = [];
+          createTokenFiles = [];
           closeModal();
           toast(`Colecao "${name}" adicionada com capa!`);
           await loadCollections();
@@ -1623,6 +1738,60 @@
       `
           : ""
       }
+
+      <div class="section-divider">
+        <span class="text-xs font-semibold text-gold uppercase tracking-wider font-display">Tokens</span>
+        <span id="edit-tokens-count" class="text-xs text-gold/60 ml-2">${(c.tokens || []).length} tokens</span>
+      </div>
+
+      <div id="edit-tokens-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
+        ${
+          (c.tokens || []).length > 0
+            ? (c.tokens || [])
+                .map(
+                  (token, i) => `
+              <div class="relative group rounded-xl overflow-hidden border border-gray-700/60 hover:border-gold/30 transition-all duration-200">
+                <span class="absolute top-1.5 left-1.5 z-10 bg-black/70 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${i + 1}</span>
+                <img src="${token.image}" class="w-full object-cover" style="aspect-ratio: 1/1;" onerror="imgRetry(this)" />
+                <div class="p-2 bg-gray-900/80 space-y-1">
+                  <p class="text-xs text-gray-300 truncate" title="${esc(token.name)}">${esc(token.name)}</p>
+                  <div class="flex items-center gap-1.5">
+                    <label class="text-[10px] text-gray-400">Qtd:</label>
+                    <input type="number" value="${token.quantity}" min="1" onchange="updateTokenQuantity('${esc(slug)}', '${esc(token.image.split('/').pop())}', parseInt(this.value))" class="input text-xs w-16 text-center" />
+                  </div>
+                </div>
+                <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split('/').pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                  </button>
+                  ${
+                    i > 0
+                      ? `<button onclick="moveToken('${esc(slug)}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                  </button>`
+                      : ""
+                  }
+                  ${
+                    i < (c.tokens || []).length - 1
+                      ? `<button onclick="moveToken('${esc(slug)}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                  </button>`
+                      : ""
+                  }
+                </div>
+              </div>
+            `,
+                )
+                .join("")
+            : '<p class="text-xs text-gray-500">Nenhum token adicionado.</p>'
+        }
+      </div>
+
+      <label class="upload-zone block cursor-pointer text-center">
+        <svg class="w-6 h-6 mx-auto text-gray-600 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        <p class="text-xs text-gray-500">Adicionar tokens</p>
+        <input type="file" accept="image/*" multiple class="hidden" onchange="uploadEditTokens('${esc(slug)}', this)" />
+      </label>
 
       <div class="section-divider section-divider-danger mt-6">
         <span class="text-xs font-semibold text-red-400 uppercase tracking-wider font-display">Zona de perigo</span>
@@ -1822,6 +1991,195 @@
           counterEl.className =
             "text-xs font-medium " +
             (c.sampleImages.length >= 6 ? "text-red-400" : "text-emerald-400");
+        }
+      }
+
+      // --- Token edit functions ---
+
+      async function removeToken(slug, filename) {
+        const c = collections.find((x) => x.slug === slug);
+        if (!c || !c.tokens) return;
+
+        const imagePath = `/images/tokens/${slug}/${filename}`;
+        const idx = c.tokens.findIndex((t) => t.image === imagePath);
+        if (idx === -1) return;
+
+        // Optimistic: remove from local state
+        const backup = [...c.tokens];
+        c.tokens.splice(idx, 1);
+        updateEditTokensGrid(slug);
+
+        const res = await apiFetch(`${API}/api/collections/${slug}/tokens/${filename}`, {
+          method: "DELETE",
+        });
+        if (!res.ok) {
+          c.tokens = backup;
+          updateEditTokensGrid(slug);
+          toast("Erro ao remover token.", "error");
+          return;
+        }
+
+        toast("Token removido!");
+        await loadCollections();
+        updateEditTokensGrid(slug);
+      }
+
+      async function moveToken(slug, fromIdx, toIdx) {
+        const c = collections.find((x) => x.slug === slug);
+        if (!c || !c.tokens) return;
+
+        // Optimistic reorder
+        const [moved] = c.tokens.splice(fromIdx, 1);
+        c.tokens.splice(toIdx, 0, moved);
+        updateEditTokensGrid(slug);
+
+        const res = await apiFetch(`${API}/api/collections/${slug}/tokens/reorder`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tokens: c.tokens }),
+        });
+
+        if (!res.ok) {
+          const [m] = c.tokens.splice(toIdx, 1);
+          c.tokens.splice(fromIdx, 0, m);
+          updateEditTokensGrid(slug);
+          toast("Erro ao reordenar tokens.", "error");
+          return;
+        }
+
+        toast("Ordem dos tokens atualizada!");
+        await loadCollections();
+        updateEditTokensGrid(slug);
+      }
+
+      async function updateTokenQuantity(slug, filename, qty) {
+        if (!qty || qty < 1) return;
+        const c = collections.find((x) => x.slug === slug);
+        if (!c || !c.tokens) return;
+
+        const imagePath = `/images/tokens/${slug}/${filename}`;
+        const token = c.tokens.find((t) => t.image === imagePath);
+        if (!token) return;
+
+        const oldQty = token.quantity;
+        token.quantity = qty;
+
+        const res = await apiFetch(`${API}/api/collections/${slug}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tokens: c.tokens }),
+        });
+
+        if (!res.ok) {
+          token.quantity = oldQty;
+          toast("Erro ao atualizar quantidade.", "error");
+          return;
+        }
+
+        toast("Quantidade atualizada!");
+        await loadCollections();
+      }
+
+      async function uploadEditTokens(slug, input) {
+        const files = Array.from(input.files);
+        if (!files.length) return;
+
+        input.disabled = true;
+        toast(`Processando ${files.length} tokens...`);
+
+        try {
+          const fd = new FormData();
+          const names = [];
+          const quantities = [];
+          for (const f of files) {
+            fd.append("files", f);
+            names.push(f.name.replace(/\.[^.]+$/, ''));
+            quantities.push(1);
+          }
+          fd.append("names", JSON.stringify(names));
+          fd.append("quantities", JSON.stringify(quantities));
+
+          const res = await apiFetch(`${API}/api/collections/${slug}/tokens`, {
+            method: "POST",
+            body: fd,
+          });
+
+          if (!res.ok) {
+            const e = await res.json();
+            toast(e.error, "error");
+            return;
+          }
+
+          const { processed, failed } = await res.json();
+          if (failed && failed.length > 0) {
+            toast(`${failed.length} tokens falharam ao processar.`, "error");
+          }
+          if (processed.length > 0) {
+            toast(`${processed.length} tokens adicionados!`);
+          }
+
+          input.value = "";
+          await loadCollections();
+          updateEditTokensGrid(slug);
+        } finally {
+          input.disabled = false;
+        }
+      }
+
+      function updateEditTokensGrid(slug) {
+        const c = collections.find((x) => x.slug === slug);
+        if (!c) return;
+
+        const grid = document.getElementById("edit-tokens-grid");
+        if (!grid) return;
+
+        const tokens = c.tokens || [];
+
+        if (tokens.length === 0) {
+          grid.innerHTML = '<p class="text-xs text-gray-500 col-span-full">Nenhum token adicionado.</p>';
+        } else {
+          grid.innerHTML = tokens
+            .map(
+              (token, i) => `
+            <div class="relative group rounded-xl overflow-hidden border border-gray-700/60 hover:border-gold/30 transition-all duration-200" style="animation: fade-in 0.25s ease-out">
+              <span class="absolute top-1.5 left-1.5 z-10 bg-black/70 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${i + 1}</span>
+              <img src="${token.image}" class="w-full object-cover" style="aspect-ratio: 1/1;" onerror="imgRetry(this)" />
+              <div class="p-2 bg-gray-900/80 space-y-1">
+                <p class="text-xs text-gray-300 truncate" title="${esc(token.name)}">${esc(token.name)}</p>
+                <div class="flex items-center gap-1.5">
+                  <label class="text-[10px] text-gray-400">Qtd:</label>
+                  <input type="number" value="${token.quantity}" min="1" onchange="updateTokenQuantity('${esc(slug)}', '${esc(token.image.split('/').pop())}', parseInt(this.value))" class="input text-xs w-16 text-center" />
+                </div>
+              </div>
+              <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split('/').pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                ${
+                  i > 0
+                    ? `<button onclick="moveToken('${esc(slug)}', ${i}, ${i - 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover acima">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                </button>`
+                    : ""
+                }
+                ${
+                  i < tokens.length - 1
+                    ? `<button onclick="moveToken('${esc(slug)}', ${i}, ${i + 1})" class="w-6 h-6 rounded-full bg-gray-700/90 hover:bg-gray-600 text-white flex items-center justify-center text-xs" title="Mover abaixo">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>`
+                    : ""
+                }
+              </div>
+            </div>
+          `,
+            )
+            .join("");
+        }
+
+        // Update counter
+        const counterEl = document.getElementById("edit-tokens-count");
+        if (counterEl) {
+          counterEl.textContent = `${tokens.length} tokens`;
         }
       }
 

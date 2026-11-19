@@ -9,6 +9,7 @@ import {
   SETTINGS_JSON,
   COVERS_DIR,
   DECKS_DIR,
+  TOKENS_DIR,
   MANUALS_DIR,
   VIDEOS_DIR,
   PROJECT_ROOT,
@@ -107,6 +108,12 @@ async function verifyGoogleToken(credential: string): Promise<string | null> {
   }
 }
 
+type Token = {
+  image: string;
+  name: string;
+  quantity: number;
+};
+
 type Collection = {
   slug: string;
   name: string;
@@ -114,6 +121,7 @@ type Collection = {
   description: string;
   cardCount: number;
   sampleImages: string[];
+  tokens: Token[];
   moxfieldUrl: string;
   deckcheckUrl: string;
   manualUrl: string;
@@ -274,6 +282,14 @@ async function handleRequest(req: Request): Promise<Response> {
         }
         return img;
       });
+      col.tokens = (col.tokens ?? []).map((t) => {
+        const tPath = join(PUBLIC_DIR, t.image.replace(/^\//, ""));
+        if (existsSync(tPath)) {
+          const mtime = statSync(tPath).mtimeMs;
+          return { ...t, image: `${t.image.split("?")[0]}?v=${Math.floor(mtime)}` };
+        }
+        return t;
+      });
     }
     return json(collections, 200, req);
   }
@@ -313,6 +329,7 @@ async function handleRequest(req: Request): Promise<Response> {
       description: body.description,
       cardCount: body.cardCount,
       sampleImages: [],
+      tokens: [],
       moxfieldUrl: body.moxfieldUrl ?? "",
       deckcheckUrl: body.deckcheckUrl ?? "",
       manualUrl: "",
@@ -359,6 +376,7 @@ async function handleRequest(req: Request): Promise<Response> {
       if (body.deckcheckUrl !== undefined) col.deckcheckUrl = body.deckcheckUrl;
       if (body.hidden !== undefined) col.hidden = body.hidden;
       if (body.sampleImages !== undefined) col.sampleImages = body.sampleImages;
+      if (body.tokens !== undefined) col.tokens = body.tokens;
       writeJson(COLLECTIONS_JSON, collections);
       gitPersist(`Editar colecao: ${slug}`);
       return json(col, 200, req);
@@ -614,6 +632,166 @@ async function handleRequest(req: Request): Promise<Response> {
     return json({ processed, failed }, 200, req);
   }
 
+  // --- Token endpoints ---
+
+  // Upload tokens (multipart: files + names + quantities)
+  const tokensUploadMatch = path.match(/^\/api\/collections\/([^/]+)\/tokens$/);
+  if (tokensUploadMatch && method === "POST") {
+    const slug = tokensUploadMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
+    const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+    const col = collections.find((c) => c.slug === slug);
+    if (!col) return json({ error: "Colecao nao encontrada." }, 404, req);
+
+    const formData = await req.formData();
+    const files = formData.getAll("files") as File[];
+    const namesRaw = formData.get("names") as string | null;
+    const quantitiesRaw = formData.get("quantities") as string | null;
+
+    if (files.length === 0) return json({ error: "Nenhuma imagem enviada." }, 400, req);
+
+    let names: string[];
+    let quantities: number[];
+    try {
+      names = JSON.parse(namesRaw || "[]");
+      quantities = JSON.parse(quantitiesRaw || "[]");
+    } catch {
+      return json({ error: "names e quantities devem ser arrays JSON validos." }, 400, req);
+    }
+
+    if (names.length !== files.length || quantities.length !== files.length) {
+      return json(
+        { error: "O numero de names e quantities deve ser igual ao numero de arquivos." },
+        400,
+        req,
+      );
+    }
+
+    for (const q of quantities) {
+      if (typeof q !== "number" || q <= 0 || !Number.isInteger(q)) {
+        return json({ error: "Todas as quantidades devem ser inteiros maiores que 0." }, 400, req);
+      }
+    }
+
+    const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
+    const invalidFiles = files.filter((f) => !allowedImageTypes.includes(f.type));
+    if (invalidFiles.length > 0) {
+      return json(
+        {
+          error: `Arquivos invalidos: ${invalidFiles.map((f) => f.name).join(", ")}. Apenas JPEG, PNG e WebP.`,
+        },
+        400,
+        req,
+      );
+    }
+
+    const destDir = join(TOKENS_DIR, slug);
+    if (!existsSync(destDir)) mkdirSync(destDir, { recursive: true });
+
+    // Ensure tokens array exists (backward compat)
+    if (!col.tokens) col.tokens = [];
+
+    const processed: Token[] = [];
+    const failed: string[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]!;
+      const tokenName = names[i]!;
+      const quantity = quantities[i]!;
+
+      const baseName = file.name.replace(extname(file.name), "");
+      const safeName = baseName
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "")
+        .toLowerCase();
+
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const outputPath = join(destDir, `${safeName}.jpg`);
+      try {
+        await processImage(buffer, outputPath);
+        const token: Token = {
+          image: `/images/tokens/${slug}/${safeName}.jpg`,
+          name: tokenName,
+          quantity,
+        };
+        processed.push(token);
+        col.tokens.push(token);
+      } catch (err) {
+        console.error(`Failed to process token ${file.name}:`, err);
+        failed.push(file.name);
+      }
+    }
+
+    writeJson(COLLECTIONS_JSON, collections);
+    gitPersist(`Upload tokens: ${slug}`);
+    return json({ processed, failed }, 200, req);
+  }
+
+  // Reorder tokens
+  const tokensReorderMatch = path.match(/^\/api\/collections\/([^/]+)\/tokens\/reorder$/);
+  if (tokensReorderMatch && method === "PUT") {
+    const slug = tokensReorderMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
+    const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+    const col = collections.find((c) => c.slug === slug);
+    if (!col) return json({ error: "Colecao nao encontrada." }, 404, req);
+
+    const body = (await req.json()) as { tokens?: Token[] };
+    if (!body.tokens || !Array.isArray(body.tokens)) {
+      return json({ error: "tokens deve ser um array." }, 400, req);
+    }
+
+    // Validate all images exist in current tokens
+    const currentImages = new Set((col.tokens || []).map((t) => t.image));
+    for (const token of body.tokens) {
+      if (!currentImages.has(token.image)) {
+        return json({ error: `Token "${token.image}" nao encontrado na colecao.` }, 400, req);
+      }
+    }
+
+    col.tokens = body.tokens;
+    writeJson(COLLECTIONS_JSON, collections);
+    gitPersist(`Reordenar tokens: ${slug}`);
+    return json(col, 200, req);
+  }
+
+  // Delete a token
+  const tokenDeleteMatch = path.match(/^\/api\/collections\/([^/]+)\/tokens\/([^/]+)$/);
+  if (tokenDeleteMatch && method === "DELETE") {
+    const slug = tokenDeleteMatch[1]!;
+    if (!isValidSlug(slug)) return json({ error: "Slug invalido." }, 400, req);
+    const filename = tokenDeleteMatch[2]!;
+    // Prevent path traversal
+    if (filename.includes("..") || filename.includes("/") || filename.includes("\\")) {
+      return json({ error: "Nome de arquivo invalido." }, 400, req);
+    }
+    const collections = readJson<Collection[]>(COLLECTIONS_JSON);
+    const col = collections.find((c) => c.slug === slug);
+    if (!col) return json({ error: "Colecao nao encontrada." }, 404, req);
+
+    const imagePath = `/images/tokens/${slug}/${filename}`;
+    const idx = (col.tokens || []).findIndex((t) => t.image === imagePath);
+    if (idx === -1) return json({ error: "Token nao encontrado na colecao." }, 404, req);
+
+    // Remove from array
+    col.tokens.splice(idx, 1);
+    writeJson(COLLECTIONS_JSON, collections);
+
+    // Delete physical file
+    const physicalPath = join(TOKENS_DIR, slug, filename);
+    try {
+      if (existsSync(physicalPath)) unlinkSync(physicalPath);
+    } catch (err) {
+      console.error(`Failed to delete token file ${physicalPath}:`, err);
+    }
+
+    gitPersist(`Remover token: ${slug}/${filename}`);
+    return json(col, 200, req);
+  }
+
   // --- Testimonials API ---
 
   if (path === "/api/testimonials" && method === "GET") {
@@ -772,6 +950,7 @@ async function handleRequest(req: Request): Promise<Response> {
   const isMutableAsset =
     path.startsWith("/images/covers/") ||
     path.startsWith("/images/decks/") ||
+    path.startsWith("/images/tokens/") ||
     path.startsWith("/manuals/") ||
     path.startsWith("/videos/decks/");
   const searchDirs = isMutableAsset ? [PUBLIC_DIR, DIST_DIR] : [DIST_DIR, PUBLIC_DIR];
@@ -854,6 +1033,15 @@ try {
     if (JSON.stringify(cleanSamples) !== JSON.stringify(col.sampleImages)) {
       col.sampleImages = cleanSamples;
       dirty = true;
+    }
+    if (col.tokens) {
+      for (const t of col.tokens) {
+        const cleanTokenImg = t.image.split("?")[0];
+        if (cleanTokenImg !== t.image) {
+          t.image = cleanTokenImg;
+          dirty = true;
+        }
+      }
     }
   }
   if (dirty) {
