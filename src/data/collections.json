@@ -99,6 +99,11 @@
         "quantity": 1
       },
       {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-human-1-1.jpg?v=1795374154459",
+        "name": "Token Human 1-1",
+        "quantity": 1
+      },
+      {
         "image": "/images/tokens/cavaleiros-do-zodiaco/knight-token-2-2.jpg?v=1795374151155",
         "name": "Knight Token 2-2",
         "quantity": 1
@@ -106,11 +111,6 @@
       {
         "image": "/images/tokens/cavaleiros-do-zodiaco/o-monarca.jpg?v=1795374152161",
         "name": "O Monarca",
-        "quantity": 1
-      },
-      {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/token-human-1-1.jpg?v=1795374154459",
-        "name": "Token Human 1-1",
         "quantity": 1
       },
       {
