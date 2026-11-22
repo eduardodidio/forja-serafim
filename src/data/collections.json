@@ -161,27 +161,27 @@
     "cardCount": 112,
     "tokens": [
       {
-        "image": "/images/tokens/final-fantasy-vii/cofre-de-gil-da-shinra.jpg?v=1795374527925",
+        "image": "/images/tokens/final-fantasy-vii/cofre-de-gil-da-shinra.jpg",
         "name": "Cofre de Gil da Shinra",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/final-fantasy-vii/materia-mimica-duas-espadas-buster.jpg?v=1795374528520",
+        "image": "/images/tokens/final-fantasy-vii/materia-mimica-duas-espadas-buster.jpg",
         "name": "Matéria Mímica_ duas Espadas Buster",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/final-fantasy-vii/red-xiii-guardiao-do-canion-cosmo.jpg?v=1795374529029",
+        "image": "/images/tokens/final-fantasy-vii/red-xiii-guardiao-do-canion-cosmo.jpg",
         "name": "Red XIII, guardião do Cânion Cosmo",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/final-fantasy-vii/sr-golfinho-de-junon.jpg?v=1795374529621",
+        "image": "/images/tokens/final-fantasy-vii/sr-golfinho-de-junon.jpg",
         "name": "Sr. Golfinho de Junon",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/final-fantasy-vii/varredor-da-shinra-na-fabrica.jpg?v=1795374530123",
+        "image": "/images/tokens/final-fantasy-vii/varredor-da-shinra-na-fabrica.jpg",
         "name": "Varredor da Shinra na fábrica",
         "quantity": 1
       }
@@ -218,7 +218,74 @@
     "deckcheckUrl": "https://deckcheck.co/app/builder/bHOv7T7mTYZf",
     "manualUrl": "",
     "videoUrl": "",
-    "hidden": false
+    "hidden": false,
+    "tokens": [
+      {
+        "image": "/images/tokens/batman/batdrone-de-reconhecimento.jpg",
+        "name": "Batdrone-de-Reconhecimento",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/bruce-wayne-e-o-arsenal-vazio.jpg",
+        "name": "Bruce Wayne e o arsenal vazio",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/cara-de-barro-surge-do-concreto.jpg",
+        "name": "Cara-de-Barro surge do concreto",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/cisne-metalico-do-coringa.jpg",
+        "name": "Cisne metálico do Coringa",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/dossie-anonimo-com-fotografia-virada-para-baixo.jpg",
+        "name": "Dossiê anônimo com fotografia virada para baixo",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/man-bat-no-laboratorio-experimento-fora-de-controle.jpg",
+        "name": "Man-Bat no laboratório, experimento fora de controle",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/morcego-de-gotham-sobre-a-cidade.jpg",
+        "name": "Morcego de Gotham sobre a cidade",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/omac-avanca-sobre-a-barreira.jpg",
+        "name": "OMAC avança sobre a barreira",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/omac-em-cela-de-contencao.jpg",
+        "name": "OMAC em cela de contenção",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/omac-voando-sobre-gotham.jpg",
+        "name": "OMAC voando sobre Gotham",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/omac-sentinela-incansavel-em-gotham.jpg",
+        "name": "OMAC, Sentinela Incansável em Gotham",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/pesadelo-de-gotham.jpg",
+        "name": "Pesadelo-de-Gotham",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/recursos-da-wayne.jpg",
+        "name": "Recursos-da-Wayne",
+        "quantity": 1
+      }
+    ]
   },
   {
     "slug": "paraiso-celestial",
