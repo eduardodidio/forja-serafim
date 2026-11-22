@@ -7,37 +7,37 @@
     "cardCount": 119,
     "tokens": [
       {
-        "image": "/images/tokens/castlevania/acolito-do-rito-velado-frame-transparente.jpg?v=1795342149351",
+        "image": "/images/tokens/castlevania/acolito-do-rito-velado-frame-transparente.jpg",
         "name": "Acolito-do-Rito-Velado-Frame-Transparente",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/castlevania/atlas-do-corredor-infinito.jpg?v=1795342149857",
+        "image": "/images/tokens/castlevania/atlas-do-corredor-infinito.jpg",
         "name": "Atlas do Corredor Infinito",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/castlevania/custodio-da-cripta-de-dracula.jpg?v=1795342150453",
+        "image": "/images/tokens/castlevania/custodio-da-cripta-de-dracula.jpg",
         "name": "Custódio da cripta de Drácula",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/castlevania/guarda-da-corte-de-styria.jpg?v=1795342150962",
+        "image": "/images/tokens/castlevania/guarda-da-corte-de-styria.jpg",
         "name": "Guarda da Corte de Styria",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/castlevania/reserva-carmesim-no-salao-gotico.jpg?v=1795342151551",
+        "image": "/images/tokens/castlevania/reserva-carmesim-no-salao-gotico.jpg",
         "name": "Reserva Carmesim no salão gótico",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/castlevania/sentinela-da-corte-de-dracula.jpg?v=1795342152053",
+        "image": "/images/tokens/castlevania/sentinela-da-corte-de-dracula.jpg",
         "name": "Sentinela-da-Corte-de-Dracula",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/castlevania/vulto-das-torres-asas-ao-luar.jpg?v=1795342152555",
+        "image": "/images/tokens/castlevania/vulto-das-torres-asas-ao-luar.jpg",
         "name": "Vulto das Torres, asas ao luar",
         "quantity": 2
       }
@@ -62,7 +62,83 @@
     "image": "/images/covers/cavaleiros-do-zodiaco.jpg",
     "description": "Armaduras douradas, cosmo ardente e as doze casas em ouro puro.",
     "cardCount": 147,
-    "tokens": [],
+    "tokens": [
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiro-marina-token-1-1.jpg",
+        "name": "Cavaleiro Marina Token 1-1",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-athena-copia.jpg",
+        "name": "Cavaleiros de Athena - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-bronze-token-1-1.jpg",
+        "name": "Cavaleiros de Bronze Token 1-1",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-ouro-divinos-copia.jpg",
+        "name": "Cavaleiros de Ouro Divinos - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-prata-token-1-1-copia.jpg",
+        "name": "Cavaleiros de Prata Token 1-1 - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-deuses-de-asgard.jpg",
+        "name": "Cavaleiros Deuses de Asgard",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/espectro-de-hades.jpg",
+        "name": "Espectro de Hades",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/knight-token-2-2.jpg",
+        "name": "Knight Token 2-2",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/marcador-de-sangue.jpg",
+        "name": "Marcador de Sangue",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/o-monarca.jpg",
+        "name": "O Monarca",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/soldados-do-santuario.jpg",
+        "name": "Soldados do Santuário",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/tesouro-01.jpg",
+        "name": "Tesouro 01",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-golem-3-3.jpg",
+        "name": "Token Golem 3-3",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-human-1-1.jpg",
+        "name": "Token Human 1-1",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-solder-1-1.jpg",
+        "name": "Token Solder 1-1",
+        "quantity": 1
+      }
+    ],
     "sampleImages": [
       "/images/decks/cavaleiros-do-zodiaco/aioros-de-sagitario-comandante.jpg",
       "/images/decks/cavaleiros-do-zodiaco/albafica-de-peixes.jpg",
