@@ -305,7 +305,69 @@
     "deckcheckUrl": "https://deckcheck.co/app/builder/AN3_1VNP0dQa",
     "manualUrl": "",
     "videoUrl": "",
-    "hidden": false
+    "hidden": false,
+    "tokens": [
+      {
+        "image": "/images/tokens/paraiso-celestial/ajani-s-pridemate-token.jpg",
+        "name": "Ajani's Pridemate Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-soldier-token-1-1-copia.jpg",
+        "name": "Angel Soldier Token 1-1 - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-token-3-3.jpg",
+        "name": "Angel Token 3-3",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-token-4-4.jpg",
+        "name": "Angel Token 4-4",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-token-vigilance-1-1-02-copia.jpg",
+        "name": "Angel Token Vigilance 1-1 02 - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-token-vigilance-4-4-02-copia.jpg",
+        "name": "Angel Token Vigilance 4-4 02 - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/copy-anjos-token.jpg",
+        "name": "Copy Anjos Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/creature-token-spirit-1-1-flying-copia.jpg",
+        "name": "Creature token Spirit 1-1 Flying - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/horadrim-token-2-2.jpg",
+        "name": "Horadrim Token 2-2",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/monarca.jpg",
+        "name": "Monarca",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/tesouro-token.jpg",
+        "name": "Tesouro Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/token-bird-1-1-copia.jpg",
+        "name": "Token Bird 1-1 - Copia",
+        "quantity": 1
+      }
+    ]
   },
   {
     "slug": "conflito-eterno",
