@@ -18,6 +18,7 @@ Colecoes de MTG proxy incluem tokens (cartas especiais) que acompanham o deck. A
 ## Architecture
 
 ### Data model (collections.json)
+
 ```json
 {
   "tokens": [
@@ -27,28 +28,31 @@ Colecoes de MTG proxy incluem tokens (cartas especiais) que acompanham o deck. A
 ```
 
 ### Endpoints (admin/src/server.ts)
+
 - `POST /api/collections/:slug/tokens` — upload token images (multipart, with quantity in FormData)
 - `DELETE /api/collections/:slug/tokens/:filename` — remove a token
 - `PUT /api/collections/:slug/tokens/reorder` — reorder tokens
 - `PUT /api/collections/:slug` — already handles full collection update (tokens included)
 
 ### Storage
+
 - Token images: `public/images/tokens/{slug}/{safeName}.jpg`
 - Watermarked at 600px max width (same as sampleImages)
 
 ### Frontend (landing page)
+
 - New `TokensModal` component in `src/components/tokens-modal.tsx`
 - Token trigger button in collection detail page (`src/routes/colecoes.$slug.tsx`)
 - Positioned between card grid and DeckCheck/Manual links section
 
 ## Tasks
 
-| Task | Wave | Description |
-|------|------|-------------|
-| F17-T01 | 0 | Extend data model + backend endpoints for tokens |
-| F17-T02 | 0 | Token image storage + watermark processing |
-| F17-T03 | 1 | Admin panel: token upload/manage UI |
-| F17-T04 | 1 | Landing page: token button + modal |
+| Task    | Wave | Description                                      |
+| ------- | ---- | ------------------------------------------------ |
+| F17-T01 | 0    | Extend data model + backend endpoints for tokens |
+| F17-T02 | 0    | Token image storage + watermark processing       |
+| F17-T03 | 1    | Admin panel: token upload/manage UI              |
+| F17-T04 | 1    | Landing page: token button + modal               |
 
 ## Waves
 

@@ -1,10 +1,10 @@
 # F14 Test Plan — Fix cover upload and structural persistence bugs
 
-| Field | Value |
-|-------|-------|
-| **Status** | drafted |
-| **Generator** | TEA |
-| **Generated at** | 2026-11-18 |
+| Field            | Value                                                                                                                                              |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Status**       | drafted                                                                                                                                            |
+| **Generator**    | TEA                                                                                                                                                |
+| **Generated at** | 2026-11-18                                                                                                                                         |
 | **Source brief** | F14-README.md — fix cover upload (sharp processing, no watermark), serve-time cache-bust injection, loading spinner, collections.json sanitisation |
 
 ---
@@ -12,6 +12,7 @@
 ## 1. Header
 
 This test plan covers validation of four bugfix tasks in F14:
+
 - **T01**: New `processCoverImage()` function in `image-processor.ts` (sharp resize, JPEG conversion, no watermark)
 - **T02**: Cover upload endpoint refactored to use sharp + tmp-file pattern; GET `/api/collections` injects serve-time `?v=<mtime>` cache-bust; persisted JSON stores clean paths only
 - **T03**: Loading spinner overlay in admin UI during cover upload
@@ -23,12 +24,12 @@ All testing is **manual** (no automated test framework in this project).
 
 ## 2. Fixtures
 
-| Fixture | Path | Domain | Owner |
-|---------|------|--------|-------|
-| Valid PNG image (>1200px wide) | _test data, not committed_ | image-processing | F14-T01 |
-| Valid WebP image with transparency | _test data, not committed_ | image-processing | F14-T01 |
-| Small JPEG image (<1200px wide) | _test data, not committed_ | image-processing | F14-T01 |
-| Corrupt image file (text renamed to .jpg) | _test data, not committed_ | error-handling | F14-T01 |
+| Fixture                                                 | Path                               | Domain            | Owner   |
+| ------------------------------------------------------- | ---------------------------------- | ----------------- | ------- |
+| Valid PNG image (>1200px wide)                          | _test data, not committed_         | image-processing  | F14-T01 |
+| Valid WebP image with transparency                      | _test data, not committed_         | image-processing  | F14-T01 |
+| Small JPEG image (<1200px wide)                         | _test data, not committed_         | image-processing  | F14-T01 |
+| Corrupt image file (text renamed to .jpg)               | _test data, not committed_         | error-handling    | F14-T01 |
 | Dirty collections.json (with `?v=12345` on image paths) | _manually crafted for T04 testing_ | data-sanitisation | F14-T04 |
 
 _All fixtures are ephemeral test data created by the tester at test time. No committed fixture files are needed — this is a manual-test project. Justified: creating permanent fixture files adds maintenance cost with no rework prevented, since tests are executed manually._
@@ -63,13 +64,13 @@ _Sem perf budgets aplicaveis._ This is a bugfix feature; no performance-sensitiv
 
 ## 5. Mocks vs hits real
 
-| Componente | Decisao | Justificativa |
-|-----------|---------|---------------|
-| sharp (image processing) | real | Core of the bugfix; must validate actual format conversion. Mocking would defeat the purpose. |
-| Filesystem (cover write/read) | real | Bug involves actual file I/O (tmp-file pattern, mtime stat). Must hit real disk. |
-| Admin server endpoints | real | Testing endpoint behaviour; curl/browser hits the real Bun server. |
-| Google OAuth | mock (bypass) | Use existing dev auth bypass or pre-authenticated session. OAuth is orthogonal to cover bugs. |
-| Git persist (F13) | real | T02 changes affect what gets committed to git; verify clean paths in actual git diff. |
+| Componente                    | Decisao       | Justificativa                                                                                 |
+| ----------------------------- | ------------- | --------------------------------------------------------------------------------------------- |
+| sharp (image processing)      | real          | Core of the bugfix; must validate actual format conversion. Mocking would defeat the purpose. |
+| Filesystem (cover write/read) | real          | Bug involves actual file I/O (tmp-file pattern, mtime stat). Must hit real disk.              |
+| Admin server endpoints        | real          | Testing endpoint behaviour; curl/browser hits the real Bun server.                            |
+| Google OAuth                  | mock (bypass) | Use existing dev auth bypass or pre-authenticated session. OAuth is orthogonal to cover bugs. |
+| Git persist (F13)             | real          | T02 changes affect what gets committed to git; verify clean paths in actual git diff.         |
 
 ---
 
@@ -124,11 +125,11 @@ _Sem perf budgets aplicaveis._ This is a bugfix feature; no performance-sensitiv
 
 ## 7. Anotacoes para tasks
 
-| Task | Fixture slugs |
-|------|---------------|
+| Task    | Fixture slugs                                          |
+| ------- | ------------------------------------------------------ |
 | F14-T01 | png-large, webp-transparent, jpeg-small, corrupt-image |
-| F14-T02 | png-large, corrupt-image, dirty-collections-json |
-| F14-T03 | _(no fixtures — visual/manual only)_ |
-| F14-T04 | dirty-collections-json |
+| F14-T02 | png-large, corrupt-image, dirty-collections-json       |
+| F14-T03 | _(no fixtures — visual/manual only)_                   |
+| F14-T04 | dirty-collections-json                                 |
 
 Tasks annotated: F14-T01, F14-T02, F14-T03, F14-T04 (see appended lines in each task file).

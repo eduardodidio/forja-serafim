@@ -46,13 +46,13 @@ Admin mutations (image uploads, collection edits, testimonial CRUD, settings cha
 
 ## Tasks
 
-| Task | Wave | Description |
-|------|------|-------------|
-| F13-T01 | 0 | Create gitPersist() helper with serial queue |
-| F13-T02 | 1 | Integrate gitPersist into all 12 mutation endpoints |
-| F13-T03 | 1 | Add /api/persist-status endpoint + state tracking |
-| F13-T04 | 2 | Add dirty-state banner UI to admin panel |
-| F13-T05 | 2 | Refactor publish to reuse gitPersist (deduplicate) |
+| Task    | Wave | Description                                         |
+| ------- | ---- | --------------------------------------------------- |
+| F13-T01 | 0    | Create gitPersist() helper with serial queue        |
+| F13-T02 | 1    | Integrate gitPersist into all 12 mutation endpoints |
+| F13-T03 | 1    | Add /api/persist-status endpoint + state tracking   |
+| F13-T04 | 2    | Add dirty-state banner UI to admin panel            |
+| F13-T05 | 2    | Refactor publish to reuse gitPersist (deduplicate)  |
 
 ## Waves
 

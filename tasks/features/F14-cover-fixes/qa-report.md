@@ -11,58 +11,58 @@
 
 ### T01 -- processCoverImage() in image-processor.ts
 
-| # | Acceptance Criterion | Verdict | Evidence |
-|---|---------------------|---------|----------|
-| 1 | `processCoverImage` exported from image-processor.ts | PASS | Line 43: `export async function processCoverImage(...)` |
-| 2 | Uses sharp for format conversion to JPEG | PASS | Line 49: `.jpeg({ quality: COVER_QUALITY })` |
-| 3 | Resizes to max 1200px with `withoutEnlargement: true` | PASS | Line 6: `COVER_MAX_WIDTH = 1200`; Line 48: `.resize({ width: resizeWidth, withoutEnlargement: true })` |
-| 4 | Does NOT add watermark (governance) | PASS | No `composite()`, no `createWatermarkSvg()` call in `processCoverImage` |
-| 5 | JPEG quality is 85 | PASS | Line 7: `COVER_QUALITY = 85`; Line 49: `.jpeg({ quality: COVER_QUALITY })` |
-| 6 | Existing `processImage()` unchanged | PASS | Lines 25-41 intact, no modifications to watermark logic |
+| #   | Acceptance Criterion                                  | Verdict | Evidence                                                                                               |
+| --- | ----------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------ |
+| 1   | `processCoverImage` exported from image-processor.ts  | PASS    | Line 43: `export async function processCoverImage(...)`                                                |
+| 2   | Uses sharp for format conversion to JPEG              | PASS    | Line 49: `.jpeg({ quality: COVER_QUALITY })`                                                           |
+| 3   | Resizes to max 1200px with `withoutEnlargement: true` | PASS    | Line 6: `COVER_MAX_WIDTH = 1200`; Line 48: `.resize({ width: resizeWidth, withoutEnlargement: true })` |
+| 4   | Does NOT add watermark (governance)                   | PASS    | No `composite()`, no `createWatermarkSvg()` call in `processCoverImage`                                |
+| 5   | JPEG quality is 85                                    | PASS    | Line 7: `COVER_QUALITY = 85`; Line 49: `.jpeg({ quality: COVER_QUALITY })`                             |
+| 6   | Existing `processImage()` unchanged                   | PASS    | Lines 25-41 intact, no modifications to watermark logic                                                |
 
 ### T02 -- Cover upload endpoint + GET cache-bust injection
 
-| # | Acceptance Criterion | Verdict | Evidence |
-|---|---------------------|---------|----------|
-| 7 | Cover upload uses `processCoverImage()` via tmp file | PASS | server.ts lines 392-408: tmp dir created, buffer written to tmpPath, `processCoverImage(tmpPath, dest)` called |
-| 8 | collections.json stores clean paths without `?v=` | PASS | Line 414: `col.image = \`/images/covers/${slug}.jpg\`` -- no query string |
-| 9 | GET /api/collections returns URLs with `?v=<mtime>` | PASS | Lines 265-279: for-loop injects `?v=${Math.floor(mtime)}` on both `image` and `sampleImages` |
-| 10 | Cover upload response includes cache-busted URL | PASS | Lines 420-421: `statSync(dest).mtimeMs` used in response `?v=${Math.floor(mtime)}` |
-| 11 | `PUBLIC_DIR` accessible in API handler scope | PASS | Line 24: `const PUBLIC_DIR = join(PROJECT_ROOT, "public")` -- module-level |
-| 12 | Tmp files cleaned up after processing | PASS | Lines 402-408: `finally` block with `unlinkSync(tmpPath)` and `rmdirSync(tmpDir)` |
-| 13 | Existing covers continue to work | PASS | Paths unchanged (`/images/covers/<slug>.jpg`), only processing added |
+| #   | Acceptance Criterion                                 | Verdict | Evidence                                                                                                       |
+| --- | ---------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------- |
+| 7   | Cover upload uses `processCoverImage()` via tmp file | PASS    | server.ts lines 392-408: tmp dir created, buffer written to tmpPath, `processCoverImage(tmpPath, dest)` called |
+| 8   | collections.json stores clean paths without `?v=`    | PASS    | Line 414: `col.image = \`/images/covers/${slug}.jpg\`` -- no query string                                      |
+| 9   | GET /api/collections returns URLs with `?v=<mtime>`  | PASS    | Lines 265-279: for-loop injects `?v=${Math.floor(mtime)}` on both `image` and `sampleImages`                   |
+| 10  | Cover upload response includes cache-busted URL      | PASS    | Lines 420-421: `statSync(dest).mtimeMs` used in response `?v=${Math.floor(mtime)}`                             |
+| 11  | `PUBLIC_DIR` accessible in API handler scope         | PASS    | Line 24: `const PUBLIC_DIR = join(PROJECT_ROOT, "public")` -- module-level                                     |
+| 12  | Tmp files cleaned up after processing                | PASS    | Lines 402-408: `finally` block with `unlinkSync(tmpPath)` and `rmdirSync(tmpDir)`                              |
+| 13  | Existing covers continue to work                     | PASS    | Paths unchanged (`/images/covers/<slug>.jpg`), only processing added                                           |
 
 ### T03 -- Loading spinner on cover upload
 
-| # | Acceptance Criterion | Verdict | Evidence |
-|---|---------------------|---------|----------|
-| 14 | Spinner overlay appears on cover preview when upload starts | PASS | Lines 1891-1897: `cover-loading` class added + spinner div appended; CSS at lines 379-404 |
-| 15 | Spinner disappears on completion (success or error) | PASS | Lines 1928-1934: `finally` block removes class + spinner |
-| 16 | Input disabled during upload | PASS | Line 1888: `input.disabled = true`; Line 1934: re-enabled in `finally` |
-| 17 | Success shows updated image and toast | PASS | Lines 1916-1926: toast + loadCollections + image refresh |
-| 18 | Error shows error toast and cleans up spinner | PASS | Line 1912: error toast; `finally` handles cleanup regardless |
+| #   | Acceptance Criterion                                        | Verdict | Evidence                                                                                  |
+| --- | ----------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------- |
+| 14  | Spinner overlay appears on cover preview when upload starts | PASS    | Lines 1891-1897: `cover-loading` class added + spinner div appended; CSS at lines 379-404 |
+| 15  | Spinner disappears on completion (success or error)         | PASS    | Lines 1928-1934: `finally` block removes class + spinner                                  |
+| 16  | Input disabled during upload                                | PASS    | Line 1888: `input.disabled = true`; Line 1934: re-enabled in `finally`                    |
+| 17  | Success shows updated image and toast                       | PASS    | Lines 1916-1926: toast + loadCollections + image refresh                                  |
+| 18  | Error shows error toast and cleans up spinner               | PASS    | Line 1912: error toast; `finally` handles cleanup regardless                              |
 
 ### T04 -- Startup sanitiser
 
-| # | Acceptance Criterion | Verdict | Evidence |
-|---|---------------------|---------|----------|
-| 19 | collections.json contains no `?v=` query strings | PASS | Grep for `?v=` in collections.json returns zero matches |
-| 20 | Startup sanitiser handles legacy `?v=` data | PASS | Lines 786-802: strips `?v=` from `image` and `sampleImages`, writes only if dirty |
-| 21 | `bun run build` succeeds | PASS | Build completed in 488ms, no errors |
-| 22 | No regression -- images display correctly | PASS | All paths in collections.json are clean, valid relative paths |
+| #   | Acceptance Criterion                             | Verdict | Evidence                                                                          |
+| --- | ------------------------------------------------ | ------- | --------------------------------------------------------------------------------- |
+| 19  | collections.json contains no `?v=` query strings | PASS    | Grep for `?v=` in collections.json returns zero matches                           |
+| 20  | Startup sanitiser handles legacy `?v=` data      | PASS    | Lines 786-802: strips `?v=` from `image` and `sampleImages`, writes only if dirty |
+| 21  | `bun run build` succeeds                         | PASS    | Build completed in 488ms, no errors                                               |
+| 22  | No regression -- images display correctly        | PASS    | All paths in collections.json are clean, valid relative paths                     |
 
 ### Global acceptance criteria
 
-| # | Criterion | Verdict |
-|---|-----------|---------|
-| G1 | Cover upload converts any format to JPEG via sharp | PASS |
-| G2 | No watermark on covers | PASS |
-| G3 | collections.json never contains `?v=` | PASS |
-| G4 | GET /api/collections returns `?v=<mtime>` | PASS |
-| G5 | Admin UI shows loading state during cover upload | PASS |
-| G6 | Existing covers render correctly | PASS |
-| G7 | `bun run build` succeeds | PASS |
-| G8 | All tasks implemented and tested | PASS |
+| #   | Criterion                                          | Verdict |
+| --- | -------------------------------------------------- | ------- |
+| G1  | Cover upload converts any format to JPEG via sharp | PASS    |
+| G2  | No watermark on covers                             | PASS    |
+| G3  | collections.json never contains `?v=`              | PASS    |
+| G4  | GET /api/collections returns `?v=<mtime>`          | PASS    |
+| G5  | Admin UI shows loading state during cover upload   | PASS    |
+| G6  | Existing covers render correctly                   | PASS    |
+| G7  | `bun run build` succeeds                           | PASS    |
+| G8  | All tasks implemented and tested                   | PASS    |
 
 ---
 

@@ -12,17 +12,21 @@
 **File:** `admin/src/lib/image-processor.ts`
 
 ### Architecture
+
 Correct placement alongside `processImage()`. Constants `COVER_MAX_WIDTH` (1200) and `COVER_QUALITY` (85) are well-named and properly scoped at module level. Function follows the same pattern as `processImage()` without the watermark composite step.
 
 ### Code quality
+
 Clean, minimal, correct. No dead code. Existing `processImage()` is untouched.
 
 ### Governance check
+
 - No watermark: PASS (no `composite()` or `createWatermarkSvg()` call)
 - 1200px max width: PASS
 - Quality 85: PASS
 
 ### Findings
+
 None.
 
 ---
@@ -32,17 +36,21 @@ None.
 **File:** `admin/src/server.ts`
 
 ### Architecture
+
 Four changes all in the right places:
+
 1. Import of `processCoverImage` -- correct
 2. `PUBLIC_DIR` moved to top-level scope (line 24) -- correct, was previously buried in static file serving
 3. Cover upload uses sharp via tmp-file pattern -- correct, mirrors the deck image upload pattern
 4. GET /api/collections injects serve-time `?v=<mtime>` -- correct, reads from disk and decorates in-memory only
 
 ### Code quality
+
 - The tmp-file + finally cleanup pattern is consistent with the deck image upload code
 - Dynamic `import("fs")` for `rmdirSync` on line 405-406 is unnecessary since `fs` is already imported at line 1 (statically). This is copied from the deck upload code which has the same pattern. Not a bug, just redundant.
 
 ### Governance check
+
 - Cache-bust NOT persisted: PASS (line 414 writes clean path `/images/covers/${slug}.jpg`)
 - GET cache-bust is serve-time only: PASS (line 265-280 decorates in-memory copy)
 - Existing covers backwards-compatible: PASS (paths unchanged, just processing added)
@@ -60,9 +68,11 @@ Four changes all in the right places:
 **File:** `admin/public/index.html`
 
 ### Architecture
+
 CSS-only overlay + JS spinner element. Correct approach for a vanilla HTML admin panel.
 
 ### Code quality
+
 - `cover-loading` class adds dark overlay via `::after` pseudo-element
 - `cover-spinner` is a real DOM element positioned above the overlay with `z-index: 10`
 - Cleanup is in a `finally` block, handling both success and error paths
@@ -80,9 +90,11 @@ CSS-only overlay + JS spinner element. Correct approach for a vanilla HTML admin
 **File:** `admin/src/server.ts` (lines 786-802)
 
 ### Architecture
+
 One-time cleanup block at server startup, placed after git config and before `Bun.serve`. Correct location and approach.
 
 ### Code quality
+
 - Uses block scope `{}` to avoid polluting module scope -- good practice
 - Handles both `image` and `sampleImages` fields defensively
 - `JSON.stringify` comparison for arrays is acceptable for small arrays
@@ -90,10 +102,12 @@ One-time cleanup block at server startup, placed after git config and before `Bu
 - Logs when sanitisation occurs
 
 ### Governance check
+
 - collections.json currently clean: PASS (verified, no `?v=` found)
 - Sanitiser handles legacy data: PASS (strips any `?v=` on startup)
 
 ### Findings
+
 None.
 
 ---
@@ -110,6 +124,7 @@ None.
 ## collections.json verification
 
 Confirmed clean:
+
 - No `?v=` query strings in any `image` or `sampleImages` field
 - All three collections (castlevania, cavaleiros-do-zodiaco, final-fantasy-vii) have clean paths
 
@@ -117,11 +132,11 @@ Confirmed clean:
 
 ## Summary of findings
 
-| # | Severity | Task | Description |
-|---|----------|------|-------------|
-| 1 | IMPORTANT | T02 | No try/catch around sharp processing + response; corrupt image causes opaque 500 |
-| 2 | MINOR | T02 | Redundant dynamic import of fs (rmdirSync) |
-| 3 | MINOR | T03 | Stale DOM reference after loadCollections() (harmless) |
+| #   | Severity  | Task | Description                                                                      |
+| --- | --------- | ---- | -------------------------------------------------------------------------------- |
+| 1   | IMPORTANT | T02  | No try/catch around sharp processing + response; corrupt image causes opaque 500 |
+| 2   | MINOR     | T02  | Redundant dynamic import of fs (rmdirSync)                                       |
+| 3   | MINOR     | T03  | Stale DOM reference after loadCollections() (harmless)                           |
 
 ---
 

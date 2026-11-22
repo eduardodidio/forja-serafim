@@ -4,21 +4,21 @@ Todos os diagramas estao no formato [Mermaid](https://mermaid.js.org/) e podem s
 
 ## Indice — Diagramas Globais
 
-| Diagrama | Arquivo | Descricao |
-|----------|---------|-----------|
-| Arquitetura Geral | [`architecture-overview.mmd`](./architecture-overview.mmd) | Visao macro de todos os modulos: frontend, admin, data layer, assets, servicos externos |
-| Fluxo de Dados | [`data-flow.mmd`](./data-flow.mmd) | Como os dados fluem dos JSONs ate as paginas e pelo pipeline admin |
-| Jornada do Usuario | [`user-journey.mmd`](./user-journey.mmd) | Todos os caminhos que um visitante pode percorrer no site |
-| Fluxo Admin | [`admin-flow.mmd`](./admin-flow.mmd) | Operacoes do painel admin: CRUD, upload, pipeline de imagens, git persist |
-| Arvore de Componentes | [`component-tree.mmd`](./component-tree.mmd) | Hierarquia completa dos componentes React e suas dependencias |
-| Infraestrutura/Deploy | [`deploy-infrastructure.mmd`](./deploy-infrastructure.mmd) | Ambiente local, GitHub, Render, DNS e roteamento do servidor |
-| Seguranca/Auth | [`security-auth.mmd`](./security-auth.mmd) | Fluxo de autenticacao Google OAuth, sessoes HMAC e protecao CSRF |
-| Pipeline Git Persist | [`git-persist-pipeline.mmd`](./git-persist-pipeline.mmd) | Maquina de estados do auto-save: dirty → pushing → clean/error |
+| Diagrama              | Arquivo                                                    | Descricao                                                                               |
+| --------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Arquitetura Geral     | [`architecture-overview.mmd`](./architecture-overview.mmd) | Visao macro de todos os modulos: frontend, admin, data layer, assets, servicos externos |
+| Fluxo de Dados        | [`data-flow.mmd`](./data-flow.mmd)                         | Como os dados fluem dos JSONs ate as paginas e pelo pipeline admin                      |
+| Jornada do Usuario    | [`user-journey.mmd`](./user-journey.mmd)                   | Todos os caminhos que um visitante pode percorrer no site                               |
+| Fluxo Admin           | [`admin-flow.mmd`](./admin-flow.mmd)                       | Operacoes do painel admin: CRUD, upload, pipeline de imagens, git persist               |
+| Arvore de Componentes | [`component-tree.mmd`](./component-tree.mmd)               | Hierarquia completa dos componentes React e suas dependencias                           |
+| Infraestrutura/Deploy | [`deploy-infrastructure.mmd`](./deploy-infrastructure.mmd) | Ambiente local, GitHub, Render, DNS e roteamento do servidor                            |
+| Seguranca/Auth        | [`security-auth.mmd`](./security-auth.mmd)                 | Fluxo de autenticacao Google OAuth, sessoes HMAC e protecao CSRF                        |
+| Pipeline Git Persist  | [`git-persist-pipeline.mmd`](./git-persist-pipeline.mmd)   | Maquina de estados do auto-save: dirty → pushing → clean/error                          |
 
 ## Indice — Diagramas por Feature
 
-| Feature | Arquitetura | Jornada |
-|---------|-------------|---------|
+| Feature        | Arquitetura                                      | Jornada                                |
+| -------------- | ------------------------------------------------ | -------------------------------------- |
 | F15 Video Demo | [`F15-architecture.mmd`](./F15-architecture.mmd) | [`F15-journey.mmd`](./F15-journey.mmd) |
 
 ## Obrigatorios (por feature)

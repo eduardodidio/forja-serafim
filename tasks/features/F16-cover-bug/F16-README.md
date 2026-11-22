@@ -42,26 +42,26 @@ A capa alterada aparece corretamente na area administrativa.
 
 ## Arquivos Relevantes
 
-| Arquivo | Papel |
-|---------|-------|
-| `src/data/collections.json` | Fonte de dados das colecoes |
-| `src/lib/store-data.ts` | Import estatico do JSON (baked at build) |
-| `src/components/card-tile.tsx` | Card na listagem (mostra sampleImages, nao cover) |
-| `src/routes/colecoes.$slug.tsx:74` | Pagina detalhe: exibe `collection.image` como cover |
-| `admin/src/server.ts:374-406` | Endpoint POST `/api/collections/:slug/cover` |
-| `admin/src/server.ts:260-277` | GET `/api/collections` (adiciona cache-bust `?v=mtime`) |
-| `admin/src/server.ts:768-772` | Static file serving: prioridade `public/` > `dist/` para mutaveis |
-| `admin/public/index.html:1928-1980` | Funcao `uploadCover()` no frontend admin |
-| `admin/src/lib/git-persist.ts` | Pipeline de commit+push automatico |
+| Arquivo                             | Papel                                                             |
+| ----------------------------------- | ----------------------------------------------------------------- |
+| `src/data/collections.json`         | Fonte de dados das colecoes                                       |
+| `src/lib/store-data.ts`             | Import estatico do JSON (baked at build)                          |
+| `src/components/card-tile.tsx`      | Card na listagem (mostra sampleImages, nao cover)                 |
+| `src/routes/colecoes.$slug.tsx:74`  | Pagina detalhe: exibe `collection.image` como cover               |
+| `admin/src/server.ts:374-406`       | Endpoint POST `/api/collections/:slug/cover`                      |
+| `admin/src/server.ts:260-277`       | GET `/api/collections` (adiciona cache-bust `?v=mtime`)           |
+| `admin/src/server.ts:768-772`       | Static file serving: prioridade `public/` > `dist/` para mutaveis |
+| `admin/public/index.html:1928-1980` | Funcao `uploadCover()` no frontend admin                          |
+| `admin/src/lib/git-persist.ts`      | Pipeline de commit+push automatico                                |
 
 ## Tasks
 
-| Task | Titulo | Wave |
-|------|--------|------|
-| F16-T01 | Diagnosticar mapeamento slug-imagem no JSON e no bundle | W1 |
-| F16-T02 | Verificar pipeline de upload de capa e git-persist end-to-end | W1 |
-| F16-T03 | Corrigir causa-raiz identificada e adicionar cache-bust no front-end | W2 |
-| F16-T04 | Validar fix em ambiente local (dev + preview) | W3 |
+| Task    | Titulo                                                               | Wave |
+| ------- | -------------------------------------------------------------------- | ---- |
+| F16-T01 | Diagnosticar mapeamento slug-imagem no JSON e no bundle              | W1   |
+| F16-T02 | Verificar pipeline de upload de capa e git-persist end-to-end        | W1   |
+| F16-T03 | Corrigir causa-raiz identificada e adicionar cache-bust no front-end | W2   |
+| F16-T04 | Validar fix em ambiente local (dev + preview)                        | W3   |
 
 **Waves:** 3
 **Total tasks:** 4

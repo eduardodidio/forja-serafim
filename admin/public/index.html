@@ -631,14 +631,34 @@
     </header>
 
     <!-- Persist status banner -->
-    <div id="persist-banner" class="hidden border-b px-4 py-2 text-xs font-medium flex items-center justify-between sticky top-[65px] z-25 transition-all duration-300">
-      <div class="flex items-center gap-2">
-        <span id="persist-icon"></span>
-        <span id="persist-text"></span>
+    <div
+      id="persist-banner"
+      class="hidden border-b px-4 py-2 text-xs font-medium sticky top-[65px] z-25 transition-all duration-300"
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span id="persist-icon"></span>
+          <span id="persist-text"></span>
+          <button
+            id="persist-history-toggle"
+            class="hidden text-xs opacity-60 hover:opacity-100 underline cursor-pointer ml-2"
+            onclick="togglePersistHistory()"
+          >
+            historico
+          </button>
+        </div>
+        <button
+          id="persist-retry"
+          class="hidden text-xs py-1 px-3 rounded border border-red-700/60 text-red-300 hover:bg-red-900/40 transition-colors cursor-pointer"
+          onclick="retryPersist()"
+        >
+          Tentar novamente
+        </button>
       </div>
-      <button id="persist-retry" class="hidden text-xs py-1 px-3 rounded border border-red-700/60 text-red-300 hover:bg-red-900/40 transition-colors cursor-pointer" onclick="retryPersist()">
-        Tentar novamente
-      </button>
+      <div
+        id="persist-history"
+        class="hidden mt-2 space-y-1 text-[11px] opacity-80 max-h-40 overflow-y-auto"
+      ></div>
     </div>
 
     <!-- Tabs -->
@@ -874,11 +894,13 @@
         const res = await fetch(url, opts);
         if (res.status === 401) {
           toast("Sessao expirada. Redirecionando para login...", "error");
-          setTimeout(() => { window.location.href = "/login"; }, 1500);
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 1500);
           throw new Error("Sessao expirada");
         }
         // After a successful mutation, check persist status with a short delay
-        const method = (opts && opts.method || "GET").toUpperCase();
+        const method = ((opts && opts.method) || "GET").toUpperCase();
         if (MUTATION_METHODS.includes(method) && res.ok) {
           setTimeout(() => checkPersistStatus(), 500);
         }
@@ -891,19 +913,21 @@
         const attempt = (parseInt(img.dataset.retry) || 0) + 1;
         if (attempt > max) {
           // Give up — show fallback placeholder or hide container
-          img.style.display = 'none';
+          img.style.display = "none";
           const sibling = img.nextElementSibling;
-          if (sibling && sibling.classList.contains('hidden')) {
+          if (sibling && sibling.classList.contains("hidden")) {
             // Cover banner: show SVG placeholder
-            sibling.style.display = 'flex';
+            sibling.style.display = "flex";
           } else if (img.parentElement) {
             // Sample thumbnail: hide entire container
-            img.parentElement.style.display = 'none';
+            img.parentElement.style.display = "none";
           }
           return;
         }
         img.dataset.retry = attempt;
-        setTimeout(() => { img.src = img.src.split('#')[0] + '#r=' + attempt; }, 2000 * attempt);
+        setTimeout(() => {
+          img.src = img.src.split("#")[0] + "#r=" + attempt;
+        }, 2000 * attempt);
       }
 
       // --- State ---
@@ -1411,7 +1435,7 @@
       function previewCreateTokens(input) {
         const files = Array.from(input.files);
         for (const file of files) {
-          const baseName = file.name.replace(/\.[^.]+$/, '');
+          const baseName = file.name.replace(/\.[^.]+$/, "");
           createTokenFiles.push({ file, name: baseName, quantity: 1 });
         }
         renderCreateTokenPreviews();
@@ -1651,16 +1675,18 @@
         <div class="mt-3">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs text-gray-400">Video demonstrativo</span>
-            ${c.videoUrl
-              ? `<button onclick="deleteVideo('${esc(slug)}')" class="text-xs text-red-400 hover:underline">Remover video</button>`
-              : ''
+            ${
+              c.videoUrl
+                ? `<button onclick="deleteVideo('${esc(slug)}')" class="text-xs text-red-400 hover:underline">Remover video</button>`
+                : ""
             }
           </div>
-          ${c.videoUrl
-            ? `<div class="rounded-lg overflow-hidden border border-gray-700/50">
+          ${
+            c.videoUrl
+              ? `<div class="rounded-lg overflow-hidden border border-gray-700/50">
                 <video src="${c.videoUrl}" controls preload="metadata" controlsList="nodownload" class="w-full" style="max-height:200px;"></video>
               </div>`
-            : `<label class="upload-zone block cursor-pointer text-center" id="upload-video-${c.slug}">
+              : `<label class="upload-zone block cursor-pointer text-center" id="upload-video-${c.slug}">
                 <svg class="w-6 h-6 mx-auto text-gray-600 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                 <p class="text-xs text-gray-500">Enviar video MP4 (max 50 MB)</p>
                 <input type="file" accept="video/mp4" class="hidden" onchange="uploadVideo('${esc(slug)}', this)" />
@@ -1757,11 +1783,11 @@
                   <p class="text-xs text-gray-300 truncate" title="${esc(token.name)}">${esc(token.name)}</p>
                   <div class="flex items-center gap-1.5">
                     <label class="text-[10px] text-gray-400">Qtd:</label>
-                    <input type="number" value="${token.quantity}" min="1" onchange="updateTokenQuantity('${esc(slug)}', '${esc(token.image.split('/').pop())}', parseInt(this.value))" class="input text-xs w-16 text-center" />
+                    <input type="number" value="${token.quantity}" min="1" onchange="updateTokenQuantity('${esc(slug)}', '${esc(token.image.split("/").pop())}', parseInt(this.value))" class="input text-xs w-16 text-center" />
                   </div>
                 </div>
                 <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split('/').pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+                  <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split("/").pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                   </button>
                   ${
@@ -2093,7 +2119,7 @@
           const quantities = [];
           for (const f of files) {
             fd.append("files", f);
-            names.push(f.name.replace(/\.[^.]+$/, ''));
+            names.push(f.name.replace(/\.[^.]+$/, ""));
             quantities.push(1);
           }
           fd.append("names", JSON.stringify(names));
@@ -2136,7 +2162,8 @@
         const tokens = c.tokens || [];
 
         if (tokens.length === 0) {
-          grid.innerHTML = '<p class="text-xs text-gray-500 col-span-full">Nenhum token adicionado.</p>';
+          grid.innerHTML =
+            '<p class="text-xs text-gray-500 col-span-full">Nenhum token adicionado.</p>';
         } else {
           grid.innerHTML = tokens
             .map(
@@ -2148,11 +2175,11 @@
                 <p class="text-xs text-gray-300 truncate" title="${esc(token.name)}">${esc(token.name)}</p>
                 <div class="flex items-center gap-1.5">
                   <label class="text-[10px] text-gray-400">Qtd:</label>
-                  <input type="number" value="${token.quantity}" min="1" onchange="updateTokenQuantity('${esc(slug)}', '${esc(token.image.split('/').pop())}', parseInt(this.value))" class="input text-xs w-16 text-center" />
+                  <input type="number" value="${token.quantity}" min="1" onchange="updateTokenQuantity('${esc(slug)}', '${esc(token.image.split("/").pop())}', parseInt(this.value))" class="input text-xs w-16 text-center" />
                 </div>
               </div>
               <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split('/').pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+                <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split("/").pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 ${
@@ -2324,7 +2351,10 @@
             const updatedPreview = document.getElementById(`cover-preview-${col.slug}`);
             if (updatedPreview) {
               const img = updatedPreview.querySelector("img");
-              if (img) { img.style.display = ""; img.src = col.image; }
+              if (img) {
+                img.style.display = "";
+                img.src = col.image;
+              }
             }
           }
         } finally {
@@ -2880,13 +2910,19 @@
       let persistState = "clean";
       let persistPollTimer = null;
 
+      let persistRecent = [];
+
       async function checkPersistStatus() {
         try {
           const res = await apiFetch(`${API}/api/persist-status`);
           if (!res.ok) return;
-          const { state, error } = await res.json();
+          const { state, error, recent } = await res.json();
+          persistRecent = recent || [];
           updatePersistBanner(state, error);
-        } catch { /* ignore network errors */ }
+          renderPersistHistory();
+        } catch {
+          /* ignore network errors */
+        }
       }
 
       function updatePersistBanner(state, error) {
@@ -2898,20 +2934,35 @@
         const tabBar = document.getElementById("tab-bar");
 
         // Reset classes
-        banner.className = "border-b px-4 py-2 text-xs font-medium flex items-center justify-between sticky top-[65px] z-25 transition-all duration-300";
+        banner.className =
+          "border-b px-4 py-2 text-xs font-medium sticky top-[65px] z-25 transition-all duration-300";
+
+        const spinnerSvg =
+          '<svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>';
+        const errorSvg =
+          '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4m0 4h.01" stroke-linecap="round"></path></svg>';
 
         if (state === "clean") {
-          banner.classList.add("hidden");
-          if (tabBar) tabBar.style.top = "65px";
+          // Show banner briefly if there are recent ops with errors
+          const hasRecentErrors = persistRecent.some((op) => op.error);
+          if (!hasRecentErrors) {
+            banner.classList.add("hidden");
+            if (tabBar) tabBar.style.top = "65px";
+            schedulePersistPoll(15000);
+            return;
+          }
+          banner.classList.remove("hidden");
+          banner.classList.add("bg-yellow-900/20", "border-yellow-700/30", "text-yellow-300/80");
+          icon.innerHTML = errorSvg;
+          text.textContent = "Git OK agora, mas houve erros recentes.";
+          retry.classList.add("hidden");
+          if (tabBar) tabBar.style.top = "97px";
           schedulePersistPoll(15000);
           return;
         }
 
         banner.classList.remove("hidden");
         if (tabBar) tabBar.style.top = "97px";
-
-        const spinnerSvg = '<svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>';
-        const errorSvg = '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4m0 4h.01" stroke-linecap="round"></path></svg>';
 
         if (state === "dirty") {
           banner.classList.add("bg-yellow-900/30", "border-yellow-700/40", "text-yellow-300");
@@ -2943,6 +2994,44 @@
         } finally {
           if (retry) retry.disabled = false;
         }
+      }
+
+      function togglePersistHistory() {
+        const el = document.getElementById("persist-history");
+        if (el) el.classList.toggle("hidden");
+      }
+
+      function renderPersistHistory() {
+        const el = document.getElementById("persist-history");
+        const toggle = document.getElementById("persist-history-toggle");
+        if (!el || !toggle) return;
+
+        if (persistRecent.length === 0) {
+          toggle.classList.add("hidden");
+          el.classList.add("hidden");
+          return;
+        }
+
+        toggle.classList.remove("hidden");
+
+        el.innerHTML = persistRecent
+          .map((op) => {
+            const time = new Date(op.timestamp).toLocaleTimeString("pt-BR", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const icon = op.pushed
+              ? '<span class="text-green-400">&#10003;</span>'
+              : op.committed
+                ? '<span class="text-red-400">&#10007;</span>'
+                : '<span class="text-gray-400">&#8212;</span>';
+            const retryInfo = op.retries ? ` (${op.retries} retries)` : "";
+            const errorInfo = op.error
+              ? ` <span class="text-red-400/70">${op.error.slice(0, 60)}</span>`
+              : "";
+            return `<div class="flex items-center gap-2">${icon} <span class="opacity-50">${time}</span> ${op.description}${retryInfo}${errorInfo}</div>`;
+          })
+          .join("");
       }
 
       function schedulePersistPoll(interval) {

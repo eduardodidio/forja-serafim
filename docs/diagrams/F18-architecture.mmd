@@ -1,0 +1,35 @@
+graph TD
+    subgraph Admin["Admin Panel (Render)"]
+        UI[Admin UI<br/>index.html]
+        API[Server API<br/>server.ts]
+        GP[git-persist.ts]
+        RETRY[pushWithRetry<br/>3 attempts, exp backoff]
+        LOG[Structured Logger<br/>console.log/error]
+        HIST[recentOps<br/>circular buffer x10]
+    end
+
+    subgraph Storage["Local Disk (ephemeral)"]
+        JSON[collections.json]
+        TOKENS[public/images/tokens/]
+    end
+
+    subgraph Remote["GitHub Remote"]
+        REPO[forja-serafim repo]
+    end
+
+    UI -->|POST /api/collections/:slug/tokens| API
+    API -->|writeJson| JSON
+    API -->|processImage + watermark| TOKENS
+    API -->|gitPersist| GP
+    GP -->|git add + commit| Storage
+    GP -->|push| RETRY
+    RETRY -->|attempt 1..3| REPO
+    RETRY -->|on failure| LOG
+    GP -->|record| HIST
+    LOG -->|sanitized| Render[Render Logs]
+    UI -->|GET /api/persist-status| API
+    API -->|state + recent| HIST
+
+    style RETRY fill:#f9e44c,stroke:#333,color:#000
+    style LOG fill:#4ca6f9,stroke:#333,color:#000
+    style HIST fill:#4ca6f9,stroke:#333,color:#000

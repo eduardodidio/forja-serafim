@@ -1,0 +1,35 @@
+graph TD
+    A[Admin faz upload de token] --> B[Server processa imagem + watermark]
+    B --> C[Salva em public/images/tokens/slug/]
+    C --> D[Atualiza collections.json]
+    D --> E[gitPersist chamado]
+    E --> F{git add + commit ok?}
+    F -->|sim| G[pushWithRetry attempt 1]
+    F -->|nada staged| Z1[LOG: SKIP, state=clean]
+
+    G --> H{Push ok?}
+    H -->|sim| I[LOG: PUSH OK, state=clean]
+    H -->|erro transitorio| J{Tentativas < 3?}
+    J -->|sim| K[LOG: RETRY in Nms]
+    K --> L[sleep + fetch + rebase]
+    L --> M[pushWithRetry attempt N+1]
+    M --> H
+
+    J -->|nao| N[LOG: PUSH FAILED, state=error]
+    N --> O[recentOps registra falha]
+    O --> P[Banner vermelho no admin]
+    P --> Q{Admin clica Retry?}
+    Q -->|sim| E
+    Q -->|nao| R[Dados perdidos no proximo redeploy]
+
+    H -->|erro auth/config| S[LOG: PUSH FAILED permanent]
+    S --> O
+
+    I --> T[recentOps registra sucesso]
+    T --> U[Banner verde no admin]
+    U --> V[Redeploy seguro - dados no GitHub]
+
+    style N fill:#ff6b6b,stroke:#333,color:#fff
+    style I fill:#51cf66,stroke:#333,color:#000
+    style K fill:#f9e44c,stroke:#333,color:#000
+    style R fill:#ff6b6b,stroke:#333,color:#fff

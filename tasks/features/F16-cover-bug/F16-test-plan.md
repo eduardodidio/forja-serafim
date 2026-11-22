@@ -25,52 +25,59 @@ No automated test suite exists for this static site, so all validation is manual
 ## 3. Test Cases
 
 ### TC-01: JSON data integrity
-| Step | Expected |
-|------|----------|
-| Read `src/data/collections.json` | Castlevania entry has `"image": "/images/covers/castlevania.jpg"` |
-| Each collection's `image` field matches its own slug | No cross-contamination between slugs |
+
+| Step                                                 | Expected                                                          |
+| ---------------------------------------------------- | ----------------------------------------------------------------- |
+| Read `src/data/collections.json`                     | Castlevania entry has `"image": "/images/covers/castlevania.jpg"` |
+| Each collection's `image` field matches its own slug | No cross-contamination between slugs                              |
 
 ### TC-02: Bundle correctness
-| Step | Expected |
-|------|----------|
-| Run `bun run build` | Exits 0, no errors |
+
+| Step                                           | Expected                                                                     |
+| ---------------------------------------------- | ---------------------------------------------------------------------------- |
+| Run `bun run build`                            | Exits 0, no errors                                                           |
 | Search for `castlevania` in `dist/assets/*.js` | The image path for Castlevania points to `castlevania.jpg`, not another slug |
-| Search for `cavaleiros-do-zodiaco` in bundle | Only appears in its own collection entry |
+| Search for `cavaleiros-do-zodiaco` in bundle   | Only appears in its own collection entry                                     |
 
 ### TC-03: Cover upload endpoint
-| Step | Expected |
-|------|----------|
+
+| Step                                                           | Expected                                                          |
+| -------------------------------------------------------------- | ----------------------------------------------------------------- |
 | POST a new cover image to `/api/collections/castlevania/cover` | Returns 200 with `{path: "/images/covers/castlevania.jpg?v=..."}` |
-| Check `public/images/covers/castlevania.jpg` on disk | File is the newly uploaded image |
-| Check `src/data/collections.json` | `image` field updated with clean path (no `?v=`) |
+| Check `public/images/covers/castlevania.jpg` on disk           | File is the newly uploaded image                                  |
+| Check `src/data/collections.json`                              | `image` field updated with clean path (no `?v=`)                  |
 
 ### TC-04: git-persist after upload
-| Step | Expected |
-|------|----------|
-| After cover upload, run `git log --oneline -1` | Shows auto-save commit with cover change |
-| Check `git diff HEAD~1` | Includes changes to `collections.json` and `public/images/covers/castlevania.jpg` |
+
+| Step                                           | Expected                                                                          |
+| ---------------------------------------------- | --------------------------------------------------------------------------------- |
+| After cover upload, run `git log --oneline -1` | Shows auto-save commit with cover change                                          |
+| Check `git diff HEAD~1`                        | Includes changes to `collections.json` and `public/images/covers/castlevania.jpg` |
 
 ### TC-05: Cache-bust on front-end
-| Step | Expected |
-|------|----------|
-| Load site, observe cover image | Image displays correctly |
-| Upload a different cover via admin | New image file on disk |
-| Reload site (no cache clear) | New cover image appears (cache-bust query string or no-cache headers prevent stale image) |
-| Inspect `<img>` src in DOM | Contains cache-bust parameter or headers prevent caching |
+
+| Step                               | Expected                                                                                  |
+| ---------------------------------- | ----------------------------------------------------------------------------------------- |
+| Load site, observe cover image     | Image displays correctly                                                                  |
+| Upload a different cover via admin | New image file on disk                                                                    |
+| Reload site (no cache clear)       | New cover image appears (cache-bust query string or no-cache headers prevent stale image) |
+| Inspect `<img>` src in DOM         | Contains cache-bust parameter or headers prevent caching                                  |
 
 ### TC-06: Site pages show correct covers
-| Step | Expected |
-|------|----------|
-| Navigate to `/colecoes/castlevania` | Cover `<img>` src contains `castlevania.jpg` |
-| Navigate to `/colecoes/cavaleiros-do-zodiaco` | Cover src contains `cavaleiros-do-zodiaco.jpg` |
-| Navigate to `/colecoes/final-fantasy-vii` | Cover src contains `final-fantasy-vii.jpg` |
-| Navigate to `/colecoes` (listing) | Each card renders its own sampleImages; no slug mismatch |
+
+| Step                                          | Expected                                                 |
+| --------------------------------------------- | -------------------------------------------------------- |
+| Navigate to `/colecoes/castlevania`           | Cover `<img>` src contains `castlevania.jpg`             |
+| Navigate to `/colecoes/cavaleiros-do-zodiaco` | Cover src contains `cavaleiros-do-zodiaco.jpg`           |
+| Navigate to `/colecoes/final-fantasy-vii`     | Cover src contains `final-fantasy-vii.jpg`               |
+| Navigate to `/colecoes` (listing)             | Each card renders its own sampleImages; no slug mismatch |
 
 ### TC-07: Regression - card flip and sample images
-| Step | Expected |
-|------|----------|
-| On `/colecoes`, hover/click each card | Card flip animation works, sampleImages display correctly |
-| No broken images (check for 404s in Network tab) | All image requests return 200 |
+
+| Step                                             | Expected                                                  |
+| ------------------------------------------------ | --------------------------------------------------------- |
+| On `/colecoes`, hover/click each card            | Card flip animation works, sampleImages display correctly |
+| No broken images (check for 404s in Network tab) | All image requests return 200                             |
 
 ## 4. Fixtures & Mocks
 
@@ -80,20 +87,20 @@ No automated test suite exists for this static site, so all validation is manual
 
 ## 5. Regression Risks
 
-| Risk | Mitigation |
-|------|------------|
-| Fix for Castlevania breaks other collections' cover paths | TC-06 checks all 3 collections explicitly |
-| Cache-bust query string breaks image loading in some browsers | TC-05 verifies image actually renders after bust |
-| `git-persist` changes break auto-save for non-cover edits | Spot-check a collection name edit after fix and verify commit |
-| Vite build plugin or config change causes build failure | TC-02 runs full build |
-| Admin UI stops showing updated cover | TC-03 verifies admin response; manual check in admin panel |
+| Risk                                                          | Mitigation                                                    |
+| ------------------------------------------------------------- | ------------------------------------------------------------- |
+| Fix for Castlevania breaks other collections' cover paths     | TC-06 checks all 3 collections explicitly                     |
+| Cache-bust query string breaks image loading in some browsers | TC-05 verifies image actually renders after bust              |
+| `git-persist` changes break auto-save for non-cover edits     | Spot-check a collection name edit after fix and verify commit |
+| Vite build plugin or config change causes build failure       | TC-02 runs full build                                         |
+| Admin UI stops showing updated cover                          | TC-03 verifies admin response; manual check in admin panel    |
 
 ## 6. Environment
 
-| Environment | How to test |
-|-------------|-------------|
-| **Local dev** | `bun run dev` for site + `cd admin && bun src/server.ts` for admin. Primary testing environment. |
-| **Local preview** | `bun run build && bun run preview` to validate production bundle locally. |
+| Environment             | How to test                                                                                                            |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Local dev**           | `bun run dev` for site + `cd admin && bun src/server.ts` for admin. Primary testing environment.                       |
+| **Local preview**       | `bun run build && bun run preview` to validate production bundle locally.                                              |
 | **Production (Render)** | After deploy, verify `https://forjaserafim.com.br/colecoes/castlevania` shows correct cover. Verify all 3 collections. |
 
 ## 7. Exit Criteria

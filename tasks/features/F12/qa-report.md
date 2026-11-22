@@ -38,6 +38,7 @@ All six items from the task spec are confirmed in the code:
 ### F12-T03: PASS -- Input Validation Hardening
 
 Testimonial validation on POST (lines 544-549):
+
 - `name.length > 100` returns 400
 - `text.length > 500` returns 400
 - `deck.length > 100` returns 400
@@ -45,6 +46,7 @@ Testimonial validation on POST (lines 544-549):
 Testimonial validation on PUT (lines 567-572): same limits applied for each field when present.
 
 Collection validation on POST (lines 267-274):
+
 - `name.length > 100` returns 400
 - `description.length > 500` returns 400
 - `moxfieldUrl.length > 500` returns 400

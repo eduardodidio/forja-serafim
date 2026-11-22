@@ -16,7 +16,7 @@ import {
 } from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
 import { processImage, processCoverImage } from "./lib/image-processor.js";
-import { gitPersist, getPersistState, getLastError } from "./lib/git-persist.js";
+import { gitPersist, getPersistState, getLastError, getRecentOps } from "./lib/git-persist.js";
 import crypto from "crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -867,7 +867,11 @@ async function handleRequest(req: Request): Promise<Response> {
   // --- Persist status ---
 
   if (path === "/api/persist-status" && method === "GET") {
-    return json({ state: getPersistState(), error: getLastError() }, 200, req);
+    return json(
+      { state: getPersistState(), error: getLastError(), recent: getRecentOps() },
+      200,
+      req,
+    );
   }
 
   if (path === "/api/persist-retry" && method === "POST") {

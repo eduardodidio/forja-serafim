@@ -18,6 +18,7 @@ The `define` block in `vite.config.ts` (line 7-9) correctly uses `JSON.stringify
 ### 2. Code quality -- PASS
 
 `src/lib/cache-bust.ts` is minimal (7 lines), handles edge cases correctly:
+
 - Returns URL unchanged if `url` is falsy or `BUILD_TS` is empty (dev mode fallback)
 - Correctly detects existing query params and uses `&` vs `?` separator
 - No unnecessary abstractions
@@ -30,16 +31,17 @@ The appended `?v=<timestamp>` is a numeric string derived from `Date.now()` at b
 
 All user-visible image rendering paths are covered:
 
-| Location | Image type | Cache-busted? |
-|----------|-----------|---------------|
-| `card-tile.tsx:52` | sampleImages (flip) + collection.image (fallback) | Yes |
-| `colecoes.$slug.tsx:77` | Hero cover (`collection.image`) | Yes |
-| `colecoes.$slug.tsx:60,105` | Sample images grid | Yes (via `bustedSampleImages`) |
-| `colecoes.$slug.tsx:102` | Lightbox images prop | Yes (receives `bustedSampleImages`) |
-| `lightbox.tsx:116` | Lightbox display `<img>` | Yes (inherits busted URLs from prop) |
-| `lightbox.tsx:51` | Lightbox preload (`new Image()`) | Yes (same busted array) |
+| Location                    | Image type                                        | Cache-busted?                        |
+| --------------------------- | ------------------------------------------------- | ------------------------------------ |
+| `card-tile.tsx:52`          | sampleImages (flip) + collection.image (fallback) | Yes                                  |
+| `colecoes.$slug.tsx:77`     | Hero cover (`collection.image`)                   | Yes                                  |
+| `colecoes.$slug.tsx:60,105` | Sample images grid                                | Yes (via `bustedSampleImages`)       |
+| `colecoes.$slug.tsx:102`    | Lightbox images prop                              | Yes (receives `bustedSampleImages`)  |
+| `lightbox.tsx:116`          | Lightbox display `<img>`                          | Yes (inherits busted URLs from prop) |
+| `lightbox.tsx:51`           | Lightbox preload (`new Image()`)                  | Yes (same busted array)              |
 
 **Not cache-busted (by design -- correct):**
+
 - OG/Twitter meta image tags (`seo.ts`, `colecoes.$slug.tsx:16`) -- These are absolute URLs consumed by social crawlers. Adding `?v=` would be counterproductive since crawlers interpret each unique URL as a different image, causing unnecessary re-crawling. These should remain stable.
 - `index.tsx:67` hero image (`import hero from "@/assets/hero.jpg"`) -- This is a Vite-managed asset import, already content-hashed in the filename by Vite. No cache-bust needed.
 - Logo images (`/images/logo-forja-serafim.jpg`) -- Static brand asset, not collection-dependent.

@@ -15,6 +15,7 @@ The tokens feature is well-implemented and closely follows the plan. The data mo
 ## 1. Architecture (PASS)
 
 The implementation matches the plan precisely:
+
 - Token type added to `store-data.ts` (line 5-9) with `image`, `name`, `quantity`.
 - Three new endpoints in `server.ts`: POST upload (line 629), PUT reorder (line 725), DELETE (line 753).
 - Token images stored under `public/images/tokens/{slug}/` via `TOKENS_DIR` constant in `paths.ts` (line 13).
@@ -48,6 +49,7 @@ Token type is consistent across frontend (`src/lib/store-data.ts` line 5-9), bac
 ## 6. Git Persist (PASS)
 
 All three mutation endpoints trigger `gitPersist()`:
+
 - Upload: line 720
 - Reorder: line 748
 - Delete: line 782
@@ -75,6 +77,7 @@ The `FILES_TO_ADD` array in `git-persist.ts` includes `public/images/tokens/` (l
 **Impact:** The GET endpoint applies mtime-based cache-bust to `col.image` and each `col.sampleImages` entry, but does NOT apply it to `col.tokens[].image`. After uploading a new token, the admin panel may show a stale cached image until a hard refresh.
 
 **Fix:** Add a loop after the sampleImages cache-bust (around line 285) that applies the same pattern to `col.tokens`:
+
 ```ts
 if (col.tokens) {
   col.tokens = col.tokens.map((t) => {
