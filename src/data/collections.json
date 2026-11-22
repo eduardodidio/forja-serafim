@@ -69,14 +69,14 @@
         "quantity": 2
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-athena-copia.jpg?v=1795374147766",
-        "name": "Cavaleiros de Athena - Copia",
-        "quantity": 2
-      },
-      {
         "image": "/images/tokens/cavaleiros-do-zodiaco/token-human-1-1.jpg?v=1795374154459",
         "name": "Token Human 1-1",
         "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-athena-copia.jpg?v=1795374147766",
+        "name": "Cavaleiros de Athena - Copia",
+        "quantity": 2
       },
       {
         "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-bronze-token-1-1.jpg?v=1795374148461",
@@ -94,8 +94,8 @@
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-prata-token-1-1-copia.jpg?v=1795374149559",
-        "name": "Cavaleiros de Prata Token 1-1 - Copia",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/knight-token-2-2.jpg?v=1795374151155",
+        "name": "Knight Token 2-2",
         "quantity": 1
       },
       {
@@ -104,8 +104,8 @@
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/knight-token-2-2.jpg?v=1795374151155",
-        "name": "Knight Token 2-2",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-prata-token-1-1-copia.jpg?v=1795374149559",
+        "name": "Cavaleiros de Prata Token 1-1 - Copia",
         "quantity": 1
       },
       {
