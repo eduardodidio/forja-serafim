@@ -221,67 +221,67 @@
     "hidden": false,
     "tokens": [
       {
-        "image": "/images/tokens/batman/batdrone-de-reconhecimento.jpg",
+        "image": "/images/tokens/batman/batdrone-de-reconhecimento.jpg?v=1795374654279",
         "name": "Batdrone-de-Reconhecimento",
-        "quantity": 1
+        "quantity": 2
       },
       {
-        "image": "/images/tokens/batman/bruce-wayne-e-o-arsenal-vazio.jpg",
+        "image": "/images/tokens/batman/bruce-wayne-e-o-arsenal-vazio.jpg?v=1795374654877",
         "name": "Bruce Wayne e o arsenal vazio",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/cara-de-barro-surge-do-concreto.jpg",
+        "image": "/images/tokens/batman/cara-de-barro-surge-do-concreto.jpg?v=1795374655383",
         "name": "Cara-de-Barro surge do concreto",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/cisne-metalico-do-coringa.jpg",
+        "image": "/images/tokens/batman/cisne-metalico-do-coringa.jpg?v=1795374655979",
         "name": "Cisne metálico do Coringa",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/dossie-anonimo-com-fotografia-virada-para-baixo.jpg",
+        "image": "/images/tokens/batman/dossie-anonimo-com-fotografia-virada-para-baixo.jpg?v=1795374656478",
         "name": "Dossiê anônimo com fotografia virada para baixo",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/man-bat-no-laboratorio-experimento-fora-de-controle.jpg",
+        "image": "/images/tokens/batman/man-bat-no-laboratorio-experimento-fora-de-controle.jpg?v=1795374656983",
         "name": "Man-Bat no laboratório, experimento fora de controle",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/morcego-de-gotham-sobre-a-cidade.jpg",
+        "image": "/images/tokens/batman/morcego-de-gotham-sobre-a-cidade.jpg?v=1795374657484",
         "name": "Morcego de Gotham sobre a cidade",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/omac-avanca-sobre-a-barreira.jpg",
+        "image": "/images/tokens/batman/omac-avanca-sobre-a-barreira.jpg?v=1795374657984",
         "name": "OMAC avança sobre a barreira",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/omac-em-cela-de-contencao.jpg",
+        "image": "/images/tokens/batman/omac-em-cela-de-contencao.jpg?v=1795374658574",
         "name": "OMAC em cela de contenção",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/omac-voando-sobre-gotham.jpg",
+        "image": "/images/tokens/batman/omac-voando-sobre-gotham.jpg?v=1795374659078",
         "name": "OMAC voando sobre Gotham",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/omac-sentinela-incansavel-em-gotham.jpg",
+        "image": "/images/tokens/batman/omac-sentinela-incansavel-em-gotham.jpg?v=1795374659582",
         "name": "OMAC, Sentinela Incansável em Gotham",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/pesadelo-de-gotham.jpg",
+        "image": "/images/tokens/batman/pesadelo-de-gotham.jpg?v=1795374660178",
         "name": "Pesadelo-de-Gotham",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/batman/recursos-da-wayne.jpg",
+        "image": "/images/tokens/batman/recursos-da-wayne.jpg?v=1795374660680",
         "name": "Recursos-da-Wayne",
         "quantity": 1
       }
