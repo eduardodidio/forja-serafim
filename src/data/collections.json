@@ -69,6 +69,11 @@
         "quantity": 2
       },
       {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-human-1-1.jpg?v=1795374154459",
+        "name": "Token Human 1-1",
+        "quantity": 1
+      },
+      {
         "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-athena-copia.jpg?v=1795374147766",
         "name": "Cavaleiros de Athena - Copia",
         "quantity": 2
@@ -77,11 +82,6 @@
         "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-bronze-token-1-1.jpg?v=1795374148461",
         "name": "Cavaleiros de Bronze Token 1-1",
         "quantity": 2
-      },
-      {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/token-human-1-1.jpg?v=1795374154459",
-        "name": "Token Human 1-1",
-        "quantity": 1
       },
       {
         "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-ouro-divinos-copia.jpg?v=1795374149055",
