@@ -64,77 +64,77 @@
     "cardCount": 147,
     "tokens": [
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiro-marina-token-1-1.jpg?v=1795374147259",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiro-marina-token-1-1.jpg",
         "name": "Cavaleiro Marina Token 1-1",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/token-human-1-1.jpg?v=1795374154459",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-human-1-1.jpg",
         "name": "Token Human 1-1",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-athena-copia.jpg?v=1795374147766",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-athena-copia.jpg",
         "name": "Cavaleiros de Athena - Copia",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-bronze-token-1-1.jpg?v=1795374148461",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-bronze-token-1-1.jpg",
         "name": "Cavaleiros de Bronze Token 1-1",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-ouro-divinos-copia.jpg?v=1795374149055",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-ouro-divinos-copia.jpg",
         "name": "Cavaleiros de Ouro Divinos - Copia",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-deuses-de-asgard.jpg?v=1795374150061",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-deuses-de-asgard.jpg",
         "name": "Cavaleiros Deuses de Asgard",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/espectro-de-hades.jpg?v=1795374150567",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/espectro-de-hades.jpg",
         "name": "Espectro de Hades",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-prata-token-1-1-copia.jpg?v=1795374149559",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-prata-token-1-1-copia.jpg",
         "name": "Cavaleiros de Prata Token 1-1 - Copia",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/knight-token-2-2.jpg?v=1795374151155",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/knight-token-2-2.jpg",
         "name": "Knight Token 2-2",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/o-monarca.jpg?v=1795374152161",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/o-monarca.jpg",
         "name": "O Monarca",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/marcador-de-sangue.jpg?v=1795374151659",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/marcador-de-sangue.jpg",
         "name": "Marcador de Sangue",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/soldados-do-santuario.jpg?v=1795374152668",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/soldados-do-santuario.jpg",
         "name": "Soldados do Santuário",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/tesouro-01.jpg?v=1795374153356",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/tesouro-01.jpg",
         "name": "Tesouro 01",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/token-golem-3-3.jpg?v=1795374153866",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-golem-3-3.jpg",
         "name": "Token Golem 3-3",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/cavaleiros-do-zodiaco/token-solder-1-1.jpg?v=1795374154962",
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-solder-1-1.jpg",
         "name": "Token Solder 1-1",
         "quantity": 1
       }
@@ -159,7 +159,33 @@
     "image": "/images/covers/final-fantasy-vii.jpg",
     "description": "Cristais, invocacoes lendarias e herois de um mundo em colapso.",
     "cardCount": 112,
-    "tokens": [],
+    "tokens": [
+      {
+        "image": "/images/tokens/final-fantasy-vii/cofre-de-gil-da-shinra.jpg",
+        "name": "Cofre de Gil da Shinra",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/final-fantasy-vii/materia-mimica-duas-espadas-buster.jpg",
+        "name": "Matéria Mímica_ duas Espadas Buster",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/final-fantasy-vii/red-xiii-guardiao-do-canion-cosmo.jpg",
+        "name": "Red XIII, guardião do Cânion Cosmo",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/final-fantasy-vii/sr-golfinho-de-junon.jpg",
+        "name": "Sr. Golfinho de Junon",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/final-fantasy-vii/varredor-da-shinra-na-fabrica.jpg",
+        "name": "Varredor da Shinra na fábrica",
+        "quantity": 1
+      }
+    ],
     "sampleImages": [
       "/images/decks/final-fantasy-vii/cloud-e-a-lamina-em-midgar.jpg",
       "/images/decks/final-fantasy-vii/genesis-rhapsodos-versos-escarlates.jpg",
