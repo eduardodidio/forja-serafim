@@ -5,7 +5,43 @@
     "image": "/images/covers/castlevania.jpg",
     "description": "Castelo eterno, cacadores e a noite sem fim sob a lua de sangue.",
     "cardCount": 119,
-    "tokens": [],
+    "tokens": [
+      {
+        "image": "/images/tokens/castlevania/acolito-do-rito-velado-frame-transparente.jpg?v=1795342149351",
+        "name": "Acolito-do-Rito-Velado-Frame-Transparente",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/castlevania/atlas-do-corredor-infinito.jpg?v=1795342149857",
+        "name": "Atlas do Corredor Infinito",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/castlevania/custodio-da-cripta-de-dracula.jpg?v=1795342150453",
+        "name": "Custódio da cripta de Drácula",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/castlevania/guarda-da-corte-de-styria.jpg?v=1795342150962",
+        "name": "Guarda da Corte de Styria",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/castlevania/reserva-carmesim-no-salao-gotico.jpg?v=1795342151551",
+        "name": "Reserva Carmesim no salão gótico",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/castlevania/sentinela-da-corte-de-dracula.jpg?v=1795342152053",
+        "name": "Sentinela-da-Corte-de-Dracula",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/castlevania/vulto-das-torres-asas-ao-luar.jpg?v=1795342152555",
+        "name": "Vulto das Torres, asas ao luar",
+        "quantity": 2
+      }
+    ],
     "sampleImages": [
       "/images/decks/castlevania/a-dracula-senhor-das-trevas-comandante.jpg",
       "/images/decks/castlevania/alucard-herdeiro-da-noite-sem-escudo.jpg",
