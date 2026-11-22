@@ -328,8 +328,43 @@
     "hidden": false,
     "tokens": [
       {
-        "image": "/images/tokens/conflito-eterno/blood-token.jpg",
+        "image": "/images/tokens/conflito-eterno/blood-token.jpg?v=1795374988673",
         "name": "Blood Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/copy-token.jpg?v=1795375012477",
+        "name": "Copy Token",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/elephant-3-3-token.jpg?v=1795375013066",
+        "name": "Elephant 3-3 Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/fearie-dragon-fly-token-1-1.jpg?v=1795375013566",
+        "name": "Fearie Dragon Fly Token 1-1",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/shapeshifter-token.jpg?v=1795375014066",
+        "name": "Shapeshifter Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/treasure-token.jpg?v=1795375014574",
+        "name": "Treasure Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/wraith-token.jpg?v=1795375015165",
+        "name": "Wraith Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/zombie-token.jpg?v=1795375015767",
+        "name": "Zombie Token",
         "quantity": 1
       }
     ]
