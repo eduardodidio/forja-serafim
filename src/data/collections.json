@@ -458,7 +458,68 @@
     "image": "/images/covers/arahbo-roar-of-the-world-premium.jpg",
     "description": "Deck de Arahbo com artes premium",
     "cardCount": 100,
-    "tokens": [],
+    "tokens": [
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/adorned-pouncer-token.jpg",
+        "name": "Adorned Pouncer Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/cat-2-2.jpg",
+        "name": "Cat 2-2",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/cat-beast-token.jpg",
+        "name": "Cat Beast Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/cat-lifelink-token.jpg",
+        "name": "Cat Lifelink Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/cat-soldier-token.jpg",
+        "name": "Cat Soldier Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/cat-token.jpg",
+        "name": "Cat Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/cat-warrior-token.jpg",
+        "name": "Cat Warrior Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/city-s-blessing-token.jpg",
+        "name": "City_s Blessing Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/copy.jpg",
+        "name": "Copy",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/rat-token.jpg",
+        "name": "Rat Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/sacred-cat-token.jpg",
+        "name": "Sacred Cat Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/arahbo-roar-of-the-world-premium/tesouro-token.jpg",
+        "name": "Tesouro Token",
+        "quantity": 1
+      }
+    ],
     "sampleImages": [
       "/images/decks/arahbo-roar-of-the-world-premium/adorned-pouncer.jpg",
       "/images/decks/arahbo-roar-of-the-world-premium/arahbo-rugido-do-mundo.jpg",
