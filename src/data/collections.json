@@ -104,6 +104,7 @@
     "image": "/images/covers/batman.jpg",
     "description": "Deck temático Batman",
     "cardCount": 100,
+    "tokens": [],
     "sampleImages": [
       "/images/decks/batman/a2-batman-vigia-de-gotham-comandante.jpg",
       "/images/decks/batman/armadura-justice-buster.jpg",
@@ -124,6 +125,7 @@
     "image": "/images/covers/paraiso-celestial.jpg",
     "description": "Deck temático Anjos do universo de Diablo",
     "cardCount": 100,
+    "tokens": [],
     "sampleImages": [
       "/images/decks/paraiso-celestial/auriel-archangel-of-hope.jpg",
       "/images/decks/paraiso-celestial/inarius-advisor-to-the-angiris-council.jpg",
@@ -144,6 +146,7 @@
     "image": "/images/covers/conflito-eterno.jpg",
     "description": "Deck temático Anjos e Demônios do universo de Diablo",
     "cardCount": 100,
+    "tokens": [],
     "sampleImages": [
       "/images/decks/conflito-eterno/a-uniao-proibida-02.jpg",
       "/images/decks/conflito-eterno/baal-senhor-da-destruicao.jpg",
@@ -164,6 +167,7 @@
     "image": "/images/covers/paraiso-celestial-mas-com-mais-cores.jpg",
     "description": "Deck temático de Anjos das 5 cores no tema de Diablo",
     "cardCount": 100,
+    "tokens": [],
     "sampleImages": [
       "/images/decks/paraiso-celestial-mas-com-mais-cores/arauto-da-servidao-eterna-no-abismo.jpg",
       "/images/decks/paraiso-celestial-mas-com-mais-cores/guardiao-do-veu-eterno.jpg",
@@ -184,6 +188,7 @@
     "image": "/images/covers/arahbo-roar-of-the-world-premium.jpg",
     "description": "Deck de Arahbo com artes premium",
     "cardCount": 100,
+    "tokens": [],
     "sampleImages": [
       "/images/decks/arahbo-roar-of-the-world-premium/adorned-pouncer.jpg",
       "/images/decks/arahbo-roar-of-the-world-premium/arahbo-rugido-do-mundo.jpg",
@@ -204,6 +209,7 @@
     "image": "/images/covers/dragon-ball.jpg",
     "description": "Deck temático de Dragon Ball",
     "cardCount": 100,
+    "tokens": [],
     "sampleImages": [
       "/images/decks/dragon-ball/gohan-beast-em-aura-suprema.jpg",
       "/images/decks/dragon-ball/goku-black-rosa-da-ruina.jpg",

@@ -1,5 +1,6 @@
 import { execFileSync } from "child_process";
-import { PROJECT_ROOT } from "./paths.js";
+import { readFileSync, copyFileSync, unlinkSync } from "fs";
+import { PROJECT_ROOT, COLLECTIONS_JSON, TESTIMONIALS_JSON, SETTINGS_JSON } from "./paths.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -171,24 +172,117 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// ---------------------------------------------------------------------------
+// Conflict detection
+// ---------------------------------------------------------------------------
+
+const JSON_DATA_FILES = [COLLECTIONS_JSON, TESTIMONIALS_JSON, SETTINGS_JSON];
+
+/** Check whether a file on disk contains git conflict markers. */
+export function hasConflictMarkers(filePath: string): boolean {
+  try {
+    const content = readFileSync(filePath, "utf-8");
+    return content.includes("<<<<<<<") || content.includes(">>>>>>>");
+  } catch {
+    return false;
+  }
+}
+
+/** Create .bak copies of all JSON data files (best-effort). */
+function backupJsonFiles(): void {
+  for (const p of JSON_DATA_FILES) {
+    try {
+      copyFileSync(p, `${p}.bak`);
+    } catch {
+      /* file may not exist yet */
+    }
+  }
+}
+
+/** Remove .bak copies of all JSON data files (best-effort). */
+function cleanupBackups(): void {
+  for (const p of JSON_DATA_FILES) {
+    try {
+      unlinkSync(`${p}.bak`);
+    } catch {
+      /* .bak may not exist */
+    }
+  }
+}
+
+/** Restore JSON data files from .bak copies (best-effort). */
+function restoreFromBackups(): void {
+  for (const p of JSON_DATA_FILES) {
+    try {
+      copyFileSync(`${p}.bak`, p);
+    } catch {
+      /* .bak may not exist */
+    }
+  }
+}
+
+/** Verify all JSON data files parse correctly. Returns false if any fails. */
+function verifyJsonFiles(): boolean {
+  for (const p of JSON_DATA_FILES) {
+    try {
+      const content = readFileSync(p, "utf-8");
+      JSON.parse(content);
+    } catch {
+      return false;
+    }
+  }
+  return true;
+}
+
+/** Check JSON data files for conflicts or parse errors, restore from backup if needed. */
+function checkAndRestoreIfCorrupted(): void {
+  // Check for conflict markers
+  for (const p of JSON_DATA_FILES) {
+    if (hasConflictMarkers(p)) {
+      log("ERROR", "CONFLICT detected post-merge, restoring backups");
+      restoreFromBackups();
+      try {
+        git("merge", "--abort");
+      } catch {
+        /* may not be in a merge state */
+      }
+      return;
+    }
+  }
+
+  // Verify JSON parses correctly
+  if (!verifyJsonFiles()) {
+    log("ERROR", "JSON parse failure post-merge, restoring backups");
+    restoreFromBackups();
+  }
+}
+
 function fetchAndRebase(): void {
   try {
-    git("fetch", "origin", "main");
-    const behind = git("rev-list", "--count", "HEAD..origin/main");
-    if (behind !== "0") {
-      try {
-        git("rebase", "origin/main");
-      } catch {
+    backupJsonFiles();
+
+    try {
+      git("fetch", "origin", "main");
+      const behind = git("rev-list", "--count", "HEAD..origin/main");
+      if (behind !== "0") {
         try {
-          git("rebase", "--abort");
+          git("rebase", "origin/main");
         } catch {
-          /* ignore */
+          try {
+            git("rebase", "--abort");
+          } catch {
+            /* ignore */
+          }
+          git("pull", "--no-rebase", "origin", "main");
         }
-        git("pull", "--no-rebase", "origin", "main");
+
+        checkAndRestoreIfCorrupted();
       }
+    } catch (err) {
+      log("ERROR", "fetchAndRebase failed", extractErrorDetail(err));
     }
-  } catch {
-    /* fetch failed (offline / no remote) — continue */
+  } finally {
+    cleanupBackups();
   }
 }
 

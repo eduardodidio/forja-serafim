@@ -1,8 +1,22 @@
-import { readFileSync, existsSync, mkdirSync, statSync, unlinkSync } from "fs";
+import {
+  readFileSync,
+  writeFileSync,
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  statSync,
+  unlinkSync,
+} from "fs";
 import { join, dirname, extname, resolve } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
-import { readJson, writeJson } from "./lib/data-io.js";
+import {
+  readJson,
+  readJsonSafe,
+  writeJson,
+  validateJson,
+  DataCorruptionError,
+} from "./lib/data-io.js";
 import {
   COLLECTIONS_JSON,
   TESTIMONIALS_JSON,
@@ -1023,6 +1037,56 @@ try {
   /* git checkout optional */
 }
 
+// Self-heal: detect and repair corrupted JSON files at startup
+{
+  const DATA_FILES = [COLLECTIONS_JSON, TESTIMONIALS_JSON, SETTINGS_JSON];
+  const DEFAULTS: Record<string, string> = {
+    [COLLECTIONS_JSON]: "[]",
+    [TESTIMONIALS_JSON]: "[]",
+    [SETTINGS_JSON]: '{"whatsappUrl":""}',
+  };
+
+  for (const filePath of DATA_FILES) {
+    if (!validateJson(filePath)) {
+      console.error(`[startup] CORRUPT DATA detected: ${filePath}`);
+
+      // Try .bak file first (created by git-persist)
+      const bakPath = filePath + ".bak";
+      if (existsSync(bakPath) && validateJson(bakPath)) {
+        copyFileSync(bakPath, filePath);
+        console.log(`[startup] Restored from backup: ${bakPath}`);
+      } else {
+        // Try to strip conflict markers
+        try {
+          const raw = readFileSync(filePath, "utf-8");
+          if (raw.includes("<<<<<<<")) {
+            // Keep "ours" side of each conflict (before =======)
+            const stripped = raw
+              .replace(/^<{7}.*\n/gm, "")
+              .replace(/^={7}\n[\s\S]*?^>{7}.*\n/gm, "");
+            try {
+              JSON.parse(stripped);
+              writeFileSync(filePath, stripped, "utf-8");
+              console.log(`[startup] Stripped conflict markers from ${filePath}`);
+            } catch {
+              // Stripped version still invalid, use default
+              writeFileSync(filePath, DEFAULTS[filePath] || "[]", "utf-8");
+              console.warn(`[startup] Reset to default: ${filePath}`);
+            }
+          } else {
+            // Not conflict markers, just invalid JSON — use default
+            writeFileSync(filePath, DEFAULTS[filePath] || "[]", "utf-8");
+            console.warn(`[startup] Reset to default: ${filePath}`);
+          }
+        } catch {
+          writeFileSync(filePath, DEFAULTS[filePath] || "[]", "utf-8");
+          console.warn(`[startup] Reset to default: ${filePath}`);
+        }
+      }
+    }
+  }
+}
+
 // One-time cleanup: strip query strings from persisted image paths
 {
   const cols = readJson<Collection[]>(COLLECTIONS_JSON);
@@ -1054,13 +1118,53 @@ try {
   }
 }
 
+// Migration: ensure all collections have tokens array
+{
+  const cols = readJsonSafe<Collection[]>(COLLECTIONS_JSON, []);
+  let dirty = false;
+  for (const col of cols) {
+    if (!Array.isArray(col.tokens)) {
+      col.tokens = [];
+      dirty = true;
+    }
+  }
+  if (dirty) {
+    writeJson(COLLECTIONS_JSON, cols);
+    console.log("[startup] Migrated: added missing tokens[] to collections");
+  }
+}
+
 console.log(`\n  Forja Serafim — Admin Web`);
 console.log(`  http://localhost:${PORT}/admin/`);
 console.log(
   `  Auth: ${isAuthEnabled() ? `Google OAuth (${ALLOWED_EMAILS.join(", ")})` : "DISABLED (local dev)"}\n`,
 );
 
+async function safeHandleRequest(req: Request): Promise<Response> {
+  try {
+    return await handleRequest(req);
+  } catch (err) {
+    console.error("[server] Unhandled error:", err);
+
+    if (err instanceof DataCorruptionError) {
+      return json(
+        {
+          error: "Dados corrompidos. O servidor detectou um problema nos arquivos de dados.",
+          detail: err.reason,
+          file: err.filePath,
+          recovery: "Reinicie o servidor para tentar auto-reparo, ou contate o desenvolvedor.",
+        },
+        503,
+        req,
+      );
+    }
+
+    const msg = err instanceof Error ? err.message : String(err);
+    return json({ error: "Erro interno do servidor.", detail: msg }, 500, req);
+  }
+}
+
 Bun.serve({
   port: PORT,
-  fetch: handleRequest,
+  fetch: safeHandleRequest,
 });
