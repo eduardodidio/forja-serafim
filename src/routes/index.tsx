@@ -4,6 +4,7 @@ import {
   ArrowRight,
   Brush,
   ClipboardPaste,
+  Gem,
   Package,
   Palette,
   Quote,
@@ -104,19 +105,32 @@ function Home() {
 
       {/* Features */}
       <section className="mx-auto max-w-7xl px-5 py-16">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { icon: Brush, t: "Arte personalizada", d: "Escolha o tema e nos criamos o design exclusivo para o seu deck." },
+            {
+              icon: Brush,
+              t: "Arte personalizada",
+              d: "Escolha o tema e nos criamos o design exclusivo para o seu deck.",
+            },
             {
               icon: Package,
               t: "Impressao premium",
               d: "Papel de alta gramatura e acabamento fosco.",
             },
-            { icon: Star, t: "Opcao foil", d: "Acabamento holografico sob encomenda." },
+            {
+              icon: Star,
+              t: "Acabamento foil",
+              d: "Brilho holografico que transforma cada carta numa joia — o impacto visual na mesa e incomparavel.",
+            },
             {
               icon: Sparkles,
               t: "Decks tematicos",
               d: "Universos inteiros aplicados ao seu commander.",
+            },
+            {
+              icon: Gem,
+              t: "Realize o deck dos seus sonhos",
+              d: "De Black Lotus a dual lands — imprima as cartas mais iconicas do Magic em alta fidelidade, sem pesar no bolso.",
             },
           ].map(({ icon: Icon, t, d }, i) => (
             <Reveal key={t} delay={i * 100}>
