@@ -887,11 +887,27 @@
     <script>
       const API = "";
 
-      // --- Auth-aware fetch: redirect to login on 401 ---
+      // --- Debounce utility ---
+      function debounce(fn, ms) {
+        let timer = null;
+        return function (...args) {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn.apply(this, args), ms);
+        };
+      }
+
+      // --- Auth-aware fetch: redirect to login on 401, retry on 502 ---
       // Mutation methods that trigger git persist check
       const MUTATION_METHODS = ["POST", "PUT", "PATCH", "DELETE"];
       async function apiFetch(url, opts) {
-        const res = await fetch(url, opts);
+        let res = await fetch(url, opts);
+
+        // Retry once on 502 (transient — server busy with git operations)
+        if (res.status === 502) {
+          await new Promise(r => setTimeout(r, 2000));
+          res = await fetch(url, opts);
+        }
+
         if (res.status === 401) {
           toast("Sessao expirada. Redirecionando para login...", "error");
           setTimeout(() => {
@@ -1783,11 +1799,11 @@
                   <p class="text-xs text-gray-300 truncate" title="${esc(token.name)}">${esc(token.name)}</p>
                   <div class="flex items-center gap-1.5">
                     <label class="text-[10px] text-gray-400">Qtd:</label>
-                    <input type="number" value="${token.quantity}" min="1" onchange="updateTokenQuantity('${esc(slug)}', '${esc(token.image.split("/").pop())}', parseInt(this.value))" class="input text-xs w-16 text-center" />
+                    <input type="number" value="${token.quantity}" min="1" data-qty-key="${slug}:${token.image.split("/").pop().split("?")[0]}" onchange="debouncedUpdateTokenQuantity('${esc(slug)}', '${esc(token.image.split("/").pop().split("?")[0])}', parseInt(this.value))" class="input text-xs w-16 text-center" />
                   </div>
                 </div>
                 <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split("/").pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+                  <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split("/").pop().split("?")[0])}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                   </button>
                   ${
@@ -1896,7 +1912,7 @@
         const res = await apiFetch(`${API}/api/collections/${slug}/images/reorder`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sampleImages: c.sampleImages }),
+          body: JSON.stringify({ sampleImages: c.sampleImages.map(img => img.split("?")[0]) }),
         });
 
         if (!res.ok) {
@@ -2026,8 +2042,9 @@
         const c = collections.find((x) => x.slug === slug);
         if (!c || !c.tokens) return;
 
-        const imagePath = `/images/tokens/${slug}/${filename}`;
-        const idx = c.tokens.findIndex((t) => t.image === imagePath);
+        const cleanFilename = filename.split("?")[0];
+        const imagePath = `/images/tokens/${slug}/${cleanFilename}`;
+        const idx = c.tokens.findIndex((t) => t.image.split("?")[0] === imagePath);
         if (idx === -1) return;
 
         // Optimistic: remove from local state
@@ -2035,7 +2052,7 @@
         c.tokens.splice(idx, 1);
         updateEditTokensGrid(slug);
 
-        const res = await apiFetch(`${API}/api/collections/${slug}/tokens/${filename}`, {
+        const res = await apiFetch(`${API}/api/collections/${slug}/tokens/${cleanFilename}`, {
           method: "DELETE",
         });
         if (!res.ok) {
@@ -2062,7 +2079,7 @@
         const res = await apiFetch(`${API}/api/collections/${slug}/tokens/reorder`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tokens: c.tokens }),
+          body: JSON.stringify({ tokens: c.tokens.map(t => ({...t, image: t.image.split("?")[0]})) }),
         });
 
         if (!res.ok) {
@@ -2083,8 +2100,9 @@
         const c = collections.find((x) => x.slug === slug);
         if (!c || !c.tokens) return;
 
-        const imagePath = `/images/tokens/${slug}/${filename}`;
-        const token = c.tokens.find((t) => t.image === imagePath);
+        const cleanFilename = filename.split("?")[0];
+        const imagePath = `/images/tokens/${slug}/${cleanFilename}`;
+        const token = c.tokens.find((t) => t.image.split("?")[0] === imagePath);
         if (!token) return;
 
         const oldQty = token.quantity;
@@ -2098,12 +2116,25 @@
 
         if (!res.ok) {
           token.quantity = oldQty;
-          toast("Erro ao atualizar quantidade.", "error");
+          const input = document.querySelector(`input[data-qty-key="${slug}:${cleanFilename}"]`);
+          if (input) {
+            input.classList.add("border-red-500");
+            setTimeout(() => input.classList.remove("border-red-500"), 2000);
+          }
           return;
         }
 
-        toast("Quantidade atualizada!");
         await loadCollections();
+      }
+
+      // Debounced quantity updater — one timer per slug:filename pair
+      const _qtyDebouncers = {};
+      function debouncedUpdateTokenQuantity(slug, filename, qty) {
+        const key = `${slug}:${filename}`;
+        if (!_qtyDebouncers[key]) {
+          _qtyDebouncers[key] = debounce((s, f, q) => updateTokenQuantity(s, f, q), 500);
+        }
+        _qtyDebouncers[key](slug, filename, qty);
       }
 
       async function uploadEditTokens(slug, input) {
@@ -2145,6 +2176,7 @@
           }
 
           input.value = "";
+          input.type = ""; input.type = "file"; // force reset for same-file re-upload
           await loadCollections();
           updateEditTokensGrid(slug);
         } finally {
@@ -2175,11 +2207,11 @@
                 <p class="text-xs text-gray-300 truncate" title="${esc(token.name)}">${esc(token.name)}</p>
                 <div class="flex items-center gap-1.5">
                   <label class="text-[10px] text-gray-400">Qtd:</label>
-                  <input type="number" value="${token.quantity}" min="1" onchange="updateTokenQuantity('${esc(slug)}', '${esc(token.image.split("/").pop())}', parseInt(this.value))" class="input text-xs w-16 text-center" />
+                  <input type="number" value="${token.quantity}" min="1" data-qty-key="${slug}:${token.image.split("/").pop().split("?")[0]}" onchange="debouncedUpdateTokenQuantity('${esc(slug)}', '${esc(token.image.split("/").pop().split("?")[0])}', parseInt(this.value))" class="input text-xs w-16 text-center" />
                 </div>
               </div>
               <div class="absolute top-1.5 right-1.5 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split("/").pop())}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
+                <button onclick="removeToken('${esc(slug)}', '${esc(token.image.split("/").pop().split("?")[0])}')" class="w-6 h-6 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center text-xs" title="Remover">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 ${

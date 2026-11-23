@@ -56,6 +56,30 @@ export function gitPersist(description: string): Promise<PersistResult> {
   return queue;
 }
 
+// ---------------------------------------------------------------------------
+// Debounced persist (coalescing rapid edits into one commit)
+// ---------------------------------------------------------------------------
+
+export const DEBOUNCE_MS = 3000;
+
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+let pendingDescription: string | null = null;
+
+/**
+ * Fire-and-forget debounced persist. Rapid calls within DEBOUNCE_MS
+ * coalesce into a single gitPersist with the last description.
+ */
+export function gitPersistDebounced(description: string): void {
+  pendingDescription = description;
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    const desc = pendingDescription!;
+    pendingDescription = null;
+    debounceTimer = null;
+    gitPersist(desc);
+  }, DEBOUNCE_MS);
+}
+
 /** Current state of the persist pipeline. */
 export function getPersistState(): PersistState {
   return state;

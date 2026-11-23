@@ -21,7 +21,7 @@ export const Route = createFileRoute("/colecoes/$slug")({
         { title: `${c.name} — Deck Proxy Full Art | ${SITE.NAME}` },
         {
           name: "description",
-          content: `${c.description} ${c.cardCount} cartas com arte autoral premium.`,
+          content: `${c.description} ${c.cardCount} cartas com design exclusivo premium.`,
         },
         { property: "og:title", content: `${c.name} — Deck Proxy Full Art` },
         { property: "og:description", content: c.description },

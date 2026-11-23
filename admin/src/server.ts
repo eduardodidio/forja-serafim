@@ -30,7 +30,7 @@ import {
 } from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
 import { processImage, processCoverImage } from "./lib/image-processor.js";
-import { gitPersist, getPersistState, getLastError, getRecentOps } from "./lib/git-persist.js";
+import { gitPersist, gitPersistDebounced, getPersistState, getLastError, getRecentOps } from "./lib/git-persist.js";
 import crypto from "crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -392,7 +392,7 @@ async function handleRequest(req: Request): Promise<Response> {
       if (body.sampleImages !== undefined) col.sampleImages = body.sampleImages;
       if (body.tokens !== undefined) col.tokens = body.tokens;
       writeJson(COLLECTIONS_JSON, collections);
-      gitPersist(`Editar colecao: ${slug}`);
+      gitPersistDebounced(`Editar colecao: ${slug}`);
       return json(col, 200, req);
     }
 
@@ -545,7 +545,7 @@ async function handleRequest(req: Request): Promise<Response> {
 
     col.sampleImages = body.sampleImages;
     writeJson(COLLECTIONS_JSON, collections);
-    gitPersist(`Reordenar imagens: ${slug}`);
+    gitPersistDebounced(`Reordenar imagens: ${slug}`);
     return json(col, 200, req);
   }
 
@@ -768,7 +768,7 @@ async function handleRequest(req: Request): Promise<Response> {
 
     col.tokens = body.tokens;
     writeJson(COLLECTIONS_JSON, collections);
-    gitPersist(`Reordenar tokens: ${slug}`);
+    gitPersistDebounced(`Reordenar tokens: ${slug}`);
     return json(col, 200, req);
   }
 

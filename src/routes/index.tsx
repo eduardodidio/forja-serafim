@@ -106,7 +106,7 @@ function Home() {
       <section className="mx-auto max-w-7xl px-5 py-16">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: Brush, t: "Arte autoral", d: "Cada carta desenhada e diagramada a mao." },
+            { icon: Brush, t: "Arte personalizada", d: "Escolha o tema e nos criamos o design exclusivo para o seu deck." },
             {
               icon: Package,
               t: "Impressao premium",

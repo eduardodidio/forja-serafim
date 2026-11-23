@@ -3,7 +3,7 @@ import { collections, WHATSAPP_URL } from "./store-data";
 const SITE_URL = "https://forjaserafim.com.br";
 const SITE_NAME = "Forja Serafim";
 const DEFAULT_DESCRIPTION =
-  "Proxies Full Art artesanais para Magic: The Gathering. Decks tematicos completos com arte autoral premium.";
+  "Proxies Full Art artesanais para Magic: The Gathering. Decks tematicos completos com design exclusivo premium.";
 const DEFAULT_IMAGE = `${SITE_URL}/images/covers/castlevania.jpg`;
 
 export function getOrganizationJsonLd() {
