@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import { RotateCw } from "lucide-react";
 import { Card3DTilt } from "@/components/card-3d-tilt";
+
+const CARD_BACK_IMAGE = "/images/verso.jpg";
 
 type LightboxProps = {
   images: string[];
@@ -9,6 +12,7 @@ type LightboxProps = {
 
 export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
   const [index, setIndex] = useState(-1);
+  const [flipped, setFlipped] = useState(false);
   const isOpen = index >= 0;
 
   const open = useCallback((i: number) => setIndex(i), []);
@@ -40,7 +44,12 @@ export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
     };
   }, [isOpen, close, prev, next]);
 
-  // Preload adjacent images
+  // Reset flip when changing card
+  useEffect(() => {
+    setFlipped(false);
+  }, [index]);
+
+  // Preload adjacent images + card back
   useEffect(() => {
     if (!isOpen) return;
     const preload = [index - 1, index + 1]
@@ -50,6 +59,8 @@ export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
       const img = new Image();
       img.src = images[i];
     });
+    const back = new Image();
+    back.src = CARD_BACK_IMAGE;
   }, [isOpen, index, images]);
 
   return (
@@ -104,25 +115,57 @@ export function Lightbox({ images, alt = "Imagem", children }: LightboxProps) {
             </button>
           )}
 
-          {/* Image */}
+          {/* Image with flip */}
           <div
             key={index}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              setFlipped((f) => !f);
+            }}
             onContextMenu={(e) => e.preventDefault()}
-            style={{ animation: "fade-in 0.2s ease-out" }}
+            style={{ animation: "fade-in 0.2s ease-out", perspective: "1200px" }}
+            className="relative cursor-pointer"
           >
             <Card3DTilt tiltMaxAngle={18} scale={1.08} className="inline-block">
-              <img
-                src={images[index]}
-                alt={`${alt} ${index + 1}`}
-                className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
+              <div
+                className="relative"
                 style={{
-                  userSelect: "none",
-                  pointerEvents: "none",
+                  transformStyle: "preserve-3d",
+                  transition: "transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)",
+                  transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
                 }}
-                draggable={false}
-              />
+              >
+                {/* Front */}
+                <img
+                  src={images[index]}
+                  alt={`${alt} ${index + 1}`}
+                  className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
+                  style={{
+                    userSelect: "none",
+                    pointerEvents: "none",
+                    backfaceVisibility: "hidden",
+                  }}
+                  draggable={false}
+                />
+                {/* Back */}
+                <img
+                  src={CARD_BACK_IMAGE}
+                  alt="Verso da carta"
+                  className="absolute inset-0 size-full rounded-lg object-contain"
+                  style={{
+                    userSelect: "none",
+                    pointerEvents: "none",
+                    backfaceVisibility: "hidden",
+                    transform: "rotateY(180deg)",
+                  }}
+                  draggable={false}
+                />
+              </div>
             </Card3DTilt>
+            {/* Flip hint */}
+            <div className="absolute bottom-3 right-3 rounded-full bg-black/40 p-1.5 text-white/50 pointer-events-none">
+              <RotateCw className="size-4" />
+            </div>
           </div>
 
           {/* Next */}
