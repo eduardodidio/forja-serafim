@@ -7,37 +7,37 @@
     "cardCount": 119,
     "tokens": [
       {
-        "image": "/images/tokens/castlevania/acolito-do-rito-velado-frame-transparente.jpg?v=1795342149351",
+        "image": "/images/tokens/castlevania/acolito-do-rito-velado-frame-transparente.jpg",
         "name": "Acolito-do-Rito-Velado-Frame-Transparente",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/castlevania/atlas-do-corredor-infinito.jpg?v=1795342149857",
+        "image": "/images/tokens/castlevania/atlas-do-corredor-infinito.jpg",
         "name": "Atlas do Corredor Infinito",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/castlevania/custodio-da-cripta-de-dracula.jpg?v=1795342150453",
+        "image": "/images/tokens/castlevania/custodio-da-cripta-de-dracula.jpg",
         "name": "Custódio da cripta de Drácula",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/castlevania/guarda-da-corte-de-styria.jpg?v=1795342150962",
+        "image": "/images/tokens/castlevania/guarda-da-corte-de-styria.jpg",
         "name": "Guarda da Corte de Styria",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/castlevania/reserva-carmesim-no-salao-gotico.jpg?v=1795342151551",
+        "image": "/images/tokens/castlevania/reserva-carmesim-no-salao-gotico.jpg",
         "name": "Reserva Carmesim no salão gótico",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/castlevania/sentinela-da-corte-de-dracula.jpg?v=1795342152053",
+        "image": "/images/tokens/castlevania/sentinela-da-corte-de-dracula.jpg",
         "name": "Sentinela-da-Corte-de-Dracula",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/castlevania/vulto-das-torres-asas-ao-luar.jpg?v=1795342152555",
+        "image": "/images/tokens/castlevania/vulto-das-torres-asas-ao-luar.jpg",
         "name": "Vulto das Torres, asas ao luar",
         "quantity": 2
       }
@@ -62,7 +62,83 @@
     "image": "/images/covers/cavaleiros-do-zodiaco.jpg",
     "description": "Armaduras douradas, cosmo ardente e as doze casas em ouro puro.",
     "cardCount": 147,
-    "tokens": [],
+    "tokens": [
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiro-marina-token-1-1.jpg",
+        "name": "Cavaleiro Marina Token 1-1",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-human-1-1.jpg",
+        "name": "Token Human 1-1",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-athena-copia.jpg",
+        "name": "Cavaleiros de Athena - Copia",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-bronze-token-1-1.jpg",
+        "name": "Cavaleiros de Bronze Token 1-1",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-ouro-divinos-copia.jpg",
+        "name": "Cavaleiros de Ouro Divinos - Copia",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-deuses-de-asgard.jpg",
+        "name": "Cavaleiros Deuses de Asgard",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/espectro-de-hades.jpg",
+        "name": "Espectro de Hades",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/cavaleiros-de-prata-token-1-1-copia.jpg",
+        "name": "Cavaleiros de Prata Token 1-1 - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/knight-token-2-2.jpg",
+        "name": "Knight Token 2-2",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/o-monarca.jpg",
+        "name": "O Monarca",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/marcador-de-sangue.jpg",
+        "name": "Marcador de Sangue",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/soldados-do-santuario.jpg",
+        "name": "Soldados do Santuário",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/tesouro-01.jpg",
+        "name": "Tesouro 01",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-golem-3-3.jpg",
+        "name": "Token Golem 3-3",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/cavaleiros-do-zodiaco/token-solder-1-1.jpg",
+        "name": "Token Solder 1-1",
+        "quantity": 1
+      }
+    ],
     "sampleImages": [
       "/images/decks/cavaleiros-do-zodiaco/aioros-de-sagitario-comandante.jpg",
       "/images/decks/cavaleiros-do-zodiaco/albafica-de-peixes.jpg",
@@ -83,7 +159,33 @@
     "image": "/images/covers/final-fantasy-vii.jpg",
     "description": "Cristais, invocacoes lendarias e herois de um mundo em colapso.",
     "cardCount": 112,
-    "tokens": [],
+    "tokens": [
+      {
+        "image": "/images/tokens/final-fantasy-vii/cofre-de-gil-da-shinra.jpg",
+        "name": "Cofre de Gil da Shinra",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/final-fantasy-vii/materia-mimica-duas-espadas-buster.jpg",
+        "name": "Matéria Mímica_ duas Espadas Buster",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/final-fantasy-vii/red-xiii-guardiao-do-canion-cosmo.jpg",
+        "name": "Red XIII, guardião do Cânion Cosmo",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/final-fantasy-vii/sr-golfinho-de-junon.jpg",
+        "name": "Sr. Golfinho de Junon",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/final-fantasy-vii/varredor-da-shinra-na-fabrica.jpg",
+        "name": "Varredor da Shinra na fábrica",
+        "quantity": 1
+      }
+    ],
     "sampleImages": [
       "/images/decks/final-fantasy-vii/cloud-e-a-lamina-em-midgar.jpg",
       "/images/decks/final-fantasy-vii/genesis-rhapsodos-versos-escarlates.jpg",
@@ -117,7 +219,74 @@
     "deckcheckUrl": "https://deckcheck.co/app/builder/bHOv7T7mTYZf",
     "manualUrl": "",
     "videoUrl": "",
-    "hidden": false
+    "hidden": false,
+    "tokens": [
+      {
+        "image": "/images/tokens/batman/batdrone-de-reconhecimento.jpg",
+        "name": "Batdrone-de-Reconhecimento",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/batman/bruce-wayne-e-o-arsenal-vazio.jpg",
+        "name": "Bruce Wayne e o arsenal vazio",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/batman/cara-de-barro-surge-do-concreto.jpg",
+        "name": "Cara-de-Barro surge do concreto",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/cisne-metalico-do-coringa.jpg",
+        "name": "Cisne metálico do Coringa",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/dossie-anonimo-com-fotografia-virada-para-baixo.jpg",
+        "name": "Dossiê anônimo com fotografia virada para baixo",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/man-bat-no-laboratorio-experimento-fora-de-controle.jpg",
+        "name": "Man-Bat no laboratório, experimento fora de controle",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/morcego-de-gotham-sobre-a-cidade.jpg",
+        "name": "Morcego de Gotham sobre a cidade",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/omac-avanca-sobre-a-barreira.jpg",
+        "name": "OMAC avança sobre a barreira",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/omac-em-cela-de-contencao.jpg",
+        "name": "OMAC em cela de contenção",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/batman/omac-voando-sobre-gotham.jpg",
+        "name": "OMAC voando sobre Gotham",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/omac-sentinela-incansavel-em-gotham.jpg",
+        "name": "OMAC, Sentinela Incansável em Gotham",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/pesadelo-de-gotham.jpg",
+        "name": "Pesadelo-de-Gotham",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/batman/recursos-da-wayne.jpg",
+        "name": "Recursos-da-Wayne",
+        "quantity": 1
+      }
+    ]
   },
   {
     "slug": "paraiso-celestial",
@@ -138,7 +307,69 @@
     "deckcheckUrl": "https://deckcheck.co/app/builder/AN3_1VNP0dQa",
     "manualUrl": "",
     "videoUrl": "",
-    "hidden": false
+    "hidden": false,
+    "tokens": [
+      {
+        "image": "/images/tokens/paraiso-celestial/ajani-s-pridemate-token.jpg",
+        "name": "Ajani's Pridemate Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-soldier-token-1-1-copia.jpg",
+        "name": "Angel Soldier Token 1-1 - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-token-3-3.jpg",
+        "name": "Angel Token 3-3",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-token-4-4.jpg",
+        "name": "Angel Token 4-4",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-token-vigilance-1-1-02-copia.jpg",
+        "name": "Angel Token Vigilance 1-1 02 - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/angel-token-vigilance-4-4-02-copia.jpg",
+        "name": "Angel Token Vigilance 4-4 02 - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/copy-anjos-token.jpg",
+        "name": "Copy Anjos Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/creature-token-spirit-1-1-flying-copia.jpg",
+        "name": "Creature token Spirit 1-1 Flying - Copia",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/horadrim-token-2-2.jpg",
+        "name": "Horadrim Token 2-2",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/monarca.jpg",
+        "name": "Monarca",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/tesouro-token.jpg",
+        "name": "Tesouro Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial/token-bird-1-1-copia.jpg",
+        "name": "Token Bird 1-1 - Copia",
+        "quantity": 1
+      }
+    ]
   },
   {
     "slug": "conflito-eterno",
@@ -159,7 +390,83 @@
     "deckcheckUrl": "https://deckcheck.co/app/builder/LQDFHkdLEesL",
     "manualUrl": "",
     "videoUrl": "",
-    "hidden": false
+    "hidden": false,
+    "tokens": [
+      {
+        "image": "/images/tokens/conflito-eterno/blood-token.jpg?v=1795374988673",
+        "name": "Blood Token",
+        "quantity": 1
+      },
+      {
+<<<<<<< HEAD
+        "image": "/images/tokens/conflito-eterno/copy-token.jpg?v=1795375012477",
+        "name": "Copy Token",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/elephant-3-3-token.jpg?v=1795375013066",
+=======
+        "image": "/images/tokens/conflito-eterno/copy-token.jpg",
+        "name": "Copy Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/elephant-3-3-token.jpg",
+>>>>>>> 19f2f45a60bd0417dab9b2ce18d1ea2493fd1540
+        "name": "Elephant 3-3 Token",
+        "quantity": 1
+      },
+      {
+<<<<<<< HEAD
+        "image": "/images/tokens/conflito-eterno/fearie-dragon-fly-token-1-1.jpg?v=1795375013566",
+        "name": "Fearie Dragon Fly Token 1-1",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/shapeshifter-token.jpg?v=1795375014066",
+        "name": "Shapeshifter Token",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/treasure-token.jpg?v=1795375014574",
+=======
+        "image": "/images/tokens/conflito-eterno/fearie-dragon-fly-token-1-1.jpg",
+        "name": "Fearie Dragon Fly Token 1-1",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/shapeshifter-token.jpg",
+        "name": "Shapeshifter Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/treasure-token.jpg",
+>>>>>>> 19f2f45a60bd0417dab9b2ce18d1ea2493fd1540
+        "name": "Treasure Token",
+        "quantity": 1
+      },
+      {
+<<<<<<< HEAD
+        "image": "/images/tokens/conflito-eterno/wraith-token.jpg?v=1795375015165",
+        "name": "Wraith Token",
+        "quantity": 2
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/zombie-token.jpg?v=1795375015767",
+        "name": "Zombie Token",
+        "quantity": 2
+=======
+        "image": "/images/tokens/conflito-eterno/wraith-token.jpg",
+        "name": "Wraith Token",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/conflito-eterno/zombie-token.jpg",
+        "name": "Zombie Token",
+        "quantity": 1
+>>>>>>> 19f2f45a60bd0417dab9b2ce18d1ea2493fd1540
+      }
+    ]
   },
   {
     "slug": "paraiso-celestial-mas-com-mais-cores",
