@@ -458,13 +458,7 @@
     "image": "/images/covers/arahbo-roar-of-the-world-premium.jpg",
     "description": "Deck de Arahbo com artes premium",
     "cardCount": 100,
-    "tokens": [
-      {
-        "image": "/images/tokens/arahbo-roar-of-the-world-premium/sentinela-da-corte-de-dracula.jpg",
-        "name": "Sentinela-da-Corte-de-Dracula",
-        "quantity": 1
-      }
-    ],
+    "tokens": [],
     "sampleImages": [
       "/images/decks/arahbo-roar-of-the-world-premium/adorned-pouncer.jpg",
       "/images/decks/arahbo-roar-of-the-world-premium/arahbo-rugido-do-mundo.jpg",
