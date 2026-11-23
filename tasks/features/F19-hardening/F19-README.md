@@ -10,14 +10,14 @@ Production `collections.json` corrupted by git merge conflict markers during `fe
 
 ## Task Table
 
-| Task   | Title                                          | Wave | Files                              |
-|--------|------------------------------------------------|------|------------------------------------|
-| F19-T01| Fix fetchAndRebase conflict detection + backup | 0    | admin/src/lib/git-persist.ts       |
-| F19-T02| Add JSON validation to readJson/writeJson      | 0    | admin/src/lib/data-io.ts           |
-| F19-T03| Harden vite sitemap plugin                     | 0    | vite.config.ts                     |
-| F19-T04| Wrap API handlers with try/catch               | 1    | admin/src/server.ts                |
-| F19-T05| Startup data migration + self-heal             | 2    | admin/src/server.ts                |
-| F19-T06| Smoke tests                                    | 3    | admin/src/__tests__/hardening.test.ts |
+| Task    | Title                                          | Wave | Files                                 |
+| ------- | ---------------------------------------------- | ---- | ------------------------------------- |
+| F19-T01 | Fix fetchAndRebase conflict detection + backup | 0    | admin/src/lib/git-persist.ts          |
+| F19-T02 | Add JSON validation to readJson/writeJson      | 0    | admin/src/lib/data-io.ts              |
+| F19-T03 | Harden vite sitemap plugin                     | 0    | vite.config.ts                        |
+| F19-T04 | Wrap API handlers with try/catch               | 1    | admin/src/server.ts                   |
+| F19-T05 | Startup data migration + self-heal             | 2    | admin/src/server.ts                   |
+| F19-T06 | Smoke tests                                    | 3    | admin/src/**tests**/hardening.test.ts |
 
 ## Wave Assignments
 

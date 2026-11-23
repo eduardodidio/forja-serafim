@@ -188,7 +188,7 @@ forja-serafim/
 
 | Feature     | Descricao                                                                                                      |
 | ----------- | -------------------------------------------------------------------------------------------------------------- |
-| **F18**     | Git-persist hardening: retry com backoff, structured logging, historico de operacoes no admin                   |
+| **F18**     | Git-persist hardening: retry com backoff, structured logging, historico de operacoes no admin                  |
 | **F17**     | Tokens: upload com watermark, gestao no admin (CRUD + reorder), modal na landing page (Card3DTilt + qty badge) |
 | **F15**     | Video demonstrativo por colecao (upload, player, admin UI)                                                     |
 | **F14**     | -                                                                                                              |

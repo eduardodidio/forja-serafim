@@ -19,6 +19,7 @@
 - `verifyJsonFiles()` additionally validates JSON parse after merge even when no conflict markers are found.
 
 **Minor observations (non-blocking):**
+
 - Both `data-io.ts` and `git-persist.ts` export a function named `hasConflictMarkers` but with different signatures (string content vs. file path). This is acceptable since they serve different modules, but the naming collision could confuse future developers. The test file handles this cleanly with aliased imports.
 - Empty catch blocks in `backupJsonFiles`, `cleanupBackups`, `restoreFromBackups` are acceptable for best-effort operations and are commented.
 
@@ -71,6 +72,7 @@
 - Startup order is correct: git config > ensure main > self-heal > query-string sanitizer > token migration > serve.
 
 **Minor observation (non-blocking):**
+
 - The conflict marker stripping regex uses `[\s\S]*?` with the `m` flag but not the `s` flag. Since `[\s\S]` already matches newlines, this is correct regardless of the `s` flag. No issue.
 
 ### 6. `src/data/collections.json` (T05)
@@ -96,14 +98,14 @@
 
 ## Global Acceptance Criteria Verification
 
-| # | Criterion | Status | Evidence |
-|---|-----------|--------|----------|
-| 1 | `bun run build` succeeds even when `collections.json` is malformed | PASS | vite.config.ts wraps `closeBundle()` in try/catch with conflict marker check. Build verified: succeeds with valid data. |
-| 2 | All `/api/*` endpoints return structured JSON errors (never crash) | PASS | `safeHandleRequest` wraps all requests. DataCorruptionError -> 503, generic -> 500, both return JSON with CORS. |
-| 3 | `fetchAndRebase()` detects merge conflicts and restores from backup | PASS | `backupJsonFiles()` before merge, `checkAndRestoreIfCorrupted()` after, with conflict marker detection and JSON parse verification. |
-| 4 | `readJson()` validates JSON and detects conflict markers | PASS | Three-stage validation: file read, conflict marker check, JSON.parse. All throw typed `DataCorruptionError`. |
-| 5 | Server startup auto-heals corrupted JSON and migrates missing `tokens` field | PASS | Self-heal block with .bak recovery, marker stripping, and default reset. Token migration block ensures `tokens: []` on all collections. |
-| 6 | Smoke tests cover all hardening scenarios | PASS | 32 tests across all hardening features. All pass. |
+| #   | Criterion                                                                    | Status | Evidence                                                                                                                                |
+| --- | ---------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `bun run build` succeeds even when `collections.json` is malformed           | PASS   | vite.config.ts wraps `closeBundle()` in try/catch with conflict marker check. Build verified: succeeds with valid data.                 |
+| 2   | All `/api/*` endpoints return structured JSON errors (never crash)           | PASS   | `safeHandleRequest` wraps all requests. DataCorruptionError -> 503, generic -> 500, both return JSON with CORS.                         |
+| 3   | `fetchAndRebase()` detects merge conflicts and restores from backup          | PASS   | `backupJsonFiles()` before merge, `checkAndRestoreIfCorrupted()` after, with conflict marker detection and JSON parse verification.     |
+| 4   | `readJson()` validates JSON and detects conflict markers                     | PASS   | Three-stage validation: file read, conflict marker check, JSON.parse. All throw typed `DataCorruptionError`.                            |
+| 5   | Server startup auto-heals corrupted JSON and migrates missing `tokens` field | PASS   | Self-heal block with .bak recovery, marker stripping, and default reset. Token migration block ensures `tokens: []` on all collections. |
+| 6   | Smoke tests cover all hardening scenarios                                    | PASS   | 32 tests across all hardening features. All pass.                                                                                       |
 
 ---
 

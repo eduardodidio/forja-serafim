@@ -13,13 +13,13 @@ overwhelming the Render free-tier 30s timeout.
 
 ## Task Table
 
-| Task   | Title                                      | Wave | Files Modified                        |
-| ------ | ------------------------------------------ | ---- | ------------------------------------- |
-| F20-T01 | Debounced/coalescing gitPersist            | 0    | `admin/src/lib/git-persist.ts`        |
-| F20-T02 | Use debounced persist in server mutations  | 0    | `admin/src/server.ts`                 |
-| F20-T03 | Fix stale state after delete/re-insert     | 1    | `admin/public/index.html`             |
-| F20-T04 | Debounce quantity input + retry on 502     | 1    | `admin/public/index.html`             |
-| F20-T05 | Fix "Arte autoral" copy on landing page    | 0    | `src/routes/index.tsx` + SEO files    |
+| Task    | Title                                     | Wave | Files Modified                     |
+| ------- | ----------------------------------------- | ---- | ---------------------------------- |
+| F20-T01 | Debounced/coalescing gitPersist           | 0    | `admin/src/lib/git-persist.ts`     |
+| F20-T02 | Use debounced persist in server mutations | 0    | `admin/src/server.ts`              |
+| F20-T03 | Fix stale state after delete/re-insert    | 1    | `admin/public/index.html`          |
+| F20-T04 | Debounce quantity input + retry on 502    | 1    | `admin/public/index.html`          |
+| F20-T05 | Fix "Arte autoral" copy on landing page   | 0    | `src/routes/index.tsx` + SEO files |
 
 ## Wave Assignments
 

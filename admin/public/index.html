@@ -904,7 +904,7 @@
 
         // Retry once on 502 (transient — server busy with git operations)
         if (res.status === 502) {
-          await new Promise(r => setTimeout(r, 2000));
+          await new Promise((r) => setTimeout(r, 2000));
           res = await fetch(url, opts);
         }
 
@@ -1912,7 +1912,7 @@
         const res = await apiFetch(`${API}/api/collections/${slug}/images/reorder`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sampleImages: c.sampleImages.map(img => img.split("?")[0]) }),
+          body: JSON.stringify({ sampleImages: c.sampleImages.map((img) => img.split("?")[0]) }),
         });
 
         if (!res.ok) {
@@ -2079,7 +2079,9 @@
         const res = await apiFetch(`${API}/api/collections/${slug}/tokens/reorder`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tokens: c.tokens.map(t => ({...t, image: t.image.split("?")[0]})) }),
+          body: JSON.stringify({
+            tokens: c.tokens.map((t) => ({ ...t, image: t.image.split("?")[0] })),
+          }),
         });
 
         if (!res.ok) {
@@ -2176,7 +2178,8 @@
           }
 
           input.value = "";
-          input.type = ""; input.type = "file"; // force reset for same-file re-upload
+          input.type = "";
+          input.type = "file"; // force reset for same-file re-upload
           await loadCollections();
           updateEditTokensGrid(slug);
         } finally {

@@ -30,7 +30,13 @@ import {
 } from "./lib/paths.js";
 import { toSlug } from "./lib/slug.js";
 import { processImage, processCoverImage } from "./lib/image-processor.js";
-import { gitPersist, gitPersistDebounced, getPersistState, getLastError, getRecentOps } from "./lib/git-persist.js";
+import {
+  gitPersist,
+  gitPersistDebounced,
+  getPersistState,
+  getLastError,
+  getRecentOps,
+} from "./lib/git-persist.js";
 import crypto from "crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
