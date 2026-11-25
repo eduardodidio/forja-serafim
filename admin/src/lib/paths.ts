@@ -12,3 +12,4 @@ export const MANUALS_DIR = resolve(PROJECT_ROOT, "public/manuals");
 export const VIDEOS_DIR = resolve(PROJECT_ROOT, "public/videos/decks");
 export const TOKENS_DIR = resolve(PROJECT_ROOT, "public/images/tokens");
 export const SETTINGS_JSON = resolve(PROJECT_ROOT, "src/data/settings.json");
+export const PRICING_JSON = resolve(PROJECT_ROOT, "src/data/pricing.json");

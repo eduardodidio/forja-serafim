@@ -21,6 +21,7 @@ import {
   COLLECTIONS_JSON,
   TESTIMONIALS_JSON,
   SETTINGS_JSON,
+  PRICING_JSON,
   COVERS_DIR,
   DECKS_DIR,
   TOKENS_DIR,
@@ -157,6 +158,36 @@ type Testimonial = {
 
 type Settings = {
   whatsappUrl: string;
+  originCep: string;
+  originAddress: string;
+};
+
+type PricingProduct = {
+  id: string;
+  label: string;
+  subtitle: string;
+  icon: string;
+  standardPrice: number;
+  foilPrice: number | null;
+  unit: string;
+  highlight: boolean;
+  visible: boolean;
+  order: number;
+};
+
+type ShippingRegion = {
+  region: string;
+  states: string[];
+  pacPrice: number;
+  pacDays: string;
+  sedexPrice: number;
+  sedexDays: string;
+};
+
+type PricingData = {
+  products: PricingProduct[];
+  notes: string[];
+  shippingRegions: ShippingRegion[];
 };
 
 function json(data: unknown, status = 200, req?: Request) {
@@ -869,6 +900,64 @@ async function handleRequest(req: Request): Promise<Response> {
     }
   }
 
+  // --- Pricing API ---
+
+  if (path === "/api/pricing" && method === "GET") {
+    return json(readJson<PricingData>(PRICING_JSON), 200, req);
+  }
+
+  if (path === "/api/pricing" && method === "PUT") {
+    const body = (await req.json()) as PricingData;
+    if (!body.products || !Array.isArray(body.products)) {
+      return json({ error: "products array required" }, 400, req);
+    }
+    writeJson(PRICING_JSON, body);
+    gitPersistDebounced("Atualizar tabela de precos");
+    return json(body, 200, req);
+  }
+
+  if (path.startsWith("/api/pricing/product/") && method === "PUT") {
+    const productId = path.replace("/api/pricing/product/", "");
+    const body = (await req.json()) as Partial<PricingProduct>;
+    const data = readJson<PricingData>(PRICING_JSON);
+    const idx = data.products.findIndex((p) => p.id === productId);
+    if (idx === -1) return json({ error: "Product not found" }, 404, req);
+    if (body.standardPrice !== undefined && body.standardPrice < 0) {
+      return json({ error: "Price must be non-negative" }, 400, req);
+    }
+    if (body.foilPrice !== undefined && body.foilPrice !== null && body.foilPrice < 0) {
+      return json({ error: "Price must be non-negative" }, 400, req);
+    }
+    data.products[idx] = { ...data.products[idx], ...body, id: productId };
+    writeJson(PRICING_JSON, data);
+    gitPersistDebounced("Atualizar produto: " + productId);
+    return json(data.products[idx], 200, req);
+  }
+
+  if (path === "/api/pricing/notes" && method === "PUT") {
+    const body = (await req.json()) as { notes: string[] };
+    if (!Array.isArray(body.notes)) {
+      return json({ error: "notes array required" }, 400, req);
+    }
+    const data = readJson<PricingData>(PRICING_JSON);
+    data.notes = body.notes;
+    writeJson(PRICING_JSON, data);
+    gitPersistDebounced("Atualizar notas de precos");
+    return json({ notes: data.notes }, 200, req);
+  }
+
+  if (path === "/api/pricing/shipping" && method === "PUT") {
+    const body = (await req.json()) as { shippingRegions: ShippingRegion[] };
+    if (!Array.isArray(body.shippingRegions)) {
+      return json({ error: "shippingRegions array required" }, 400, req);
+    }
+    const data = readJson<PricingData>(PRICING_JSON);
+    data.shippingRegions = body.shippingRegions;
+    writeJson(PRICING_JSON, data);
+    gitPersistDebounced("Atualizar tabela de frete");
+    return json({ shippingRegions: data.shippingRegions }, 200, req);
+  }
+
   // --- Settings API ---
 
   if (path === "/api/settings" && method === "GET") {
@@ -879,6 +968,8 @@ async function handleRequest(req: Request): Promise<Response> {
     const body = (await req.json()) as Partial<Settings>;
     const settings = readJson<Settings>(SETTINGS_JSON);
     if (body.whatsappUrl !== undefined) settings.whatsappUrl = body.whatsappUrl;
+    if (body.originCep !== undefined) settings.originCep = body.originCep;
+    if (body.originAddress !== undefined) settings.originAddress = body.originAddress;
     writeJson(SETTINGS_JSON, settings);
     gitPersist("Atualizar configuracoes");
     return json(settings, 200, req);

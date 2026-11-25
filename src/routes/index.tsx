@@ -15,6 +15,8 @@ import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import hero from "@/assets/hero.jpg";
 import { PageShell } from "@/components/page-shell";
 import { CollectionCard } from "@/components/card-tile";
+import { PricingSection } from "@/components/pricing-section";
+import { ShippingSimulator } from "@/components/shipping-simulator";
 import { visibleCollections, testimonials, WHATSAPP_URL, whatsappLink } from "@/lib/store-data";
 
 import { useReveal } from "@/hooks/useReveal";
@@ -173,6 +175,12 @@ function Home() {
 
       {/* Voce escolhe o tema */}
       <ThemeBuilderSection />
+
+      {/* Valores */}
+      <PricingSection />
+
+      {/* Simulador de Frete */}
+      <ShippingSimulator />
 
       {/* Depoimentos — só exibe quando houver reviews reais */}
       {testimonials.length > 0 && <TestimonialsSection />}

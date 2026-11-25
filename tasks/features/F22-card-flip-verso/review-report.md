@@ -6,10 +6,12 @@
 ## Changes Reviewed
 
 ### `public/images/verso.jpg` (new asset)
+
 - 612KB JPEG — card back with Forja Serafim branding
 - Served statically, preloaded when lightbox opens
 
 ### `src/components/lightbox.tsx` (modified)
+
 - Added `flipped` state toggled on card click
 - Reset flip on card navigation (prev/next)
 - CSS 3D flip: `rotateY(180deg)` with `preserve-3d` + `backfaceVisibility: hidden`
@@ -18,9 +20,11 @@
 - Flip hint icon (RotateCw) in bottom-right corner
 
 ## Issues Found & Fixed
+
 - Missing `position: relative` on outer flip container — hint icon would float to wrong position. Fixed by adding `relative` class.
 
 ## Quality
+
 - Build: PASS
 - Lint: PASS
 - No new dependencies (lucide-react already in project)

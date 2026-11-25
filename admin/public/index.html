@@ -720,6 +720,21 @@
           </svg>
           Configuracoes
         </button>
+        <button
+          onclick="showTab('pricing')"
+          id="tab-pricing"
+          class="tab-btn px-5 py-3.5 text-sm transition-colors flex items-center gap-2 font-display"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          Valores
+        </button>
       </div>
     </nav>
 
@@ -833,6 +848,33 @@
                 (pais + DDD + numero)
               </p>
             </div>
+            <div>
+              <label class="text-xs font-medium text-gray-400 mb-1.5 block uppercase tracking-wider"
+                >CEP de Origem</label
+              >
+              <input
+                type="text"
+                id="settings-origin-cep"
+                class="input w-full"
+                placeholder="94075-300"
+                maxlength="9"
+                oninput="onSettingsChange()"
+              />
+              <p class="text-xs text-gray-500 mt-1">CEP do endereco de envio</p>
+            </div>
+            <div>
+              <label class="text-xs font-medium text-gray-400 mb-1.5 block uppercase tracking-wider"
+                >Endereco de Origem</label
+              >
+              <input
+                type="text"
+                id="settings-origin-address"
+                class="input w-full"
+                placeholder="R. Osasco, 217 - Parque Florido, Gravatai - RS"
+                oninput="onSettingsChange()"
+              />
+              <p class="text-xs text-gray-500 mt-1">Endereco exibido no simulador de frete</p>
+            </div>
             <div class="flex justify-end pt-2">
               <button onclick="saveSettings()" id="btn-save-settings" class="btn btn-gold" disabled>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -848,6 +890,50 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Pricing Tab -->
+      <div id="panel-pricing" class="hidden fade-in">
+        <h2 class="text-xl font-bold mb-6 text-gold">Tabela de Precos</h2>
+
+        <!-- Products -->
+        <div id="pricing-products" class="space-y-4 mb-8">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Notes -->
+        <div class="card mb-8">
+          <h3 class="text-lg font-semibold mb-3">Observacoes</h3>
+          <textarea
+            id="pricing-notes"
+            rows="4"
+            class="input w-full"
+            placeholder="Uma nota por linha"
+            oninput="onPricingNotesChange()"
+          ></textarea>
+          <button
+            onclick="savePricingNotes()"
+            id="btn-save-notes"
+            class="btn btn-gold mt-3"
+            disabled
+          >
+            Salvar Notas
+          </button>
+        </div>
+
+        <!-- Shipping Regions -->
+        <h3 class="text-lg font-semibold mb-3">Tabela de Frete por Regiao</h3>
+        <div id="pricing-shipping" class="space-y-4 mb-6">
+          <!-- Dynamically populated -->
+        </div>
+        <button
+          onclick="savePricingShipping()"
+          id="btn-save-shipping"
+          class="btn btn-gold"
+          disabled
+        >
+          Salvar Frete
+        </button>
       </div>
     </main>
 
@@ -951,9 +1037,13 @@
       let testimonials = [];
       let settings = {};
       let settingsOriginal = "";
+      let pricingData = null;
+      let pricingOriginal = "";
+      let shippingOriginal = "";
+      let notesOriginal = "";
 
       // --- Tabs ---
-      const TABS = ["collections", "testimonials", "settings"];
+      const TABS = ["collections", "testimonials", "settings", "pricing"];
       function showTab(tab) {
         TABS.forEach((t) => {
           const panel = document.getElementById("panel-" + t);
@@ -1097,17 +1187,29 @@
         settings = await res.json();
         const input = document.getElementById("settings-whatsapp");
         input.value = settings.whatsappUrl || "";
-        settingsOriginal = input.value;
+        document.getElementById("settings-origin-cep").value = settings.originCep || "";
+        document.getElementById("settings-origin-address").value = settings.originAddress || "";
+        settingsOriginal = JSON.stringify({
+          whatsappUrl: settings.whatsappUrl || "",
+          originCep: settings.originCep || "",
+          originAddress: settings.originAddress || "",
+        });
         document.getElementById("btn-save-settings").disabled = true;
       }
 
       function onSettingsChange() {
-        const current = document.getElementById("settings-whatsapp").value.trim();
+        const current = JSON.stringify({
+          whatsappUrl: document.getElementById("settings-whatsapp").value.trim(),
+          originCep: document.getElementById("settings-origin-cep").value.trim(),
+          originAddress: document.getElementById("settings-origin-address").value.trim(),
+        });
         document.getElementById("btn-save-settings").disabled = current === settingsOriginal;
       }
 
       async function saveSettings() {
         const whatsappUrl = document.getElementById("settings-whatsapp").value.trim();
+        const originCep = document.getElementById("settings-origin-cep").value.trim();
+        const originAddress = document.getElementById("settings-origin-address").value.trim();
         const btn = document.getElementById("btn-save-settings");
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Salvando...';
@@ -1115,7 +1217,7 @@
         const res = await apiFetch(`${API}/api/settings`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ whatsappUrl }),
+          body: JSON.stringify({ whatsappUrl, originCep, originAddress }),
         });
 
         btn.innerHTML =
@@ -1127,9 +1229,241 @@
           return;
         }
         settings = await res.json();
-        settingsOriginal = whatsappUrl;
+        settingsOriginal = JSON.stringify({ whatsappUrl, originCep, originAddress });
         btn.disabled = true;
         toast("Configuracoes salvas!");
+      }
+
+      // --- Pricing ---
+      async function loadPricing() {
+        const res = await apiFetch(`${API}/api/pricing`);
+        if (!res.ok) {
+          toast("Erro ao carregar precos", "error");
+          return;
+        }
+        pricingData = await res.json();
+        renderPricingProducts();
+        renderPricingNotes();
+        renderPricingShipping();
+      }
+
+      function renderPricingProducts() {
+        const container = document.getElementById("pricing-products");
+        container.innerHTML = pricingData.products
+          .map(
+            (p, i) => `
+          <div class="card">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold">${p.label}</h3>
+              <div class="flex items-center gap-3">
+                <label class="flex items-center gap-1 text-sm">
+                  <input type="checkbox" ${p.visible ? "checked" : ""}
+                    onchange="onProductFieldChange(${i}, 'visible', this.checked)" />
+                  Visivel
+                </label>
+                <label class="flex items-center gap-1 text-sm">
+                  <input type="checkbox" ${p.highlight ? "checked" : ""}
+                    onchange="onProductFieldChange(${i}, 'highlight', this.checked)" />
+                  Destaque
+                </label>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+              <div>
+                <label class="label">Nome</label>
+                <input type="text" class="input w-full" value="${p.label}"
+                  oninput="onProductFieldChange(${i}, 'label', this.value)" />
+              </div>
+              <div>
+                <label class="label">Icone</label>
+                <select class="input w-full" onchange="onProductFieldChange(${i}, 'icon', this.value)">
+                  ${["Swords", "Palette", "Layers", "PenTool", "Package", "Gem", "Sparkles"]
+                    .map(
+                      (ic) =>
+                        `<option value="${ic}" ${p.icon === ic ? "selected" : ""}>${ic}</option>`,
+                    )
+                    .join("")}
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="label">Subtitulo</label>
+              <input type="text" class="input w-full mb-3" value="${p.subtitle}"
+                oninput="onProductFieldChange(${i}, 'subtitle', this.value)" />
+            </div>
+            <div class="grid grid-cols-3 gap-3 mb-3">
+              <div>
+                <label class="label">Preco Padrao (R$)</label>
+                <input type="number" class="input w-full" value="${p.standardPrice}" min="0"
+                  oninput="onProductFieldChange(${i}, 'standardPrice', parseFloat(this.value) || 0)" />
+              </div>
+              <div>
+                <label class="label">Preco Foil (R$)</label>
+                <input type="number" class="input w-full" value="${p.foilPrice ?? ""}" min="0"
+                  placeholder="Vazio = sem foil"
+                  oninput="onProductFieldChange(${i}, 'foilPrice', this.value === '' ? null : parseFloat(this.value) || 0)" />
+              </div>
+              <div>
+                <label class="label">Unidade</label>
+                <select class="input w-full" onchange="onProductFieldChange(${i}, 'unit', this.value)">
+                  ${["deck", "carta", "arte"].map((u) => `<option value="${u}" ${p.unit === u ? "selected" : ""}>${u}</option>`).join("")}
+                </select>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div>
+                <label class="label">Ordem</label>
+                <input type="number" class="input w-20" value="${p.order}" min="1"
+                  oninput="onProductFieldChange(${i}, 'order', parseInt(this.value) || 1)" />
+              </div>
+              <button onclick="saveProduct(${i})" id="btn-save-product-${i}" class="btn btn-gold mt-5" disabled>
+                Salvar Produto
+              </button>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+        pricingOriginal = JSON.stringify(pricingData.products);
+      }
+
+      function onProductFieldChange(idx, field, value) {
+        pricingData.products[idx][field] = value;
+        const btn = document.getElementById(`btn-save-product-${idx}`);
+        if (btn) btn.disabled = JSON.stringify(pricingData.products) === pricingOriginal;
+      }
+
+      async function saveProduct(idx) {
+        const product = pricingData.products[idx];
+        const btn = document.getElementById(`btn-save-product-${idx}`);
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "Salvando...";
+        }
+        try {
+          const res = await apiFetch(`${API}/api/pricing/product/${product.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(product),
+          });
+          if (!res.ok) {
+            toast("Erro ao salvar produto", "error");
+            return;
+          }
+          pricingData.products[idx] = await res.json();
+          pricingOriginal = JSON.stringify(pricingData.products);
+          toast("Produto salvo!");
+        } catch (e) {
+          toast("Erro ao salvar produto", "error");
+        } finally {
+          if (btn) btn.textContent = "Salvar Produto";
+        }
+      }
+
+      function renderPricingNotes() {
+        const textarea = document.getElementById("pricing-notes");
+        textarea.value = (pricingData.notes || []).join("\n");
+        notesOriginal = textarea.value;
+        document.getElementById("btn-save-notes").disabled = true;
+      }
+
+      function onPricingNotesChange() {
+        const current = document.getElementById("pricing-notes").value;
+        document.getElementById("btn-save-notes").disabled = current === notesOriginal;
+      }
+
+      async function savePricingNotes() {
+        const text = document.getElementById("pricing-notes").value;
+        const notes = text.split("\n").filter((line) => line.trim() !== "");
+        const btn = document.getElementById("btn-save-notes");
+        btn.disabled = true;
+        btn.textContent = "Salvando...";
+        try {
+          const res = await apiFetch(`${API}/api/pricing/notes`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ notes }),
+          });
+          if (!res.ok) {
+            toast("Erro ao salvar notas", "error");
+            return;
+          }
+          const data = await res.json();
+          pricingData.notes = data.notes;
+          notesOriginal = text;
+          toast("Notas salvas!");
+        } catch (e) {
+          toast("Erro ao salvar notas", "error");
+        } finally {
+          btn.textContent = "Salvar Notas";
+        }
+      }
+
+      function renderPricingShipping() {
+        const container = document.getElementById("pricing-shipping");
+        container.innerHTML = pricingData.shippingRegions
+          .map(
+            (r, i) => `
+          <div class="card">
+            <h4 class="font-semibold mb-2">${r.region} <span class="text-sm text-gray-400">(${r.states.join(", ")})</span></h4>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="label">PAC (R$)</label>
+                <input type="number" class="input w-full" value="${r.pacPrice}" min="0"
+                  oninput="onShippingFieldChange(${i}, 'pacPrice', parseFloat(this.value) || 0)" />
+              </div>
+              <div>
+                <label class="label">PAC Prazo</label>
+                <input type="text" class="input w-full" value="${r.pacDays}"
+                  oninput="onShippingFieldChange(${i}, 'pacDays', this.value)" />
+              </div>
+              <div>
+                <label class="label">SEDEX (R$)</label>
+                <input type="number" class="input w-full" value="${r.sedexPrice}" min="0"
+                  oninput="onShippingFieldChange(${i}, 'sedexPrice', parseFloat(this.value) || 0)" />
+              </div>
+              <div>
+                <label class="label">SEDEX Prazo</label>
+                <input type="text" class="input w-full" value="${r.sedexDays}"
+                  oninput="onShippingFieldChange(${i}, 'sedexDays', this.value)" />
+              </div>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+        shippingOriginal = JSON.stringify(pricingData.shippingRegions);
+      }
+
+      function onShippingFieldChange(idx, field, value) {
+        pricingData.shippingRegions[idx][field] = value;
+        document.getElementById("btn-save-shipping").disabled =
+          JSON.stringify(pricingData.shippingRegions) === shippingOriginal;
+      }
+
+      async function savePricingShipping() {
+        const btn = document.getElementById("btn-save-shipping");
+        btn.disabled = true;
+        btn.textContent = "Salvando...";
+        try {
+          const res = await apiFetch(`${API}/api/pricing/shipping`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ shippingRegions: pricingData.shippingRegions }),
+          });
+          if (!res.ok) {
+            toast("Erro ao salvar frete", "error");
+            return;
+          }
+          const data = await res.json();
+          pricingData.shippingRegions = data.shippingRegions;
+          shippingOriginal = JSON.stringify(pricingData.shippingRegions);
+          toast("Frete salvo!");
+        } catch (e) {
+          toast("Erro ao salvar frete", "error");
+        } finally {
+          btn.textContent = "Salvar Frete";
+        }
       }
 
       // --- Collections ---
@@ -2937,6 +3271,11 @@
           await loadSettings();
         } catch (err) {
           toast("Erro ao carregar configuracoes", "error");
+        }
+        try {
+          await loadPricing();
+        } catch (err) {
+          toast("Erro ao carregar precos", "error");
         }
       }
       // ================================================================

@@ -1,0 +1,99 @@
+{
+  "products": [
+    {
+      "id": "deck-commander",
+      "label": "Deck Commander",
+      "subtitle": "100 cartas — frente e verso impressos",
+      "icon": "Swords",
+      "standardPrice": 250,
+      "foilPrice": 350,
+      "unit": "deck",
+      "highlight": false,
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": "deck-tematico",
+      "label": "Deck Tematico Completo",
+      "subtitle": "Voce escolhe o tema; criamos a identidade visual das 100 cartas e dos tokens",
+      "icon": "Palette",
+      "standardPrice": 500,
+      "foilPrice": 600,
+      "unit": "deck",
+      "highlight": true,
+      "visible": true,
+      "order": 2
+    },
+    {
+      "id": "cartas-avulsas",
+      "label": "Cartas Avulsas",
+      "subtitle": "Minimo de 9 cartas",
+      "icon": "Layers",
+      "standardPrice": 5,
+      "foilPrice": 8,
+      "unit": "carta",
+      "highlight": false,
+      "visible": true,
+      "order": 3
+    },
+    {
+      "id": "arte-personalizada",
+      "label": "Arte Personalizada Avulsa",
+      "subtitle": "A impressao, quando solicitada, e cobrada a parte",
+      "icon": "PenTool",
+      "standardPrice": 25,
+      "foilPrice": null,
+      "unit": "arte",
+      "highlight": false,
+      "visible": true,
+      "order": 4
+    }
+  ],
+  "notes": [
+    "Frete pago pelo cliente, na modalidade de envio de sua escolha.",
+    "Consulte a disponibilidade para decks tematicos. As vagas sao limitadas e, em periodos de alta demanda, os pedidos entram em fila de espera.",
+    "Pedidos com caracteristicas ou quantidade de artes especiais recebem orcamento individual."
+  ],
+  "shippingRegions": [
+    {
+      "region": "Sul",
+      "states": ["RS", "SC", "PR"],
+      "pacPrice": 25,
+      "pacDays": "3-5",
+      "sedexPrice": 45,
+      "sedexDays": "1-2"
+    },
+    {
+      "region": "Sudeste",
+      "states": ["SP", "RJ", "MG", "ES"],
+      "pacPrice": 35,
+      "pacDays": "5-8",
+      "sedexPrice": 55,
+      "sedexDays": "2-4"
+    },
+    {
+      "region": "Centro-Oeste",
+      "states": ["GO", "MT", "MS", "DF"],
+      "pacPrice": 40,
+      "pacDays": "6-10",
+      "sedexPrice": 60,
+      "sedexDays": "3-5"
+    },
+    {
+      "region": "Nordeste",
+      "states": ["BA", "SE", "AL", "PE", "PB", "RN", "CE", "PI", "MA"],
+      "pacPrice": 45,
+      "pacDays": "8-12",
+      "sedexPrice": 65,
+      "sedexDays": "4-6"
+    },
+    {
+      "region": "Norte",
+      "states": ["AM", "PA", "AC", "RO", "RR", "AP", "TO"],
+      "pacPrice": 50,
+      "pacDays": "10-15",
+      "sedexPrice": 70,
+      "sedexDays": "5-8"
+    }
+  ]
+}
