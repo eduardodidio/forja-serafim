@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { Instagram } from "lucide-react";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { whatsappLink } from "@/lib/store-data";
@@ -42,22 +41,18 @@ export function SiteFooter() {
           <p className="text-xs uppercase tracking-[0.2em] text-gold">Navegue</p>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             {[
-              { to: "/", label: "Home" },
-              { to: "/colecoes", label: "Colecoes" },
-              { to: "/sobre", label: "Sobre" },
-              { to: "/contato", label: "Contato" },
+              { href: "/#home", label: "Home" },
+              { href: "/#colecoes", label: "Colecoes" },
+              { href: "/#sobre", label: "Sobre" },
+              { href: "/#valores", label: "Valores" },
+              { href: "/#contato", label: "Contato" },
             ].map((l) => (
-              <li key={l.to}>
-                <Link to={l.to} className="transition-colors hover:text-gold">
+              <li key={l.href}>
+                <a href={l.href} className="transition-colors hover:text-gold">
                   {l.label}
-                </Link>
+                </a>
               </li>
             ))}
-            <li>
-              <a href="/#valores" className="transition-colors hover:text-gold">
-                Valores
-              </a>
-            </li>
           </ul>
         </div>
 

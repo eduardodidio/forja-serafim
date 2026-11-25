@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ArrowRight,
@@ -17,6 +17,8 @@ import { PageShell } from "@/components/page-shell";
 import { CollectionCard } from "@/components/card-tile";
 import { PricingSection } from "@/components/pricing-section";
 import { ShippingSimulator } from "@/components/shipping-simulator";
+import { SobreSection } from "@/components/sobre-section";
+import { ContatoSection } from "@/components/contato-section";
 import { visibleCollections, testimonials, WHATSAPP_URL, whatsappLink } from "@/lib/store-data";
 
 import { useReveal } from "@/hooks/useReveal";
@@ -65,7 +67,7 @@ function Home() {
   return (
     <PageShell>
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      <section id="home" className="relative overflow-hidden">
         <img
           src={hero}
           alt="Cartas full art espalhadas sobre uma mesa escura"
@@ -85,12 +87,12 @@ function Home() {
             Proxies Full Art feitas para transformar seu deck em uma verdadeira obra de arte.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
-            <Link
-              to="/colecoes"
+            <a
+              href="#colecoes"
               className="inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03]"
             >
               Ver Colecoes <ArrowRight className="size-4" />
-            </Link>
+            </a>
             <a
               href={whatsappLink(
                 "Ola! Vim pelo site da Forja Serafim e gostaria de saber mais sobre as proxies full art.",
@@ -147,18 +149,18 @@ function Home() {
       </section>
 
       {/* Collections */}
-      <section className="mx-auto max-w-7xl px-5 py-10">
+      <section id="colecoes" className="mx-auto max-w-7xl px-5 py-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-gold">Colecoes</p>
             <h2 className="mt-3 text-3xl sm:text-4xl">Universos em papel</h2>
           </div>
-          <Link
-            to="/colecoes"
+          <a
+            href="#colecoes"
             className="text-sm text-muted-foreground transition-colors hover:text-gold"
           >
             Ver todas &rarr;
-          </Link>
+          </a>
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -182,8 +184,14 @@ function Home() {
       {/* Simulador de Frete */}
       <ShippingSimulator />
 
+      {/* Sobre */}
+      <SobreSection />
+
       {/* Depoimentos — só exibe quando houver reviews reais */}
       {testimonials.length > 0 && <TestimonialsSection />}
+
+      {/* Contato */}
+      <ContatoSection />
 
       {/* CTA Final */}
       <Reveal>

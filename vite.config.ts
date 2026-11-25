@@ -28,8 +28,6 @@ function sitemapPlugin(): Plugin {
         const staticRoutes = [
           { loc: "/", priority: "1.0" },
           { loc: "/colecoes", priority: "0.9" },
-          { loc: "/sobre", priority: "0.6" },
-          { loc: "/contato", priority: "0.6" },
         ];
         const collectionRoutes = collections
           .filter((c) => !c.hidden)

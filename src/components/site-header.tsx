@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { Menu, Moon, Sun } from "lucide-react";
 
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
@@ -6,14 +5,13 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { whatsappLink } from "@/lib/store-data";
 
-const links = [
-  { to: "/", label: "Home" },
-  { to: "/colecoes", label: "Colecoes" },
-  { to: "/sobre", label: "Sobre" },
-  { to: "/contato", label: "Contato" },
-] as const;
-
-const anchorLinks = [{ href: "/#valores", label: "Valores" }];
+const navLinks = [
+  { href: "/#home", label: "Home" },
+  { href: "/#colecoes", label: "Colecoes" },
+  { href: "/#sobre", label: "Sobre" },
+  { href: "/#valores", label: "Valores" },
+  { href: "/#contato", label: "Contato" },
+];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -46,7 +44,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-4 sm:flex sm:justify-between">
-        <Link to="/" className="flex min-w-0 items-center gap-3">
+        <a href="/" className="flex min-w-0 items-center gap-3">
           <img
             src="/images/logo-forja-serafim.jpg"
             alt="Forja Serafim"
@@ -55,21 +53,10 @@ export function SiteHeader() {
           <span className="truncate font-display text-lg tracking-[0.18em] uppercase text-gradient-gold sm:text-xl">
             Forja Serafim
           </span>
-        </Link>
+        </a>
 
         <nav className="hidden items-center gap-8 lg:flex">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="text-sm text-muted-foreground transition-colors hover:text-gold"
-              activeProps={{ className: "text-gold" }}
-              activeOptions={{ exact: l.to === "/" }}
-            >
-              {l.label}
-            </Link>
-          ))}
-          {anchorLinks.map((l) => (
+          {navLinks.map((l) => (
             <a
               key={l.href}
               href={l.href}
@@ -122,17 +109,7 @@ export function SiteHeader() {
         )}
       >
         <nav className="flex flex-col gap-1 px-5 py-3">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-gold"
-            >
-              {l.label}
-            </Link>
-          ))}
-          {anchorLinks.map((l) => (
+          {navLinks.map((l) => (
             <a
               key={l.href}
               href={l.href}

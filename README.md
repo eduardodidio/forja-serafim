@@ -27,7 +27,7 @@ Landing page estatica com painel admin web para gestao de conteudo.
 ```
 Browser (SPA)
   └── Vite + React 19 + TanStack Router
-        ├── Pages: /, /colecoes, /colecoes/$slug, /sobre, /contato
+        ├── Pages: / (single-page with anchors), /colecoes/$slug
         ├── Components: PageShell, SiteHeader, SiteFooter, CollectionCard, Lightbox, Card3DTilt
         └── Data: collections.json, testimonials.json, settings.json, pricing.json
 
@@ -188,6 +188,7 @@ forja-serafim/
 
 | Feature     | Descricao                                                                                                      |
 | ----------- | -------------------------------------------------------------------------------------------------------------- |
+| **F24**     | Navegacao 100% anchor-based (single-page scroll), Sobre e Contato integrados na homepage                       |
 | **F23**     | Secao Valores (precos editaveis via admin) + simulador de frete por CEP (ViaCEP + tabela regional)             |
 | **F18**     | Git-persist hardening: retry com backoff, structured logging, historico de operacoes no admin                  |
 | **F17**     | Tokens: upload com watermark, gestao no admin (CRUD + reorder), modal na landing page (Card3DTilt + qty badge) |

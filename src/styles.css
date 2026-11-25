@@ -242,6 +242,14 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+[id] {
+  scroll-margin-top: 5rem;
+}
+
 @utility veil {
   background: var(--gradient-veil);
 }
