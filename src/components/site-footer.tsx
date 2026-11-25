@@ -53,6 +53,11 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
+            <li>
+              <a href="/#valores" className="transition-colors hover:text-gold">
+                Valores
+              </a>
+            </li>
           </ul>
         </div>
 
