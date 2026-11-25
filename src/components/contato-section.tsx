@@ -31,7 +31,7 @@ export function ContatoSection() {
         A forma mais rapida de falar com a gente e pelo WhatsApp. Respondemos em ate 24 horas.
       </p>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid gap-4 sm:grid-cols-2">
         <Reveal delay={0}>
           <a
             href={whatsappLink(
@@ -53,11 +53,13 @@ export function ContatoSection() {
             href="https://www.instagram.com/forjaserafim"
             target="_blank"
             rel="noopener noreferrer"
-            className="surface-card p-6 transition-colors hover:border-gold/60"
+            className="surface-card flex items-center gap-4 p-6 transition-colors hover:border-gold/60"
           >
-            <Instagram className="size-5 text-gold" />
-            <p className="mt-4 font-display text-base">Instagram</p>
-            <p className="mt-1 text-sm text-muted-foreground">@forjaserafim</p>
+            <Instagram className="size-8 shrink-0 text-gold" />
+            <div>
+              <p className="font-display text-base">Instagram</p>
+              <p className="mt-1 text-sm text-muted-foreground">@forjaserafim</p>
+            </div>
           </a>
         </Reveal>
       </div>
