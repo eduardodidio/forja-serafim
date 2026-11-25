@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Truck, MapPin, Package, Zap } from "lucide-react";
-import { shippingRegions, originAddress } from "@/lib/store-data";
+import { shippingRegions } from "@/lib/store-data";
 import { useReveal } from "@/hooks/useReveal";
 
 type ShippingResult = {
@@ -143,12 +143,10 @@ export function ShippingSimulator() {
               Digite seu CEP para calcular o valor estimado do frete. Enviamos para todo o Brasil
               via PAC e SEDEX.
             </p>
-            {originAddress && (
-              <div className="mt-6 flex items-center gap-2 text-xs text-muted-foreground/60">
-                <MapPin className="size-3.5" />
-                <span>Enviamos de {originAddress}</span>
-              </div>
-            )}
+            <div className="mt-6 flex items-center gap-2 text-xs text-muted-foreground/60">
+              <MapPin className="size-3.5" />
+              <span>Enviamos para todo o Brasil</span>
+            </div>
           </div>
 
           {/* Right — calculator */}
