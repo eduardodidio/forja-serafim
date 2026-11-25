@@ -13,6 +13,8 @@ const links = [
   { to: "/contato", label: "Contato" },
 ] as const;
 
+const anchorLinks = [{ href: "/#valores", label: "Valores" }];
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
@@ -67,6 +69,15 @@ export function SiteHeader() {
               {l.label}
             </Link>
           ))}
+          {anchorLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-sm text-muted-foreground transition-colors hover:text-gold"
+            >
+              {l.label}
+            </a>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -120,6 +131,16 @@ export function SiteHeader() {
             >
               {l.label}
             </Link>
+          ))}
+          {anchorLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-gold"
+            >
+              {l.label}
+            </a>
           ))}
         </nav>
       </div>

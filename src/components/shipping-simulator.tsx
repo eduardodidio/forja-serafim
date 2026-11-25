@@ -246,6 +246,46 @@ export function ShippingSimulator() {
             )}
           </div>
         </div>
+
+        {/* Tabela de frete por regiao */}
+        <div className="mt-8">
+          <p className="mb-4 text-xs uppercase tracking-[0.2em] text-gold">
+            Tabela de frete por regiao
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/50 text-left text-xs uppercase tracking-wider text-muted-foreground">
+                  <th className="pb-3 pr-4 font-medium">Regiao</th>
+                  <th className="pb-3 pr-4 font-medium">PAC</th>
+                  <th className="pb-3 pr-4 font-medium">Prazo PAC</th>
+                  <th className="pb-3 pr-4 font-medium">SEDEX</th>
+                  <th className="pb-3 font-medium">Prazo SEDEX</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shippingRegions.map((r) => (
+                  <tr key={r.region} className="border-b border-border/20">
+                    <td className="py-3 pr-4">
+                      <span className="font-medium">{r.region}</span>
+                      <span className="ml-2 text-xs text-muted-foreground/60">
+                        {r.states.join(", ")}
+                      </span>
+                    </td>
+                    <td className="py-3 pr-4 font-display">R$ {r.pacPrice}</td>
+                    <td className="py-3 pr-4 text-muted-foreground">{r.pacDays} dias</td>
+                    <td className="py-3 pr-4 font-display text-gold">R$ {r.sedexPrice}</td>
+                    <td className="py-3 text-muted-foreground">{r.sedexDays} dias</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-3 text-[11px] text-muted-foreground/50">
+            Frete pago pelo cliente. Valores estimados — o custo final e confirmado no momento do
+            pedido.
+          </p>
+        </div>
       </section>
     </Reveal>
   );
