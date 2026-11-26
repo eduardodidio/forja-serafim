@@ -437,7 +437,23 @@
     "image": "/images/covers/paraiso-celestial-mas-com-mais-cores.jpg",
     "description": "Deck temático de Anjos das 5 cores no tema de Diablo",
     "cardCount": 100,
-    "tokens": [],
+    "tokens": [
+      {
+        "image": "/images/tokens/paraiso-celestial-mas-com-mais-cores/angel-token-vigilance-4-4.jpg",
+        "name": "Angel Token Vigilance 4-4",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial-mas-com-mais-cores/cofre-horadrico-de-luz-dourada.jpg",
+        "name": "Cofre Horádrico de Luz Dourada",
+        "quantity": 1
+      },
+      {
+        "image": "/images/tokens/paraiso-celestial-mas-com-mais-cores/copy-anjos-token.jpg",
+        "name": "Copy Anjos Token",
+        "quantity": 1
+      }
+    ],
     "sampleImages": [
       "/images/decks/paraiso-celestial-mas-com-mais-cores/arauto-da-servidao-eterna-no-abismo.jpg",
       "/images/decks/paraiso-celestial-mas-com-mais-cores/guardiao-do-veu-eterno.jpg",
