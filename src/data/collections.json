@@ -439,17 +439,17 @@
     "cardCount": 100,
     "tokens": [
       {
-        "image": "/images/tokens/paraiso-celestial-mas-com-mais-cores/angel-token-vigilance-4-4.jpg?v=1795659901943",
+        "image": "/images/tokens/paraiso-celestial-mas-com-mais-cores/angel-token-vigilance-4-4.jpg",
         "name": "Angel Token Vigilance 4-4",
         "quantity": 2
       },
       {
-        "image": "/images/tokens/paraiso-celestial-mas-com-mais-cores/cofre-horadrico-de-luz-dourada.jpg?v=1795659902633",
+        "image": "/images/tokens/paraiso-celestial-mas-com-mais-cores/cofre-horadrico-de-luz-dourada.jpg",
         "name": "Cofre Horádrico de Luz Dourada",
         "quantity": 1
       },
       {
-        "image": "/images/tokens/paraiso-celestial-mas-com-mais-cores/copy-anjos-token.jpg?v=1795659903144",
+        "image": "/images/tokens/paraiso-celestial-mas-com-mais-cores/copy-anjos-token.jpg",
         "name": "Copy Anjos Token",
         "quantity": 2
       }
@@ -465,7 +465,7 @@
     "moxfieldUrl": "",
     "deckcheckUrl": "https://deckcheck.co/app/builder/7yEOcNIf5dVT",
     "manualUrl": "",
-    "videoUrl": "",
+    "videoUrl": "/videos/decks/paraiso-celestial-mas-com-mais-cores.mp4",
     "hidden": false
   },
   {
